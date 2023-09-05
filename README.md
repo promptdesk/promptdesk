@@ -1,2 +1,2 @@
 # promptdesk
-Promptdesk is a an in-memory prompt management tool that supports multi-model management and variable declarations.
+Promptdesk is a tool designed for effectively creating, organizing, and evaluating prompts and large language models (LLMs).
