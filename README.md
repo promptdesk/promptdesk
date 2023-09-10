@@ -1,4 +1,6 @@
 # PromptDesk
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Promptdesk is a tool designed for effectively creating, organizing, and evaluating prompts and large language models (LLMs).
 
 # Run

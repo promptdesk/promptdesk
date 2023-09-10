@@ -111,85 +111,35 @@ router.all('/magic', async (req, res) => {
 
 });
 
-// Route for /api/magic/text-bison-001
-router.post('/magic/text-bison-001', async (req, res) => {
-    try {
-        const url = "https://us-central1-aiplatform.googleapis.com/v1/projects/promptdesk/locations/us-central1/publishers/google/models/text-bison@001:predict";
-        const payload = {
-            instances: [
-                {
-                    content: "Say hello."
-                }
-            ],
-            parameters: {
-                temperature: 0.2,
-                maxOutputTokens: 256,
-                topP: 0.8,
-                topK: 40
-            }
-        };
-        const headers = {
-            'Authorization': 'Bearer ya29.a0AbVbY6N-V8oV8L44vC61F35_ffY-gd_UPINQeaL5BqA5FlNqzQdw_wW-sC1My5a9j9mLfJTVM6YI2a_iR4oy5vsM6gXxMi2n5tw3V6Qnt6zhunN9ZUnWvax8uPqzbORy0XucGzDaCJj1pmLoTGqY181OYyC4mrEASxWxrQaCgYKAVgSARASFQFWKvPlSIYMaeJz_CxVjLNsCVAcSw0173',
-            'Content-Type': 'application/json'
-        };
-        const response = await axios.post(url, payload, { headers });
-        const message = response.data.predictions[0].content;
-        res.status(200).json({ message });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: "Something went wrong" });
+// Route for /api/magic/gpt-3.5-turbo
+router.all('/magic/generate', async (req, res) => {
+
+    //check if name is provided
+    if (!req.body.name) {
+        return res.status(400).json({ message: 'Prompt name is required' });
     }
+
+    var prompt = req.body
+
+    if(!prompt){
+        return res.status(404).json({ message: 'Prompt not found' });
+    }
+
+    var model_id = prompt.model
+
+    const model = model_db.findModel(model_id);
+
+    if(!model){
+        return res.status(404).json({ message: 'Model not found' });
+    }
+
+    return res.status(200).json({
+        data: {
+            message: "Hello, World!",
+        }
+    });
+
 });
 
-// Route for /api/magic/chat-bison-001
-router.post('/magic/chat-bison-001', async (req, res) => {
-    try {
-        const url = "https://us-central1-aiplatform.googleapis.com/v1/projects/promptdesk/locations/us-central1/publishers/google/models/chat-bison@001:predict";
-        const payload = {
-            instances: [
-                {
-                    context: "",
-                    examples: [
-                        {
-                            input: {
-                                author: "user",
-                                content: "Hello how are you?"
-                            },
-                            output: {
-                                author: "bot",
-                                content: "I'm doing well! How are you doing?"
-                            }
-                        }
-                    ],
-                    messages: [
-                        {
-                            author: "bot",
-                            content: "Okay, how can I help?"
-                        }
-                    ]
-                }
-            ],
-            parameters: {
-                temperature: 0.2,
-                maxOutputTokens: 256,
-                topP: 0.8,
-                topK: 40
-            }
-        };
-        const headers = {
-            'Authorization': 'Bearer ya29.a0AbVbY6N-V8oV8L44vC61F35_ffY-gd_UPINQeaL5BqA5FlNqzQdw_wW-sC1My5a9j9mLfJTVM6YI2a_iR4oy5vsM6gXxMi2n5tw3V6Qnt6zhunN9ZUnWvax8uPqzbORy0XucGzDaCJj1pmLoTGqY181OYyC4mrEASxWxrQaCgYKAVgSARASFQFWKvPlSIYMaeJz_CxVjLNsCVAcSw0173',
-            'Content-Type': 'application/json'
-        };
-        const response = await axios.post(url, payload, { headers });
-        const message = response.data.predictions[0].candidates[0].content;
-        res.status(200).json({
-            role: "bot",
-            content: message
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ error: "Something went wrong" });
-    }
-});
 
 export default router;
