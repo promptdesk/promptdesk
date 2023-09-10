@@ -2,6 +2,12 @@
 Promptdesk is a tool designed for effectively creating, organizing, and evaluating prompts and large language models (LLMs).
 
 # Run
+To initialize the project, run the following commands:
+```sh
+npm initialize.js
+```
+
+To run the project, run the following commands:
 ```sh
 docker-compose build
 docker-compose up
