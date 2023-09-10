@@ -13,6 +13,10 @@ docker-compose build
 docker-compose up
 ```
 
+# Requirements
+- Docker
+- NPM
+
 # Roadmap
 - [x] Implement prompt and model editors.
 - [x] Integrate support for .env prompt variables.
