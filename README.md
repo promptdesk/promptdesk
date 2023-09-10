@@ -16,8 +16,40 @@ docker-compose up
 ```
 
 # API Documentation
-To call a prompt, send a POST request to the following endpoint:
+## Python PIP
+```sh
+pip install promptdesk
+```
+
+```py
+import promptdesk
+
+promptdesk.endpoint = "https://example.com/api/magic/generate"
+
+promptdesk.generate("yoda-test-variables", {
+  "message": "What is your name?"
+})
+```
+
+## JavaScript NPM
+```sh
+npm install promptdesk
+```
+
+```js
+import PromptDesk from 'promptdesk';
+
+const promptdesk = new PromptDesk({
+  endpoint: "https://example.com/api/magic/generate",
+});
+
+promptdesk.generate("yoda-test-variables", {
+  "message": "What is your name?"
+})
+```
+
 ## REST API
+To call a prompt, send a POST request to the following endpoint:
 ### Python
 ```py
 import requests
