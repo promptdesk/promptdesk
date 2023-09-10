@@ -25,12 +25,24 @@ function variable_object(prompt_variables) {
 }
 
 // Route for /api/magic/gpt-3.5-turbo
-router.all('/magic', async (req, res) => {
+router.all(['/magic', '/magic/generate'], async (req, res) => {
 
-    var prompt = req.body
+    var prompt = undefined;
+    var proxy = false;
+
+    //check if prompt_name is provided
+    if (req.body.prompt_name) {
+        prompt = prompt_db.findPromptByName(req.body.prompt_name);
+        if (!prompt) {
+            return res.status(404).json({ error: 'Prompt name is required' });
+        }
+        proxy = true;
+    } else {
+        prompt = req.body
+    }
 
     if(!prompt){
-        return res.status(404).json({ message: 'Prompt not found' });
+        return res.status(404).json({ error: 'Prompt not found.' });
     }
 
     var model_id = prompt.model
@@ -38,11 +50,11 @@ router.all('/magic', async (req, res) => {
     const model = model_db.findModel(model_id);
 
     if(!model){
-        return res.status(404).json({ message: 'Model not found' });
+        return res.status(404).json({ error: 'Model not found.' });
     }
     
     if(!model.api_call){
-        return res.status(404).json({ message: 'Model API Call not found' });
+        return res.status(404).json({ error: 'Model API not found.' });
     }
 
     var start = Date.now()
@@ -56,29 +68,40 @@ router.all('/magic', async (req, res) => {
     var end = Date.now()
     var elapsed = end - start
 
-    console.log(api_call)
-
     if(!model.format_function){
-        return res.status(404).json({ message: 'Model Format Function not found' });
+        return res.status(404).json({ error: 'Model format function not found.' });
     }
 
     if(!model.post_format_function){
-        return res.status(404).json({ message: 'Model Post Format Function not found' });
+        return res.status(404).json({ error: 'Model format function not found.' });
     }
 
     var format_function = eval(model.format_function)
     var post_format_function = eval(model.post_format_function)
 
-    var variables = variable_object(prompt.prompt_variables)
+    console.log(prompt.prompt_variables)
+
+    var variables = req.body.variables || {}
+    if(!proxy){
+        variables = variable_object(prompt.prompt_variables)
+    }
+
+    //validate variables
+    for (var key in prompt.prompt_variables) {
+        //check if key exists in prompt.prompt_variables
+        console.log(key)
+        if (!variables[key]) {
+            return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.' });
+        }
+    }
+
+    console.log(variables)
 
     var prompt_data = JSON.stringify(prompt.prompt_data)
     var prompt_data_template = handlebars.compile(prompt_data);
     prompt_data = prompt_data_template(variables);
 
     prompt_data = JSON.parse(prompt_data)
-
-    console.log("prompt_data", JSON.stringify(prompt_data, null, 2))
-    console.log("prompt_data_template", JSON.stringify(prompt_data, null, 2))
 
     var body = format_function(prompt_data, prompt.prompt_parameters)
 
@@ -87,21 +110,21 @@ router.all('/magic', async (req, res) => {
     try {
         var response = await axios(api_call)
         var data = response.data
-        console.log(data)
         var data = post_format_function(response.data)
         return res.status(200).json({
             data: {
                 message: data,
                 //trimmed_text: data.trim(),
+                error: undefined,
                 raw_response: response.data,
                 raw_request: body
             }
         });
     } catch (error) {
-        console.log(error.response.data)
         return res.status(error.response.status).json({
             data: {
                 message: undefined,
+                error: "3rd party API error.",
                 //trimmed_text: data.trim(),
                 raw_response: error.response.data,
                 raw_request: body
@@ -110,36 +133,5 @@ router.all('/magic', async (req, res) => {
     }
 
 });
-
-// Route for /api/magic/gpt-3.5-turbo
-router.all('/magic/generate', async (req, res) => {
-
-    //check if name is provided
-    if (!req.body.name) {
-        return res.status(400).json({ message: 'Prompt name is required' });
-    }
-
-    var prompt = req.body
-
-    if(!prompt){
-        return res.status(404).json({ message: 'Prompt not found' });
-    }
-
-    var model_id = prompt.model
-
-    const model = model_db.findModel(model_id);
-
-    if(!model){
-        return res.status(404).json({ message: 'Model not found' });
-    }
-
-    return res.status(200).json({
-        data: {
-            message: "Hello, World!",
-        }
-    });
-
-});
-
 
 export default router;

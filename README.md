@@ -15,6 +15,54 @@ docker-compose build
 docker-compose up
 ```
 
+# API Documentation
+To call a prompt, send a POST request to the following endpoint:
+
+### Python
+```py
+import requests
+import json
+
+url = "https://example.com/api/magic/generate"
+
+payload = json.dumps({
+  "prompt_name": "yoda-test-variables",
+  "variables": {
+    "message": "What is your name?"
+  }
+})
+headers = {
+  'Content-Type': 'application/json'
+}
+
+response = requests.request("POST", url, headers=headers, data=payload)
+
+print(response.text)
+```
+
+### JavaScript
+```js
+var request = require('request');
+var options = {
+  'method': 'POST',
+  'url': 'https://example.com/api/magic/generate',
+  'headers': {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    "prompt_name": "yoda-test-variables",
+    "variables": {
+      "message": "What is your name?"
+    }
+  })
+
+};
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+});
+```
+
 # Requirements
 - Docker
 - NPM

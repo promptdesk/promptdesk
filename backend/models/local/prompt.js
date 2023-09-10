@@ -21,6 +21,10 @@ class Prompt {
         return db.data.prompts.find(prompt => prompt.id === id) || null;
     }
 
+    findPromptByName(name) {
+        return db.data.prompts.find(prompt => prompt.name === name) || null;
+    }
+
     updatePromptById(prompt) {
         const index = db.data.prompts.findIndex(p => p.id === prompt.id);
         if (index !== -1) {
