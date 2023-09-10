@@ -17,7 +17,7 @@ docker-compose up
 
 # API Documentation
 To call a prompt, send a POST request to the following endpoint:
-
+## REST API
 ### Python
 ```py
 import requests
