@@ -42,5 +42,5 @@ readline.question('Enter your OpenAI API key: ', (key) => {
 
 //display the instructions to run the app: docker compose build && docker compose up
 
-console.log('Please run the following command to start the app:');
-console.log('docker compose build && docker compose up');
+//console.log('Please run the following command to start the app:');
+//console.log('docker compose build && docker compose up');

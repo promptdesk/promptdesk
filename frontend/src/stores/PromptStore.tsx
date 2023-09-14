@@ -67,6 +67,21 @@ const promptStore = create<PromptStore>((set, get) => ({
     generatedText: undefined,
     selectedVariable: "",
 
+    fetchAllPrompts: async () => {
+        try {
+            const response = await fetch('http://localhost:4000/api/prompts');
+            if (!response.ok) {
+                throw new Error('Failed to fetch prompts');
+            }
+            const prompts = await response.json();
+            set({ prompts });
+            return prompts;
+        } catch (error) {
+            console.error('Error fetching prompts:', error);
+            throw error;
+        }
+    },
+
     setSelectedVariable: (variable: string) => {
         set({ selectedVariable: variable });
     },
@@ -157,6 +172,7 @@ const promptStore = create<PromptStore>((set, get) => ({
     editMessageAtIndex: (index: number, newValue: string) => {
         set((state) => {
             const promptObject = { ...state.promptObject };
+            //console.log("promptObject", promptObject.id)
             promptObject.prompt_data.messages[index].content = newValue;
             return { promptObject };
         });
@@ -194,21 +210,6 @@ const promptStore = create<PromptStore>((set, get) => ({
               throw new Error('Failed to fetch prompts');
           }
           const prompts = await response.json();
-          return prompts;
-      } catch (error) {
-          console.error('Error fetching prompts:', error);
-          throw error;
-      }
-  },
-
-  fetchAllPrompts: async () => {
-      try {
-          const response = await fetch('http://localhost:4000/api/prompts');
-          if (!response.ok) {
-              throw new Error('Failed to fetch prompts');
-          }
-          const prompts = await response.json();
-          set({ prompts });
           return prompts;
       } catch (error) {
           console.error('Error fetching prompts:', error);

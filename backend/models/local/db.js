@@ -5,7 +5,7 @@ import { JSONFile } from 'lowdb/node'
 
 // db.json file path
 const file = join('./tmp/', 'db.json')
-//console.log(file)
+////console.log(file)
 
 // Configure lowdb to write data to JSON file
 const adapter = new JSONFile(file)

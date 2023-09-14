@@ -7,7 +7,7 @@ import { promptStore } from '@/stores/PromptStore';
 
 
 const RemoveMessage = ({ index }: { index: number }) => {
-  ////////console.log("tagsInfo.default", tagsInfo.tagsInfo.default)'
+  //////////console.log("tagsInfo.default", tagsInfo.tagsInfo.default)'
 
   const { removeAtIndex, promptObject } = promptStore()
 

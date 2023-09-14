@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
 import { modelStore } from "@/stores/ModelStore";
@@ -21,6 +21,10 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
 
   const [message, setMessage] = React.useState(messages[index]?.content || "");
 
+  useEffect(() => {
+    setMessage(messages[index]?.content || "");
+  })
+
   const processVariables = React.useMemo(() => (inputValue: string) => {
     try {
       const ast = Handlebars.parse(inputValue);
@@ -32,7 +36,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
       }, {});
 
       setPromptVariables(newPromptVariableData);
-      console.log(newPromptVariableData);
+      //console.log(newPromptVariableData);
     } catch (e) {
       // Ignore handlebars parsing errors
     }

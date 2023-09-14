@@ -67,14 +67,14 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
     }
 
     var tab_index = promptWorkspaceTabs.getState().tabs.findIndex((t) => t.prompt_id === id);
-    console.log("setActiveTabById", id, tab_index)
+    //console.log("setActiveTabById", id, tab_index)
 
     if (tab_index === -1) {
 
       var name = promptStore.getState().prompts.find((p) => p.id === id)?.name;
 
       if(name === undefined) {
-        return console.log("name is undefined");
+        return //console.log("name is undefined");
       }
 
       promptWorkspaceTabs.getState().addTab(name as string, id, true);

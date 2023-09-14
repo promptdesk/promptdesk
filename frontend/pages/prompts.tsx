@@ -40,7 +40,7 @@ export default function About() {
 
     // Fetch models and set initial state on component mount
     useEffect(() => {
-      //loop through all prompts and console.log them
+      //loop through all prompts and //console.log them
       //fetchAllPrompts();
       //fetchAllModels();
 

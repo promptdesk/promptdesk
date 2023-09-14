@@ -21,7 +21,7 @@ function Editor() {
       }, {});
       setPromptVariableData(newPromptVariableData);
       setPromptVariables(newPromptVariableData);
-      console.log(newPromptVariableData);
+      //console.log(newPromptVariableData);
     } catch (e) {
       console.error(e); // Handle the error appropriately
     }
@@ -61,6 +61,7 @@ function Editor() {
         <div className="chat-pg-right-wrapper">
           <div className="chat-pg-panel-wrapper">
             <div className="chat-pg-exchange-container">
+              {JSON.stringify(promptObject.prompt_data.messages)}
               <div className="chat-pg-exchange">
                 {promptObject.prompt_data.messages?.map((_, index) => (
                   <MessageContainer key={index} index={index} />

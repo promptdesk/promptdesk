@@ -43,7 +43,7 @@ describe('Main /magic/generate route', () => {
                 "prompt_name": "yoda-test-variables",
             });
 
-        console.log(response.body)
+        //console.log(response.body)
         expect(response.status).to.equal(400)
 
     });
@@ -59,7 +59,7 @@ describe('Main /magic/generate route', () => {
                 }
             });
 
-        console.log(response.body)
+        //console.log(response.body)
         expect(response.status).to.equal(200)
 
     });

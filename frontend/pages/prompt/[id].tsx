@@ -60,12 +60,12 @@ export default function Home() {
   const { query } = router; // Using destructuring here
 
   useEffect(() => {
-    console.log("useEffect called");
+    //console.log("useEffect called");
     const id = query.id as string; // Using id from the query object
     setPrompt(id);
     setActiveTabById(id);
     setModelById(promptObject.id as string);
-    console.log("promptObject.id", promptObject.id)
+    //console.log("promptObject.id", promptObject.id)
   }, [query.id]);
 
   const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
@@ -136,12 +136,14 @@ export default function Home() {
                     style={{width: "188px", borderRadius: "10px 10px 0px 0px", padding: "5px"}}
                     className={classNames(
                       tab.current ? 'bg-white text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
-                      'px-2 py-1 text-sm font-medium cursor-pointer pl-4 pr-4 flex'
+                      'px-2 py-1 text-sm font-medium cursor-pointer pl-4 pr-4 flex justify-between'
                     )}
                     aria-current={tab.current ? 'page' : undefined}
                     onClick={() => {
-                      setActiveTab(tab.name);
-                      changeIdInUrl(tab.prompt_id);
+                      //setActiveTab(tab.name);
+                      router.push(`/prompt/${tab.prompt_id}`);
+                      //changeIdInUrl(tab.prompt_id);
+                      //setPrompt(tab.prompt_id);
                     }}
                   >
                     <span style={{
@@ -178,6 +180,7 @@ export default function Home() {
                 {show_modal && <Modal />}
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
+                {JSON.stringify(prompts)}
                   <div className="pg-content-body">
                     {modelObject.type === "chat" ? (
                       <ChatEditor />
@@ -202,7 +205,7 @@ export default function Home() {
                           selected={selectedModeId}
                           onChange={(id: any) => {
                             setModelById(id);
-                            //console.log("MODEL USED", id)
+                            ////console.log("MODEL USED", id)
                           }}
                         />
                         <br />

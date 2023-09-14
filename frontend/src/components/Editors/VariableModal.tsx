@@ -17,7 +17,7 @@ const Modal = () => {
 
   var obj = promptObject.prompt_variables
 
-  console.log("obj", promptObject, obj, promptStore.getState().selectedVariable)
+  //console.log("obj", promptObject, obj, promptStore.getState().selectedVariable)
 
   var x = obj[promptStore.getState().selectedVariable].value
 

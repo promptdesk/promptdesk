@@ -9,7 +9,7 @@ import magicRouter from './routes/api/magic.js';
 dotenv.config();
 const app = express();
 
-console.log(dotenv.config()['parsed'])
+//console.log(dotenv.config()['parsed'])
 
 // Middleware
 app.use(cors());
@@ -30,7 +30,7 @@ app.use('/api', promptsRouter);
 
 // Start the server
 app.listen(port, () => {
-  //console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
 
 // Export app for testing

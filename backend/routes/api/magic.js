@@ -79,7 +79,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     var format_function = eval(model.format_function)
     var post_format_function = eval(model.post_format_function)
 
-    console.log(prompt.prompt_variables)
+    //console.log(prompt.prompt_variables)
 
     var variables = req.body.variables || {}
     if(!proxy){
@@ -89,13 +89,13 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     //validate variables
     for (var key in prompt.prompt_variables) {
         //check if key exists in prompt.prompt_variables
-        console.log(key)
+        //console.log(key)
         if (!variables[key]) {
             return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.' });
         }
     }
 
-    console.log(variables)
+    //console.log(variables)
 
     var prompt_data = JSON.stringify(prompt.prompt_data)
     var prompt_data_template = handlebars.compile(prompt_data);
