@@ -128,14 +128,14 @@ export default function Home() {
           <div className="pg-tab-header">
             {/* TABS */}
             <div className="hidden sm:block">
-              <nav aria-label="Tabs" style={{background: "#f2f2f2", paddingTop:"8px"}}>
+              <nav aria-label="Tabs" style={{background: "#f2f2f2", paddingTop:"8px"}} className="flex">
                 {tabs.map((tab) => (
                   <div
                     key={tab.prompt_id}
-                    style={{width: "188px", display: "inline-block", borderRadius: "10px 10px 0px 0px", padding: "5px"}}
+                    style={{width: "188px", borderRadius: "10px 10px 0px 0px", padding: "5px"}}
                     className={classNames(
                       tab.current ? 'bg-white text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
-                      'px-2 py-1 text-sm font-medium cursor-pointer'
+                      'px-2 py-1 text-sm font-medium cursor-pointer pl-4 pr-4 flex'
                     )}
                     aria-current={tab.current ? 'page' : undefined}
                     onClick={() => {
@@ -143,25 +143,31 @@ export default function Home() {
                       changeIdInUrl(tab.prompt_id);
                     }}
                   >
-                    {tab.name}
-                    <span onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} className="ml-2 inline-flex items-center rounded-md bg-gray-50 hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
-          x
-        </span>
+                    <span style={{
+                      textOverflow: 'ellipsis',
+                      minWidth: '0px',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
+                      padding: '4px'
+                    }}>
+                      {tab.name}
+                    </span>
+                    <span onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} className="ml-2 inline-flex items-center rounded-md bg-gray-50 hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">x</span>
                   </div>
                 ))}
                 <div
                     key='-1'
                     className={classNames(
                       'text-gray-500 hover:text-gray-700 hover:bg-gray-200',
-                      'rounded-md px-2 py-1 text-sm font-medium',
+                      'rounded-md px-3 py-2 text-sm font-medium cursor-pointer',
                     )}
-                    style={{width: "188px", display: "inline-block"}}
+                    style={{display: "inline-block", borderRadius: "10px 10px 0px 0px"}}
                     onClick={() => {
                       newPrompt();
                     }}
                   >
                     <span className="font-bold">+</span>
-                  </div>
+                </div>
               </nav>
             </div>
           </div>

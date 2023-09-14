@@ -1,46 +1,46 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
-import { modelStore } from "@/stores/ModelStore"; // Combine imports if possible
+import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
-import useAutosizeTextArea from "@/stores/useAutosizeTextArea";
 import Handlebars from 'handlebars';
 
+interface MessageContainerProps {
+  index: number;
+}
 
-const MessageContainer = ({ index }: { index: number }) => {
+const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
   const { promptObject, editMessageAtIndex, toggleRoleAtIndex, setPromptVariables } = promptStore();
   const { modelObject } = modelStore();
-  const [promptVariableData, setPromptVariableData] = useState(promptObject.prompt_variables || {});
 
-
-  const textAreaRef = useRef(null);
+  const textAreaRef = useRef<HTMLDivElement | null>(null);
 
   const { messages } = promptObject?.prompt_data || {};
   const { role: defaultRole } = messages?.[index] || { role: "user" };
   const article = defaultRole.charAt(0).toLowerCase() === "u" ? "an" : "a";
 
-  function processVariables(inputValue:string) {
-      try {
-          const ast = Handlebars.parse(inputValue);
-          const variables = [...new Set(ast.body.filter(node => node.path).map(node => node.path.original))];
+  const [message, setMessage] = React.useState(messages[index]?.content || "");
 
-          const newPromptVariableData = variables.reduce((acc, variable) => {
-              acc[variable] = promptVariableData[variable] || { type: 'text', value: '' };
-              return acc;
-          }, {});
+  const processVariables = React.useMemo(() => (inputValue: string) => {
+    try {
+      const ast = Handlebars.parse(inputValue);
+      const variables = [...new Set(ast.body.filter(node => node.path).map(node => node.path.original))];
 
-          setPromptVariableData(newPromptVariableData);
-          setPromptVariables(newPromptVariableData);
-          console.log(newPromptVariableData)
-      } catch (e) {
-          // Handle the error appropriately
-          console.log(e)
-      }
-  }
+      const newPromptVariableData = variables.reduce((acc, variable) => {
+        acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
+        return acc;
+      }, {});
 
-  const handleTextAreaChange = (e:any) => {
-    editMessageAtIndex(index, e.target.value);
-    processVariables(promptObject?.prompt_data.context + " " + e.target.value);
+      setPromptVariables(newPromptVariableData);
+      console.log(newPromptVariableData);
+    } catch (e) {
+      // Ignore handlebars parsing errors
+    }
+  }, [promptObject.prompt_variables, setPromptVariables]);
+
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLDivElement>) => {
+    editMessageAtIndex(index, e.target.textContent || "");
+    processVariables(`${promptObject.prompt_data.context} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
 
   const handleRoleToggle = () => {
@@ -60,24 +60,17 @@ const MessageContainer = ({ index }: { index: number }) => {
         </div>
       </div>
       <div className="text-input-with-focus">
-        {/*<div
-          className="text-input-md text-input"
-          rows={1}
-          tabIndex={0}
-          ref={textAreaRef}
-          placeholder={placeholder}
-          style={{ height: 36 }}
-          value={messages[index]?.content || ""}
-          onChange={handleTextAreaChange}
-          />*/}
-          <div
+        <div
           className="text-input-md text-input"
           contentEditable={true}
           tabIndex={0}
           ref={textAreaRef}
           placeholder={placeholder}
-          onChange={handleTextAreaChange}
-          >{messages[index]?.content || ""}</div>
+          suppressContentEditableWarning={true}
+          onInput={handleTextAreaChange}
+        >
+          {message || ""}
+        </div>
       </div>
       <RemoveMessage index={index} />
     </div>
