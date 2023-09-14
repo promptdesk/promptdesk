@@ -65,7 +65,6 @@ export default function Home() {
     setPrompt(id);
     setActiveTabById(id);
     setModelById(promptObject.id as string);
-    //console.log("promptObject.id", promptObject.id)
   }, [query.id]);
 
   const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
@@ -140,10 +139,9 @@ export default function Home() {
                     )}
                     aria-current={tab.current ? 'page' : undefined}
                     onClick={() => {
-                      //setActiveTab(tab.name);
-                      router.push(`/prompt/${tab.prompt_id}`);
-                      //changeIdInUrl(tab.prompt_id);
-                      //setPrompt(tab.prompt_id);
+                      setActiveTab(tab.name);
+                      changeIdInUrl(tab.prompt_id);
+                      setPrompt(tab.prompt_id);
                     }}
                   >
                     <span style={{
@@ -180,7 +178,6 @@ export default function Home() {
                 {show_modal && <Modal />}
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
-                {JSON.stringify(prompts)}
                   <div className="pg-content-body">
                     {modelObject.type === "chat" ? (
                       <ChatEditor />

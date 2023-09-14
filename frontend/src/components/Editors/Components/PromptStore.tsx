@@ -130,7 +130,7 @@ const promptStore = create<PromptStore>((set, get) => ({
             return;
         }
         const newPrompt: Prompt = {
-            ...JSON.parse(JSON.stringify(defaultPrompt)),
+            ...defaultPrompt,
             name: new Date().toLocaleString(),
             id: Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10),
             model: defaultModel.id
@@ -172,10 +172,8 @@ const promptStore = create<PromptStore>((set, get) => ({
     editMessageAtIndex: (index: number, newValue: string) => {
         set((state) => {
             const promptObject = { ...state.promptObject };
-            console.log("promptObject --", promptObject.id)
+            console.log("promptObject", promptObject.id)
             promptObject.prompt_data.messages[index].content = newValue;
-            
-            promptStore.setState({ promptObject });
             return { promptObject };
         });
     },
@@ -257,7 +255,6 @@ const promptStore = create<PromptStore>((set, get) => ({
 
     createNewPrompt: async () => {
         const prompt = get().promptObject;
-        prompt.new = undefined;
         const response = await fetch('http://localhost:4000/api/prompt', {
             method: 'POST',
             headers: {

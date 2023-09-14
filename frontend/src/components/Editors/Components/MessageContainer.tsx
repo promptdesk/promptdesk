@@ -19,11 +19,11 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
   const { role: defaultRole } = messages?.[index] || { role: "user" };
   const article = defaultRole.charAt(0).toLowerCase() === "u" ? "an" : "a";
 
-  const [message, setMessage] = React.useState(messages[index]?.content || "");
+  const [message, setMessage] = React.useState(promptObject?.prompt_data?.messages[index]?.content || "");
 
   useEffect(() => {
-    setMessage(messages[index]?.content || "");
-  })
+    setMessage(promptObject?.prompt_data?.messages[index]?.content || "");
+  }, [promptObject.id]);
 
   const processVariables = React.useMemo(() => (inputValue: string) => {
     try {
@@ -36,13 +36,13 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
       }, {});
 
       setPromptVariables(newPromptVariableData);
-      //console.log(newPromptVariableData);
     } catch (e) {
       // Ignore handlebars parsing errors
     }
   }, [promptObject.prompt_variables, setPromptVariables]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLDivElement>) => {
+    console.log("promptObject.id", promptObject.id)
     editMessageAtIndex(index, e.target.textContent || "");
     processVariables(`${promptObject.prompt_data.context} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
