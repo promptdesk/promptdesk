@@ -95,6 +95,7 @@ export default function Home() {
           setActiveTabById(tabs[nextTabIndex].prompt_id);
         }
         setPrompt(tabs[nextTabIndex].prompt_id);
+        changeIdInUrl(tabs[nextTabIndex].prompt_id);
       }
 
       removeTab(id);
