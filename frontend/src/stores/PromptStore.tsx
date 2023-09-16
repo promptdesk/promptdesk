@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { modelStore, Model } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/general';
 import router from 'next/router';
+import Handlebars from 'handlebars';
 
 import { Prompt } from "@/interfaces/prompt"
 
@@ -30,6 +31,7 @@ interface PromptStore {
     updatePromptObjectInPrompts: (promptObject: Prompt) => void;
     setPromptVariables: (variables: any) => void;
     setSelectedVariable: (variable: string) => void;
+    processVariables: (inputValue: string) => void;
 }
 
 const defaultPrompt: Prompt = {
@@ -81,9 +83,8 @@ const promptStore = create<PromptStore>((set, get) => ({
         if (!inputValue) {
             return;
         }
-        set((state) => {
-            try {
-
+        try {
+            set((state) => {
                 const ast = Handlebars.parse(inputValue);
                 const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
                 const promptObject = { ...state.promptObject };
@@ -96,11 +97,10 @@ const promptStore = create<PromptStore>((set, get) => ({
                 //setPromptVariables with newPromptVariableData
                 promptObject.prompt_variables = newPromptVariableData;
                 return { promptObject };
-                
-            } catch (e) {
-                // Ignore handlebars parsing errors
-            }
-        })
+            })
+        } catch (error) {
+            //ignore errors
+        }
     },
 
 

@@ -31,7 +31,7 @@ export default function About() {
         };
 
         fetchData();
-    }, []);
+    }, [fetchAllModels]);
 
     return (
         <div className="flex flex-row">

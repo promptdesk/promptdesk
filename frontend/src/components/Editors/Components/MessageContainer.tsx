@@ -10,7 +10,7 @@ interface MessageContainerProps {
 }
 
 const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
-  const { promptObject, editMessageAtIndex, toggleRoleAtIndex, setPromptVariables } = promptStore();
+  const { promptObject, editMessageAtIndex, toggleRoleAtIndex, setPromptVariables, processVariables } = promptStore();
   const { modelObject } = modelStore();
 
   const textAreaRef = useRef<HTMLDivElement | null>(null);
@@ -23,23 +23,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
 
   useEffect(() => {
     setMessage(promptObject?.prompt_data?.messages[index]?.content || "");
-  }, [promptObject.id]);
-
-  const processVariables = React.useMemo(() => (inputValue: string) => {
-    try {
-      const ast = Handlebars.parse(inputValue);
-      const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
-
-      const newPromptVariableData = variables.reduce((acc, variable) => {
-        acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
-        return acc;
-      }, {});
-
-      setPromptVariables(newPromptVariableData);
-    } catch (e) {
-      // Ignore handlebars parsing errors
-    }
-  }, [promptObject.prompt_variables, setPromptVariables]);
+  }, [promptObject.id, promptObject?.prompt_data?.messages, index]);
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLDivElement>) => {
     console.log("promptObject.id", promptObject.id)

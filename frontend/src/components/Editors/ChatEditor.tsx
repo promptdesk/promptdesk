@@ -5,27 +5,9 @@ import MessageContainer from './Components/MessageContainer';
 import EditorFooter from './Components/EditorFooter';
 import Variables from '@/components/Editors/Variables';
 import { promptStore } from '@/stores/PromptStore';
-import Handlebars from 'handlebars';
 
 function Editor() {
-  const { promptObject, setPromptInformation, setPromptVariables } = promptStore();
-  const [promptVariableData, setPromptVariableData] = useState(promptObject.prompt_variables || {});
-
-  const processVariables = React.useMemo(() => (inputValue: string) => {
-    try {
-      const ast = Handlebars.parse(inputValue);
-      const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
-
-      const newPromptVariableData = variables.reduce((acc, variable) => {
-        acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
-        return acc;
-      }, {});
-
-      setPromptVariables(newPromptVariableData);
-    } catch (e) {
-      // Ignore handlebars parsing errors
-    }
-  }, [promptObject.prompt_variables, setPromptVariables]);
+  const { promptObject, setPromptInformation, setPromptVariables, processVariables } = promptStore();
 
   const handleSystemInput = (e:any) => {
     const systemInput = e.target.value;
@@ -37,7 +19,7 @@ function Editor() {
     const context = promptObject?.prompt_data.context || '';
     const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
     processVariables(`${context} ${messages}`);
-  }, [promptObject?.name]);
+  }, [promptObject?.name, promptObject?.prompt_data?.messages.length, processVariables, promptObject?.prompt_data.context, promptObject?.prompt_data.messages]);
 
   return (
     <div className="flex flex-col">
@@ -62,7 +44,7 @@ function Editor() {
           <div className="chat-pg-panel-wrapper">
             <div className="chat-pg-exchange-container">
               <div className="chat-pg-exchange">
-                {promptObject.prompt_data.messages?.map((_, index) => (
+                {promptObject.prompt_data.messages?.map((_: any, index: any) => (
                   <MessageContainer key={index} index={index} />
                 ))}
                 <AddMessage />

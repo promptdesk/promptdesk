@@ -91,8 +91,8 @@
             "top_p": 0
           }
         },
-        "format_function": "(function(prompt_data, prompt_parameters) { const formattedParameters = {}; for (const key in prompt_parameters) { const value = prompt_parameters[key]; const parsedValue = parseFloat(value); if (!isNaN(parsedValue)) { if (Number.isInteger(parsedValue)) { formattedParameters[key] = parseInt(parsedValue); } else { formattedParameters[key] = parsedValue; } } else { formattedParameters[key] = value; } } const output = { model: 'gpt-3.5-turbo', messages: [ ...(prompt_data.context ? [{ role: 'system', content: prompt_data.context }] : []), ...(prompt_data.messages.filter(message => message.role !== 'system')) ], ...formattedParameters }; return output; })",
-        "post_format_function": "(function(data) { if (data && data.choices && data.choices.length > 0) { var message = data.choices[0].message; return message} return ''; })",
+        "input_format": "(function(prompt_data, prompt_parameters) { const formattedParameters = {}; for (const key in prompt_parameters) { const value = prompt_parameters[key]; const parsedValue = parseFloat(value); if (!isNaN(parsedValue)) { if (Number.isInteger(parsedValue)) { formattedParameters[key] = parseInt(parsedValue); } else { formattedParameters[key] = parsedValue; } } else { formattedParameters[key] = value; } } const output = { model: 'gpt-3.5-turbo', messages: [ ...(prompt_data.context ? [{ role: 'system', content: prompt_data.context }] : []), ...(prompt_data.messages.filter(message => message.role !== 'system')) ], ...formattedParameters }; return output; })",
+        "output_format": "(function(data) { if (data && data.choices && data.choices.length > 0) { var message = data.choices[0].message; return message} return ''; })",
         "id": "0x9c5985109263f22eb6b0c150f02ab1e3",
         "default": true
       }

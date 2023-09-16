@@ -8,8 +8,8 @@ export interface Model {
   type: string;
   roles: string;
   api_call: any;
-  format_function: string;
-  post_format_function: string;
+  input_format: string;
+  output_format: string;
   model_parameters: any;
   default: boolean;
 }

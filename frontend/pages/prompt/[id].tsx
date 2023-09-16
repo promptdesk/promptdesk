@@ -47,7 +47,7 @@ export default function Home() {
     prompts,
     addNewPrompt,
     updatePromptObjectInPrompts
-  } = promptStore();
+  } = promptStore() ?? {};
 
   const {
     modelListSelector,
@@ -65,7 +65,7 @@ export default function Home() {
     setPrompt(id);
     setActiveTabById(id);
     setModelById(promptObject.id as string);
-  }, [query.id]);
+  }, [query.id, promptObject.id, setActiveTabById, setModelById, setPrompt]);
 
   const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
@@ -105,14 +105,13 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
 
-    //check lentgh of tabs
     if(tabs.length === 0) {
       router.push('/prompts');
     }
 
-  }, [tabs]);
+  }, [tabs, router]);*/
 
   const newPrompt = async () => {
     const newId = await addNewPrompt();

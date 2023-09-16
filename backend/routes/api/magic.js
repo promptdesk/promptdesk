@@ -67,16 +67,16 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     var end = Date.now()
     var elapsed = end - start
 
-    if(!model.format_function){
+    if(!model.input_format){
         return res.status(404).json({ error: 'Model format function not found.' });
     }
 
-    if(!model.post_format_function){
+    if(!model.output_format){
         return res.status(404).json({ error: 'Model format function not found.' });
     }
 
-    var format_function = eval(model.format_function)
-    var post_format_function = eval(model.post_format_function)
+    var input_format = eval(model.input_format)
+    var output_format = eval(model.output_format)
 
     //console.log(prompt.prompt_variables)
 
@@ -102,14 +102,14 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     prompt_data = JSON.parse(prompt_data)
 
-    var body = format_function(prompt_data, prompt.prompt_parameters)
+    var body = input_format(prompt_data, prompt.prompt_parameters)
 
     api_call.data = body
 
     try {
         var response = await axios(api_call)
         var data = response.data
-        var data = post_format_function(response.data)
+        var data = output_format(response.data)
         return res.status(200).json({
             data: {
                 message: data,
