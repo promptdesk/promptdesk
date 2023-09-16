@@ -6,10 +6,9 @@ import prompt from '../../models/local/prompt.js';
 import handlebars from 'handlebars';
 
 dotenv.config();
-const environment_variables = dotenv.config()['parsed']
+const environment_variables = dotenv.config({path:'../.env'})['parsed']
 
 const router = express.Router();
-
 
 var model_db = new model();
 var prompt_db = new prompt();

@@ -6,17 +6,16 @@ import modelsRouter from './routes/api/models.js';
 import promptsRouter from './routes/api/prompts.js';
 import magicRouter from './routes/api/magic.js';
 
-dotenv.config();
+dotenv.config({path:'../.env'})
+console.log(process.env)
 const app = express();
-
-//console.log(dotenv.config()['parsed'])
 
 // Middleware
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // Port configuration
-const port = process.env.PORT || 4000;
+const port = process.env.PROMPT_SERVER_PORT || 4000;
 
 // Root Router
 app.get('/', (req, res) => {
@@ -27,6 +26,8 @@ app.get('/', (req, res) => {
 app.use('/api', modelsRouter);
 app.use('/api', magicRouter);
 app.use('/api', promptsRouter);
+
+//route all routes to 
 
 // Start the server
 app.listen(port, () => {
