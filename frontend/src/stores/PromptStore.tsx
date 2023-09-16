@@ -4,6 +4,8 @@ import { modelStore, Model } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/general';
 import router from 'next/router';
 
+import { Prompt } from "@/interfaces/prompt"
+
 interface PromptStore {
     promptObject: Prompt;
     prompts: Array<Prompt>;
@@ -24,22 +26,10 @@ interface PromptStore {
     editMessageAtIndex: (index: number, message: string) => void;
     toggleRoleAtIndex: (index: number, roles: string[]) => void;
     removeAtIndex: (index: number) => void;
-    addNewPrompt: () => string;
+    addNewPrompt: () => string | undefined;
     updatePromptObjectInPrompts: (promptObject: Prompt) => void;
     setPromptVariables: (variables: any) => void;
     setSelectedVariable: (variable: string) => void;
-}
-
-interface Prompt {
-    id: string;
-    name: string;
-    description: string;
-    model: string;
-    prompt_variables: any;
-    prompt_parameters: any;
-    prompt_data: any;
-    new: boolean | undefined;
-    model_type: string | undefined;
 }
 
 const defaultPrompt: Prompt = {
@@ -61,7 +51,8 @@ const defaultPrompt: Prompt = {
 }
 
 const promptStore = create<PromptStore>((set, get) => ({
-    promptObject: defaultPrompt,
+    defaultPrompt,
+    promptObject: JSON.parse(JSON.stringify(defaultPrompt)),
     prompts: [],
     isPromptLoading: false,
     generatedText: undefined,
@@ -86,6 +77,33 @@ const promptStore = create<PromptStore>((set, get) => ({
         set({ selectedVariable: variable });
     },
 
+    processVariables: (inputValue: string) => {
+        if (!inputValue) {
+            return;
+        }
+        set((state) => {
+            try {
+
+                const ast = Handlebars.parse(inputValue);
+                const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
+                const promptObject = { ...state.promptObject };
+
+                const newPromptVariableData = variables.reduce((acc, variable) => {
+                acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
+                return acc;
+                }, {});
+                
+                //setPromptVariables with newPromptVariableData
+                promptObject.prompt_variables = newPromptVariableData;
+                return { promptObject };
+                
+            } catch (e) {
+                // Ignore handlebars parsing errors
+            }
+        })
+    },
+
+
     setPromptInformation: (key: any, value: any) => {
         set((state) => {
             const promptObject = { ...state.promptObject };
@@ -96,7 +114,7 @@ const promptStore = create<PromptStore>((set, get) => ({
                 const promptDataKey = key.split(".")[1];
                 promptObject.prompt_data[promptDataKey] = value;
             } else {
-                promptObject[key] = value;
+                (promptObject as any)[key] = value;
             }
             return { promptObject };
         });
@@ -124,7 +142,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
     },
 
-    addNewPrompt: async () => {
+    addNewPrompt: () => {
         const defaultModel = modelStore.getState().models.find((model) => model.default);
         if (!defaultModel) {
             return;
@@ -312,6 +330,9 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
         const data = await response.json();
         const newPrompt = dbPrompts.find((prompt) => prompt.id === data.id);
+        if (!newPrompt) {
+            return;
+        }
         set((state) => {
             const prompts = [...state.prompts, newPrompt];
             return { prompts };

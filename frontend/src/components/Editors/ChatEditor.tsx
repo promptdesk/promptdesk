@@ -11,21 +11,21 @@ function Editor() {
   const { promptObject, setPromptInformation, setPromptVariables } = promptStore();
   const [promptVariableData, setPromptVariableData] = useState(promptObject.prompt_variables || {});
 
-  const processVariables = (inputValue:string) => {
+  const processVariables = React.useMemo(() => (inputValue: string) => {
     try {
       const ast = Handlebars.parse(inputValue);
-      const variables = [...new Set(ast.body.filter(node => node.path).map(node => node.path.original))];
+      const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
+
       const newPromptVariableData = variables.reduce((acc, variable) => {
-        acc[variable] = promptVariableData[variable] || { type: 'text', value: '' };
+        acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
         return acc;
       }, {});
-      setPromptVariableData(newPromptVariableData);
+
       setPromptVariables(newPromptVariableData);
-      //console.log(newPromptVariableData);
     } catch (e) {
-      console.error(e); // Handle the error appropriately
+      // Ignore handlebars parsing errors
     }
-  };
+  }, [promptObject.prompt_variables, setPromptVariables]);
 
   const handleSystemInput = (e:any) => {
     const systemInput = e.target.value;

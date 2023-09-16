@@ -28,7 +28,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
   const processVariables = React.useMemo(() => (inputValue: string) => {
     try {
       const ast = Handlebars.parse(inputValue);
-      const variables = [...new Set(ast.body.filter(node => node.path).map(node => node.path.original))];
+      const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
 
       const newPromptVariableData = variables.reduce((acc, variable) => {
         acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };

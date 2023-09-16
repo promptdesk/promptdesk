@@ -45,7 +45,8 @@ export default function Home() {
     setPromptInformation,
     promptObject,
     prompts,
-    addNewPrompt
+    addNewPrompt,
+    updatePromptObjectInPrompts
   } = promptStore();
 
   const {
@@ -60,7 +61,6 @@ export default function Home() {
   const { query } = router; // Using destructuring here
 
   useEffect(() => {
-    //console.log("useEffect called");
     const id = query.id as string; // Using id from the query object
     setPrompt(id);
     setActiveTabById(id);
@@ -116,7 +116,7 @@ export default function Home() {
 
   const newPrompt = async () => {
     const newId = await addNewPrompt();
-    setActiveTabById(newId);
+    setActiveTabById(newId as string);
     router.push(`/prompt/${newId}`);
   };
 
@@ -139,9 +139,8 @@ export default function Home() {
                     )}
                     aria-current={tab.current ? 'page' : undefined}
                     onClick={() => {
-                      setActiveTab(tab.name);
-                      changeIdInUrl(tab.prompt_id);
-                      setPrompt(tab.prompt_id);
+                      updatePromptObjectInPrompts(promptObject);
+                      router.push(`/prompt/${tab.prompt_id}`);
                     }}
                   >
                     <span style={{
@@ -164,6 +163,7 @@ export default function Home() {
                     )}
                     style={{display: "inline-block", borderRadius: "10px 10px 0px 0px"}}
                     onClick={() => {
+                      updatePromptObjectInPrompts(promptObject);
                       newPrompt();
                     }}
                   >
