@@ -24,6 +24,8 @@ export interface PromptWorkspaceTabs {
   setActiveTab: (tab: string) => void;
   setActiveTabById: (id: string) => void;
   updateNameById: (id: string, new_id:string, name: string) => void;
+  saveTabsToLocalStorage: () => void;
+  retreiveTabsFromLocalStorage: () => void;
 }
 
 
@@ -41,6 +43,28 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
     prompt_id: "0j0f9j0wjf0j",
     current: false
   }*/],
+  saveTabsToLocalStorage: () => {
+    localStorage.setItem("tabs", JSON.stringify(promptWorkspaceTabs.getState().tabs));
+  },
+
+  retreiveTabsFromLocalStorage: () => {
+    var tabs = localStorage.getItem("tabs");
+    if (tabs !== null) {
+      var tabs_array = JSON.parse(tabs);
+      set((state: { tabs: Array<{ name: string; prompt_id: string; current: boolean; }>; }) => ({
+        tabs: tabs_array
+      }))
+    }
+  },
+
+  deactivateAllTabs: () => {
+    set((state: { tabs: Array<{ name: string; prompt_id: string; current: boolean; }>; }) => ({
+      tabs: state.tabs.map((t) => {
+        return { ...t, current: false }
+      })
+    }))
+  },
+
   addTab: (tab: string, prompt_id: string, current: boolean) => {
 
     set((state: { tabs: Array<{ name: string; prompt_id: string; current:boolean }>; }) => ({
@@ -53,12 +77,19 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
 
     promptWorkspaceTabs.getState().setActiveTabById(prompt_id);
 
+    //save
+    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+
   },
   removeTab: (id: string) => {
     //find index of id in tabs
     set((state: { tabs: Array<{ name: string; prompt_id: string; current: boolean }>; }) => ({
       tabs: state.tabs.filter((t) => t.prompt_id !== id)
     }))
+
+    //save
+    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+
   },
   setActiveTabById: (id: string) => {
 
@@ -91,6 +122,9 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
       })
     }))
 
+    //save
+    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+
   },
   setActiveTab: (tab: string) => {
     set((state: { tabs: Array<{ name: string; prompt_id: string; current: boolean; }>; }) => ({
@@ -102,6 +136,10 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
         }
       })
     }))
+
+    //save
+    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+
   },
   updateNameById: (id: string, new_id: string, name: string) => {
     set((state: { tabs: Array<{ name: string; prompt_id: string; current: boolean; }>; }) => ({
@@ -113,6 +151,10 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
         }
       })
     }))
+
+    //save
+    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+
   }
 }))
 
