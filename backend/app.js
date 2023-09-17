@@ -7,7 +7,6 @@ import promptsRouter from './routes/api/prompts.js';
 import magicRouter from './routes/api/magic.js';
 
 dotenv.config({path:'../.env'})
-console.log(process.env)
 const app = express();
 
 // Middleware

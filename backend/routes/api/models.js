@@ -1,5 +1,5 @@
 import express from 'express';
-import Model from '../../models/local/model.js';
+import { Model } from '../../models/allModels.js';
 
 const router = express.Router();
 const model_db = new Model();

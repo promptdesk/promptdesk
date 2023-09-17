@@ -16,6 +16,8 @@ import {
 } from "@/stores/general";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
+import ErrorPage from 'next/error'
+
 
 export default function Home() {
   const { push } = useRouter();
@@ -171,6 +173,9 @@ export default function Home() {
               </nav>
             </div>
           </div>
+          {(!promptObject.id) && (
+            <ErrorPage statusCode={404} />
+          )}
           {promptObject.id && promptObject.id !== "" && (
           <div className="pg-body">
                 {/*show && <History />*/}
