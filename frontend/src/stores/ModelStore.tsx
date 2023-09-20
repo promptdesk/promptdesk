@@ -1,18 +1,7 @@
 /* Refactored on September 4th 2023 */
 import { create } from 'zustand'
 import { promptStore } from '@/stores/PromptStore';
-
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  roles: string;
-  api_call: any;
-  input_format: string;
-  output_format: string;
-  model_parameters: any;
-  default: boolean;
-}
+import { Model } from '@/interfaces/model';
 
 interface ModelStore {
   modelListSelector: { id: any; name: any; }[];
@@ -35,6 +24,7 @@ const modelStore = create<ModelStore>((set) => ({
     try {
       const response = await fetch('http://localhost:4000/api/models');
       const models = await response.json();
+      console.log("FETCH", models)
       set({ models });
       const dropdownModelList = models.map((model: Model) => ({
         id: model.id,
@@ -108,6 +98,8 @@ const modelStore = create<ModelStore>((set) => ({
         },
         body: JSON.stringify(model)
       });
+      //call fetchAllModels
+      const updatedModels = await modelStore.getState().fetchAllModels();
     } catch (error) {
       console.error('Error:', error);
     }

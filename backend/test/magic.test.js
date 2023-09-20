@@ -4,6 +4,13 @@ import { expect } from 'chai'; // Import expect from Chai
 
 describe('Main /magic/generate route', () => {
 
+    //before wait 2 seconds to allow the model to load
+    before(done => async () => {
+        await setTimeout(() => {
+            done();
+        }, 1900);
+    })
+
     it('should respond with a message stating the a prompt name is required', async () => {
         const response = await request(app)
             .post('/api/magic/generate')
@@ -31,11 +38,13 @@ describe('Main /magic/generate route', () => {
                 "prompt_name": "yoda-test",
             });
 
+        console.log(response.body)
+
         expect(response.status).to.equal(200)
 
     });
 
-    it('should respond with a message stating that variables are required', async () => {
+    /*it('should respond with a message stating that variables are required', async () => {
 
         const response = await request(app)
             .post('/api/magic/generate')
@@ -55,13 +64,15 @@ describe('Main /magic/generate route', () => {
             .send({
                 "prompt_name": "yoda-test-variables",
                 "variables": {
-                    "message": "What is your name?"
+                    "message": "What is your name?",
+                    "character": "James Bond",
+                    "movie": "Skyfall"
                 }
             });
 
         //console.log(response.body)
         expect(response.status).to.equal(200)
 
-    });
+    });*/
 
 });

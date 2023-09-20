@@ -1,8 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import model from '../../models/local/model.js';
-import prompt from '../../models/local/prompt.js';
+import { Prompt, Model, Log } from '../../models/allModels.js';
 import handlebars from 'handlebars';
 
 dotenv.config();
@@ -10,8 +9,9 @@ const environment_variables = dotenv.config({path:'../.env'})['parsed']
 
 const router = express.Router();
 
-var model_db = new model();
-var prompt_db = new prompt();
+var model_db = new Model();
+var prompt_db = new Prompt();
+var log_db = new Log();
 
 function variable_object(prompt_variables) {
 
@@ -46,7 +46,11 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     var model_id = prompt.model
 
-    const model = model_db.findModel(model_id);
+    console.log(model_id)
+
+    const model = await model_db.findModel(model_id);
+
+    console.log(model)
 
     if(!model){
         return res.status(404).json({ error: 'Model not found.' });
@@ -87,8 +91,6 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     //validate variables
     for (var key in prompt.prompt_variables) {
-        //check if key exists in prompt.prompt_variables
-        //console.log(key)
         if (!variables[key]) {
             return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.' });
         }
@@ -110,25 +112,33 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
         var response = await axios(api_call)
         var data = response.data
         var data = output_format(response.data)
-        return res.status(200).json({
+        var obj = {
             data: {
                 message: data,
-                //trimmed_text: data.trim(),
-                error: undefined,
+                error: false,
                 raw_response: response.data,
-                raw_request: body
+                raw_request: body,
+                status: 200,
+                model_id: model_id,
+                prompt_id: prompt.id
             }
-        });
+        }
+        log_db.createLog(obj.data)
+        return res.status(200).json(obj);
     } catch (error) {
-        return res.status(error.response.status).json({
+        var obj = {
             data: {
                 message: undefined,
-                error: "3rd party API error.",
-                //trimmed_text: data.trim(),
+                error: true,
                 raw_response: error.response.data,
-                raw_request: body
+                raw_request: body,
+                status: error.response.status,
+                model_id: model_id,
+                prompt_id: prompt.id
             }
-        });
+        }
+        log_db.createLog(obj.data)
+        return res.status(error.response.status).json(obj);
     }
 
 });

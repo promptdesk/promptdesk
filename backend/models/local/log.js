@@ -2,7 +2,6 @@ import db from './db.js';
 import { randomBytes } from 'crypto';
 
 class Model {
-
     generateRandomId() {
         return randomBytes(8).toString('hex');
     }

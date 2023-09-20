@@ -22,6 +22,9 @@ function Navigation() {
             <Link className="nav-item" href="/models">
                 Models
             </Link>
+            <Link className="nav-item" href="/logs">
+                Logs
+            </Link>
             {/*<a className="nav-item" href="/docs/api-reference">
                 API reference
             </a>

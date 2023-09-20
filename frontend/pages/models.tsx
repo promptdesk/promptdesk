@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { modelStore, Model } from "@/stores/ModelStore";
+import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
+import { Model } from "@/interfaces/model";
 
 export default function About() {
     // Destructure modelStore methods and state
@@ -25,7 +26,6 @@ export default function About() {
         const fetchData = async () => {
             const fetchedModels = await fetchAllModels();
             const defaultModel = fetchedModels[0] || { name: "" };
-
             setSelectedModel(defaultModel);
             setModifiedModel(JSON.stringify(defaultModel, null, 2));
         };
@@ -75,11 +75,23 @@ export default function About() {
                         />
                         <PlaygroundButton
                             text="Delete"
-                            onClick={() => {
-                                const modelToDelete = isValidJSON
-                                    ? JSON.parse(modifiedModel)
-                                    : selectedModel as Model;
-                                deleteModel(modelToDelete);
+                            onClick={async () => {
+
+                                //find index of selectedModel
+                                const index = models.findIndex((model) => model.id === selectedModel.id);
+
+                                const modelToDelete = selectedModel as Model;
+                                await deleteModel(modelToDelete);
+
+                                //set selectedModel to the next model in the list if it exists
+                                if (index < models.length - 1) {
+                                    setSelectedModel(models[index + 1]);
+                                } else if (index > 0) {
+                                    setSelectedModel(models[index - 1]);
+                                } else {
+                                    setSelectedModel({ name: "", id: "" });
+                                }
+                                
                             }}
                         />
                     </div>

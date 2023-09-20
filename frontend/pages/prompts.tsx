@@ -19,6 +19,7 @@ export default function About() {
     const fetchPrompts = async () => {
       const promptList = await Promise.all(
         JSON.parse(JSON.stringify(prompts)).map(async (prompt:Prompt) => {
+          console.log("models", models)
           const model = models.find((model) => model.id === prompt.model);
           if (model) {
             prompt.model = model.name;
