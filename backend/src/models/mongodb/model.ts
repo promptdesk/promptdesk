@@ -22,25 +22,26 @@ const modelSchema = mongoose.model(
   )
 );
 
-export default class Model {
-  async createModel(modelData) {
+class Model {
+  
+  async createModel(modelData:any) {
     const model = new modelSchema(modelData);
     await model.save();
     return model._id.toString();
   }
 
-  async findModel(id) {
+  async findModel(id:any) {
     console.log("id", id)
     const model = await modelSchema.findById(id);
     return model ? this.transformModel(model) : null;
   }
 
-  async updateModelById(updatedModel) {
+  async updateModelById(updatedModel:any) {
     const { id, ...modelData } = updatedModel;
     await modelSchema.findByIdAndUpdate(id, modelData);
   }
 
-  async deleteModel(id) {
+  async deleteModel(id:any) {
     await modelSchema.findByIdAndDelete(id);
     return id;
   }
@@ -54,10 +55,12 @@ export default class Model {
     return models.map(this.transformModel);
   }
 
-  transformModel(model) {
+  transformModel(model:any) {
     const transformedModel = model.toObject();
     transformedModel.id = transformedModel._id.toString();
     delete transformedModel._id;
     return transformedModel;
   }
 }
+
+export { Model }

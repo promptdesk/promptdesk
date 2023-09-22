@@ -1,15 +1,15 @@
-import express from 'express';
-import { Log } from '../../models/allModels.js';
+import express, { Request, Response } from 'express';
+import { Log } from '../../models/allModels';
 
 const router = express.Router();
 const log_db = new Log();
 
-router.get('/logs', async (req, res) => {
-  const page = req.query.page || 1;
-  const limit = req.query.limit || 10;
+router.get('/logs', async (req: Request, res: Response) => {
+  const page: number = parseInt(req.query.page as string) || 1;
+  const limit: number = parseInt(req.query.limit as string) || 10;
 
   try {
-    console.log(req.query)
+    console.log(req.query);
     const logs = await log_db.getLogs(page, limit);
     res.status(200).json(logs);
   } catch (error) {
@@ -18,7 +18,7 @@ router.get('/logs', async (req, res) => {
   }
 });
 
-router.post('/logs', async (req, res) => {
+router.post('/logs', async (req: Request, res: Response) => {
   const logData = req.body;
 
   try {
@@ -30,8 +30,8 @@ router.post('/logs', async (req, res) => {
   }
 });
 
-router.get('/logs/:id', async (req, res) => {
-  const logId = req.params.id;
+router.get('/logs/:id', async (req: Request, res: Response) => {
+  const logId: string = req.params.id;
 
   try {
     const logJson = await log_db.findLog(logId);

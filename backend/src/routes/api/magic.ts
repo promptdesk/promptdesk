@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { Prompt, Model, Log } from '../../models/allModels.js';
+import { Model, Prompt, Log } from '../../models/allModels';
 import handlebars from 'handlebars';
 
 dotenv.config();
@@ -13,11 +13,11 @@ var model_db = new Model();
 var prompt_db = new Prompt();
 var log_db = new Log();
 
-function variable_object(prompt_variables) {
+function variable_object(prompt_variables:any) {
 
     var variables = {}
     for (var key in prompt_variables) {
-        variables[key] = prompt_variables[key]['value']
+        (variables as any)[key] = prompt_variables[key]['value']
     }
 
     return variables
@@ -62,7 +62,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     var start = Date.now()
 
-    var api_call = JSON.stringify(model.api_call)
+    var api_call = JSON.stringify(model.api_call) as any;
     var template = handlebars.compile(api_call);
     api_call = template(environment_variables);
 
@@ -122,10 +122,10 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 model_id: model_id,
                 prompt_id: prompt.id
             }
-        }
+        } as any;
         log_db.createLog(obj.data)
         return res.status(200).json(obj);
-    } catch (error) {
+    } catch (error:any) {
         var obj = {
             data: {
                 message: undefined,
@@ -136,7 +136,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 model_id: model_id,
                 prompt_id: prompt.id
             }
-        }
+        } as any;
         log_db.createLog(obj.data)
         return res.status(error.response.status).json(obj);
     }

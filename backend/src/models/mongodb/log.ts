@@ -17,19 +17,19 @@ const logSchema = mongoose.model(
   )
 );
 
-export default class Log {
-  async createLog(logData) {
+class Log {
+  async createLog(logData: any) {
     const log = new logSchema(logData);
     await log.save();
     return log._id.toString();
   }
 
-  async findLog(id) {
+  async findLog(id: any) {
     const log = await logSchema.findById(id);
     return log ? this.transformLog(log) : null;
   }
 
-  async getLogs(page, limit = 10) {
+  async getLogs(page:any, limit = 10) {
     const skip = (page - 1) * limit;
     const logs = await logSchema.find()
       .skip(skip)
@@ -38,10 +38,12 @@ export default class Log {
     return logs.map(this.transformLog);
   }
 
-  transformLog(log) {
+  transformLog(log:any) {
     const transformedLog = log.toObject();
     transformedLog.id = transformedLog._id.toString();
     delete transformedLog._id;
     return transformedLog;
   }
 }
+
+export { Log }

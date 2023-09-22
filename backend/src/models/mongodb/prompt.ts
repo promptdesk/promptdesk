@@ -15,29 +15,29 @@ const promptSchema = mongoose.model(
   })
 );
 
-export default class PromptModel {
-  async createPrompt(promptData) {
+class Prompt {
+  async createPrompt(promptData:any) {
     const prompt = new promptSchema(promptData);
     await prompt.save();
     return prompt._id.toString();
   }
 
-  async findPrompt(id) {
+  async findPrompt(id:any) {
     const prompt = await promptSchema.findById(id);
     return prompt ? this.transformPrompt(prompt) : null;
   }
 
-  async findPromptByName(name) {
+  async findPromptByName(name:any) {
     const prompt = await promptSchema.findOne({ name });
     return prompt ? this.transformPrompt(prompt) : null;
   }
 
-  async updatePromptById(updatedPrompt) {
+  async updatePromptById(updatedPrompt:any) {
     const { id, ...promptData } = updatedPrompt;
     await promptSchema.findByIdAndUpdate(id, promptData);
   }
 
-  async deletePrompt(id) {
+  async deletePrompt(id:any) {
     await promptSchema.findByIdAndDelete(id);
     return id;
   }
@@ -51,10 +51,12 @@ export default class PromptModel {
     return prompts.map(this.transformPrompt);
   }
 
-  transformPrompt(prompt) {
+  transformPrompt(prompt:any) {
     const transformedPrompt = prompt.toObject();
     transformedPrompt.id = transformedPrompt._id.toString();
     delete transformedPrompt._id;
     return transformedPrompt;
   }
 }
+
+export { Prompt }
