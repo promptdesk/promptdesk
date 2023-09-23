@@ -5,9 +5,7 @@ const router = express.Router();
 const prompt_db = new Prompt();
 
 router.get('/prompts', async (req, res) => {
-  console.log(prompt_db)
   const promptList = await prompt_db.listPrompts();
-  console.log(promptList)
   res.status(200).json(promptList);
 });
 

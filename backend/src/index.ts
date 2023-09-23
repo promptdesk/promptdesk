@@ -12,6 +12,7 @@ import modelsRouter from './routes/api/models';
 import promptsRouter from './routes/api/prompts';
 import magicRouter from './routes/api/magic';
 import logsRouter from './routes/api/logs';
+import variablesRouter from './routes/api/variables';
 
 // Middleware
 app.use(cors());
@@ -33,6 +34,7 @@ app.use('/api', magicRouter);
 app.use('/api', promptsRouter);
 app.use('/api', logsRouter);
 app.use('/api', modelsRouter);
+app.use('/api', variablesRouter);
 
 app.listen(port, () => {
     console.log('INFO :: Webserver started on port ' + port)

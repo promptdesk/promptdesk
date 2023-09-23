@@ -46,11 +46,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     var model_id = prompt.model
 
-    console.log(model_id)
-
     const model = await model_db.findModel(model_id);
-
-    console.log(model)
 
     if(!model){
         return res.status(404).json({ error: 'Model not found.' });

@@ -1,10 +1,10 @@
 import request from 'supertest';
 import app from '../src/index'
 import { expect } from 'chai';
+import { describe, it } from 'mocha';
 
-
-describe('Express App Tests', () => {
-  it('should respond with "INFO :: Root route called" on GET /', (done) => {
+describe('Express App Server', () => {
+  it('should respond with pong on GET /', (done) => {
     request(app)
       .get('/ping')
       .expect(200)

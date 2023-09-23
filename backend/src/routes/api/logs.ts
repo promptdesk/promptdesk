@@ -9,7 +9,6 @@ router.get('/logs', async (req: Request, res: Response) => {
   const limit: number = parseInt(req.query.limit as string) || 10;
 
   try {
-    console.log(req.query);
     const logs = await log_db.getLogs(page, limit);
     res.status(200).json(logs);
   } catch (error) {

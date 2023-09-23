@@ -10,7 +10,6 @@ services:
       - backend
     volumes:
       - ./frontend:/app
-
   backend:
     build:
       context: ./backend

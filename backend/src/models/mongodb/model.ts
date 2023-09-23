@@ -31,7 +31,6 @@ class Model {
   }
 
   async findModel(id:any) {
-    console.log("id", id)
     const model = await modelSchema.findById(id);
     return model ? this.transformModel(model) : null;
   }
