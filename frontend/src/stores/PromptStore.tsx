@@ -1,6 +1,7 @@
 /* Refactored on September 4th 2023 */
 import { create } from 'zustand'
-import { modelStore, Model } from '@/stores/ModelStore';
+import { modelStore } from '@/stores/ModelStore';
+import { Model } from '@/interfaces/model';
 import { promptWorkspaceTabs } from '@/stores/general';
 import router from 'next/router';
 import Handlebars from 'handlebars';

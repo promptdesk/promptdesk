@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import setup from './init/first_run_setup';
 
 dotenv.config({path:'../.env'})
 const app = express();
@@ -39,5 +40,7 @@ app.use('/api', variablesRouter);
 app.listen(port, () => {
     console.log('INFO :: Webserver started on port ' + port)
 });
+
+setup();
 
 export default app;

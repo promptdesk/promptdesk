@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-bullseye
 
 WORKDIR /app
 
@@ -9,8 +9,8 @@ RUN npm install
 #COPY . ./
 
 # Add the volume mapping
-VOLUME /app
+VOLUME /src
 
 EXPOSE 4000
 
-CMD ["npm","run" ,"start"]
+CMD ["npm", "run" ,"start"]

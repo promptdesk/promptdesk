@@ -13,8 +13,8 @@ describe('Mongodb tests', () => {
     before(async () => {
         initialCount = await model_db.countModels();
         model = { "name": "model_test" };
-        const response = await model_db.createModel(model);
-        model.id = response;
+        const model_id = await model_db.createModel(model);
+        model.id = model_id;
     });
 
     // Clean up after running tests

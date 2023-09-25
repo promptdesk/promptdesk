@@ -15,7 +15,7 @@ const variableSchema = mongoose.model(
 );
 
 class Variable {
-  async createVariable(data_list:any) {
+  async createVariables(data_list:any) {
     const prompt = new variableSchema({
       data: data_list
     });
@@ -39,8 +39,10 @@ class Variable {
       variables.data.forEach((element:any) => {
         delete element._id;
       });
+      return variables.data;
+    } else {
+      return []
     }
-    return variables;
   }
 
   async deleteVariables() {

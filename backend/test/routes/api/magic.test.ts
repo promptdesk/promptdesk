@@ -5,7 +5,7 @@ import { describe, it } from 'mocha';
 import axios from 'axios';
 
 var payload = {
-  "model": "6507d2b59df2cc0108a9ab1e",
+  "model": "65104c1435147b037f4a944a",
   "prompt_parameters": {
       "max_tokens": 700,
       "temperature": "0.26",
@@ -20,7 +20,7 @@ var payload = {
           }
       ]
   },
-  "id": "6507d3ddb7bf7679fb132df5"
+  "id": "65104c1435147b037f4a944c"
 }
 
 describe('Express App Server', async () => {

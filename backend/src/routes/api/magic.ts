@@ -31,9 +31,10 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     //check if prompt_name is provided
     if (req.body.prompt_name) {
-        prompt = prompt_db.findPromptByName(req.body.prompt_name);
+        prompt = await prompt_db.findPromptByName(req.body.prompt_name);
+        console.log(prompt)
         if (!prompt) {
-            return res.status(404).json({ error: 'Prompt name is required' });
+            return res.status(404).json({ error: 'Prompt name is required', status: 404 });
         }
         proxy = true;
     } else {
@@ -41,7 +42,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     }
 
     if(!prompt){
-        return res.status(404).json({ error: 'Prompt not found.' });
+        return res.status(404).json({ error: 'Prompt not found.', status: 404 });
     }
 
     var model_id = prompt.model
@@ -49,11 +50,11 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     const model = await model_db.findModel(model_id);
 
     if(!model){
-        return res.status(404).json({ error: 'Model not found.' });
+        return res.status(404).json({ error: 'Model not found.', status: 404 });
     }
     
     if(!model.api_call){
-        return res.status(404).json({ error: 'Model API not found.' });
+        return res.status(404).json({ error: 'Model API not found.', status: 404 });
     }
 
     var start = Date.now()
@@ -78,8 +79,6 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     var input_format = eval(model.input_format)
     var output_format = eval(model.output_format)
 
-    //console.log(prompt.prompt_variables)
-
     var variables = req.body.variables || {}
     if(!proxy){
         variables = variable_object(prompt.prompt_variables)
@@ -88,7 +87,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     //validate variables
     for (var key in prompt.prompt_variables) {
         if (!variables[key]) {
-            return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.' });
+            return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.', status: 400});
         }
     }
 

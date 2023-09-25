@@ -126,7 +126,7 @@ const modelStore = create<ModelStore>((set) => ({
   setModelByName: (name: string) => {
     const model = modelStore.getState().models.find((m) => m.name === name);
     set({ modelObject: model, selectedModeId: model?.id });
-    promptStore.setState((state) => ({
+    promptStore.setState((state:any) => ({
       promptObject: { ...state.promptObject, model: model?.id },
     }));
   }

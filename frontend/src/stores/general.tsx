@@ -13,7 +13,12 @@ export interface SnowShouldShowSaveModal {
 
 export interface shouldShowSaveVariableModal {
   show_variable_modal: boolean;
-  toggle_variable_modal: (variable_name:string) => void; // Corrected property name
+  toggle_variable_modal: (variable_name?: string) => void; // Corrected property name
+}
+
+export interface shouldShowEnvVariableModal {
+  show_env_variable_modal: boolean;
+  toggle_env_variable_modal: () => void; // Corrected property name
 }
 
 export interface PromptWorkspaceTabs {
@@ -174,14 +179,24 @@ const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
 
 const shouldShowSaveVariableModal = create<shouldShowSaveVariableModal>((set) => ({
   show_variable_modal: false,
-  toggle_variable_modal: (variableName: string) => {
+  toggle_variable_modal: (variableName: string | undefined) => {
     shouldShowSaveVariableModal.setState((state: { show_variable_modal: boolean; }) => ({
       show_variable_modal: !state.show_variable_modal
     }))
+    if(variableName !== undefined) {
+      promptStore.getState().setSelectedVariable(variableName)
+    }
+  },
+}));
 
-    promptStore.getState().setSelectedVariable(variableName)
+const shouldShowEnvVariableModal = create<shouldShowEnvVariableModal>((set) => ({
+  show_env_variable_modal: false,
+  toggle_env_variable_modal: () => {
+    shouldShowEnvVariableModal.setState((state: { show_env_variable_modal: boolean; }) => ({
+      show_env_variable_modal: !state.show_env_variable_modal
+    }))
   },
 }));
 
 //export both stores
-export { shouldShowSaveModal, showPromptHistory, promptWorkspaceTabs, shouldShowSaveVariableModal }
+export { shouldShowSaveModal, showPromptHistory, promptWorkspaceTabs, shouldShowSaveVariableModal, shouldShowEnvVariableModal }

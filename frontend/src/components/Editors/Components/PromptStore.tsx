@@ -1,7 +1,8 @@
 /* Refactored on September 4th 2023 */
 import { create } from 'zustand'
-import { modelStore, Model } from '@/stores/ModelStore';
+import { modelStore } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/general';
+import { Model } from '@/interfaces/model';
 import router from 'next/router';
 
 interface PromptStore {
@@ -24,7 +25,7 @@ interface PromptStore {
     editMessageAtIndex: (index: number, message: string) => void;
     toggleRoleAtIndex: (index: number, roles: string[]) => void;
     removeAtIndex: (index: number) => void;
-    addNewPrompt: () => string;
+    addNewPrompt: () => string | undefined;
     updatePromptObjectInPrompts: (promptObject: Prompt) => void;
     setPromptVariables: (variables: any) => void;
     setSelectedVariable: (variable: string) => void;
@@ -61,6 +62,7 @@ const defaultPrompt: Prompt = {
 }
 
 const promptStore = create<PromptStore>((set, get) => ({
+    defaultPrompt,
     promptObject: defaultPrompt,
     prompts: [],
     isPromptLoading: false,
@@ -96,7 +98,7 @@ const promptStore = create<PromptStore>((set, get) => ({
                 const promptDataKey = key.split(".")[1];
                 promptObject.prompt_data[promptDataKey] = value;
             } else {
-                promptObject[key] = value;
+                (promptObject as any)[key] = value;
             }
             return { promptObject };
         });
@@ -124,7 +126,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
     },
 
-    addNewPrompt: async () => {
+    addNewPrompt: () => {
         const defaultModel = modelStore.getState().models.find((model) => model.default);
         if (!defaultModel) {
             return;
@@ -309,12 +311,14 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
         const data = await response.json();
         const newPrompt = dbPrompts.find((prompt) => prompt.id === data.id);
-        set((state) => {
+        set((state:any) => {
             const prompts = [...state.prompts, newPrompt];
             return { prompts };
         });
         set({ promptObject: originPrompt });
-        promptWorkspaceTabs.getState().addTab(newPrompt.name, data.id, true);
+        if(newPrompt) {
+            
+        }
         router.push(`/prompt/${data.id}`);
     },
 

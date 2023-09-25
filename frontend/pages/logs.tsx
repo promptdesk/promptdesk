@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-
 import { logStore } from '@/stores/LogStore';
-
-import Link from 'next/link';
 
 export default function About() {
   const { push } = useRouter();
@@ -13,26 +10,61 @@ export default function About() {
   const initial_page = parseInt(location.search.replace('?page=', ''));
 
   const [page, setPage] = useState(initial_page || 1);
+  const [expandedRows, setExpandedRows] = useState({});
 
-  //set page in url
-  useEffect(() => {
-    push(`?page=${page}`);
-  }, [page]);
-
-  //get page from query ?page=1
   useEffect(() => {
     const page = parseInt(location.search.replace('?page=', ''));
-    if (page) {
-      console.log('page', page)
-      setPage(page);
-    }
-  }, []);
+    if (page) setPage(page);
+  }, [setPage]);
 
-  //fetch logs on load
   useEffect(() => {
-    console.log(page)
     fetchLogs(page);
-  }, []);
+  }, [fetchLogs, page]);
+
+  const handleRowClick = (logId:string) => {
+    setExpandedRows((prevExpandedRows) => ({
+      ...prevExpandedRows,
+      [logId]: !(prevExpandedRows as any)[logId],
+    }));
+  };
+
+  const handlePrevious = () => {
+    if (page > 1) push(`?page=${page - 1}`);
+    setPage(page - 1);
+    fetchLogs(page);
+  };
+
+  const handleNext = () => {
+    if (page) push(`?page=${page + 1}`);
+    setPage(page + 1);
+    fetchLogs(page);
+  };
+
+  const renderRow = (log:any) => (
+    <>
+      <tr key={log.id} onClick={() => handleRowClick(log.id)} className="cursor-pointer">
+        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+          {log.model_id}
+        </td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{log.prompt_id}</td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{(log.createdAt.toString())}</td>
+        <td
+          className={`whitespace-nowrap px-3 py-4 text-sm ${
+            log.status !== 200 ? 'bg-yellow-300' : '' // Add your yellow background class here
+          } text-gray-500`}
+        >
+          {log.status}
+        </td>
+      </tr>
+      {(expandedRows as any)[log.id] && (
+        <tr>
+          <td colSpan={4} className="p-4 bg-gray-100">
+            <pre>{JSON.stringify(log, null, 2)}</pre>
+          </td>
+        </tr>
+      )}
+    </>
+  );
 
   return (
     <div>
@@ -47,6 +79,7 @@ export default function About() {
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           </div>
         </div>
+
         <div className="mt-8 flow-root markdown-page markdown-content markdown-prompt-blockquote models">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -65,36 +98,37 @@ export default function About() {
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Status
                     </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Data
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {logs
-                    .map((log) => (
-                      <tr key={log.id}>
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                          {log.model_id}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{log.prompt_id}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{log.createdAt}</td>
-                        <td
-                          className={`whitespace-nowrap px-3 py-4 text-sm ${
-                            log.status !== 200 ? 'bg-yellow-300' : '' // Add your yellow background class here
-                          } text-gray-500`}
-                        >
-                          {log.status}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{prompt.model}</td>
-                      </tr>
-                    ))}
+                  {logs.map((log) => renderRow(log))}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
+        <nav className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
+          <div className="hidden sm:block">
+
+          </div>
+          <div className="flex flex-1 justify-between sm:justify-end">
+            <button
+              onClick={handlePrevious}
+              className={`relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${page === 1 && "opacity-50 cursor-not-allowed"}`}
+              disabled={page === 1}
+            >
+              Previous
+            </button>
+            <button
+              onClick={handleNext}
+              className={`relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0`}
+            >
+              Next
+            </button>
+          </div>
+        </nav>
+
     </div>
   );
 }

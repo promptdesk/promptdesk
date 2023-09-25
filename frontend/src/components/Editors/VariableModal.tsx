@@ -30,8 +30,6 @@ const Modal = () => {
 
   }
 
-
-
   const saveNewButtonData = [
     { label: "Okay", className: "btn-neutral", action: () => {
       toggle_variable_modal()
