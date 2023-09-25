@@ -1,113 +1,93 @@
 # PromptDesk
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Promptdesk is a tool designed for effectively creating, organizing, and evaluating prompts and large language models (LLMs).
+PromptDesk is a versatile tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
 
-# Run
-To initialize the project, run the following commands:
-```sh
-npm initialize.js
-```
+## Prerequisites
+Before you begin, ensure you have the following installed on your machine:
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-To run the project, run the following commands:
-```sh
-docker-compose build
-docker-compose up
-```
+## Installation
 
-# API Documentation
-## Python PIP
-```sh
-pip install promptdesk
-```
+1. **Clone the Repository**
+   
+   Open your terminal and run the following command to clone the PromptDesk repository:
 
-```py
-import promptdesk
+   ```bash
+   git clone git@github.com:promptdesk/promptdesk.git
+   ```
 
-promptdesk.endpoint = "https://example.com/api/magic/generate"
+2. **Navigate to the Project Directory**
+   
+   Change to the newly created `promptdesk` directory:
 
-promptdesk.generate("yoda-test-variables", {
-  "message": "What is your name?"
-})
-```
+   ```bash
+   cd promptdesk
+   ```
 
-## JavaScript NPM
-```sh
-npm install promptdesk
-```
+3. **Start the Service with Docker Compose**
+   
+   Run Docker Compose to start the PromptDesk service:
 
-```js
-import PromptDesk from 'promptdesk';
+   ```bash
+   docker-compose up -d
+   ```
 
-const promptdesk = new PromptDesk({
-  endpoint: "https://example.com/api/magic/generate",
-});
+   This command will download the necessary Docker images and start the services in detached mode.
 
-promptdesk.generate("yoda-test-variables", {
-  "message": "What is your name?"
-})
-```
+   After running the above commands, check the status of the Docker containers to ensure that they are up and running:
 
-## REST API
-To call a prompt, send a POST request to the following endpoint:
-### Python
-```py
-import requests
-import json
+   ```bash
+   docker ps
+   ```
 
-url = "https://example.com/api/magic/generate"
+## Start Building
 
-payload = json.dumps({
-  "prompt_name": "yoda-test-variables",
-  "variables": {
-    "message": "What is your name?"
-  }
-})
-headers = {
-  'Content-Type': 'application/json'
-}
+- Open a web browser and navigate to the application URL (e.g., `http://localhost:port`). The specific port number will be mentioned in the project documentation or Docker Compose file.
 
-response = requests.request("POST", url, headers=headers, data=payload)
+  ```bash
+  http://localhost:4000
+  ```
 
-print(response.text)
-```
+## Usage
 
-### JavaScript
-```js
-var request = require('request');
-var options = {
-  'method': 'POST',
-  'url': 'https://example.com/api/magic/generate',
-  'headers': {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    "prompt_name": "yoda-test-variables",
-    "variables": {
-      "message": "What is your name?"
-    }
-  })
+Once the application is running, you can start creating, organizing, and evaluating prompts and LLMs. Refer to the official [PromptDesk Documentation](https://promptdesk.ai/docs) for detailed instructions and examples.
 
-};
-request(options, function (error, response) {
-  if (error) throw new Error(error);
-  //console.log(response.body);
-});
-```
+## Troubleshooting
 
-# Requirements
-- Docker
-- NPM
+If you encounter any issues during installation or usage, please check the [Troubleshooting Guide](#) or [FAQs](#) section. For further assistance, feel free to [raise an issue](https://github.com/promptdesk/promptdesk/issues) on the GitHub repository.
 
-# Roadmap
-- [x] Implement prompt and model editors.
-- [x] Integrate support for .env prompt variables.
-- [x] Enable in-prompt variables.
-- [x] Allow multi-tab prompt editing.
-- [ ] Develop a REST API.
-- [ ] Create a Python API.
+## Contributing
+
+We welcome contributions to improve PromptDesk!
+
+## License
+
+PromptDesk is licensed under the [MIT License](#). For more information, please refer to the [LICENSE](#) file in the repository.
+
+## Contact
+
+For any queries or suggestions, please reach out to us at [feedback@promptdesk.ai](mailto:feedback@promptdesk.ai). This is a shared inbox. We will get back to you as soon as possible.
+
+## Thank you
+
+Thank you for your support! We hope you find it useful. If you like the project, please consider giving it a star on GitHub. This is a 100% free, open-source project.
+
+## Roadmap
+
+### To-Do
 - [ ] Build an NPM API.
 - [ ] Implement dataset testing capability.
 - [ ] Add support for bulk LLM (Language Model) requests.
 - [ ] Add prompt history/versioning.
 - [ ] Add GitHub prompt synchronization.
+
+### Complete
+- [x] Implement prompt and model editors.
+- [x] Integrate support for .env prompt variables.
+- [x] Enable in-prompt variables.
+- [x] Allow multi-tab prompt editing.
+- [X] Develop a REST API.
+- [X] Create a Python API.
