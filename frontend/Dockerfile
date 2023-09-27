@@ -4,13 +4,14 @@ WORKDIR /app
 
 COPY package.json ./
 
+#copy this directory to ./frontend
+COPY . .
+#copy ../shared to ./shared
+COPY ../shared ./shared
+
 RUN npm install
-
-#COPY . ./
-
-# Add the volume mapping
-VOLUME /app
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

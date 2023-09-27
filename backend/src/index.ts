@@ -4,7 +4,17 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import setup from './init/first_run_setup';
 
-dotenv.config({path:'../.env'})
+//get NODE_ENV variable
+var environment = process.env.NODE_ENV;
+
+if(environment == 'development') {
+  console.log("INFO :: DEVELOPMENT ENVIRONMENT")
+  dotenv.config({path:'../.env.development.local'})
+} else {
+  console.log("INFO :: PRODUCTION ENVIRONMENT")
+  dotenv.config({path:'../.env'})
+}
+
 const app = express();
 
 import './models/allModels';
@@ -38,7 +48,7 @@ app.use('/api', modelsRouter);
 app.use('/api', variablesRouter);
 
 app.listen(port, () => {
-    console.log('INFO :: Webserver started on port ' + port)
+    console.log('INFO :: SERVER RUNNING ON PORT ' + port)
 });
 
 setup();

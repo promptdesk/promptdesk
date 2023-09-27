@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 
 //import mongodb models
 import {Model as mongoModel} from './mongodb/model';
@@ -7,13 +7,11 @@ import {Log as mongoLog} from './mongodb/log';
 import {Variable as mongoVariable} from './mongodb/variable';
 
 async function importModule(moduleName: string):Promise<any>{
-  console.log("importing ", moduleName);
   const importedModule = await import(moduleName);
-  console.log("\timported ...");
   return importedModule;
 }
 
-dotenv.config({ path: '../.env' });
+//dotenv.config({ path: '../.env' });
 
 let Prompt:any, Model:any, Log:any, Variable:any;
 

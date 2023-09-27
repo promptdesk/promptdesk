@@ -4,9 +4,9 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "dev": "nodemon src/index.ts",
-    "test": "mocha -r ts-node/register test/**/*.test.ts"
+    "start": "NODE_ENV=production ts-node src/index.ts",
+    "dev": "NODE_ENV=development nodemon src/index.ts",
+    "test": "NODE_ENV=development mocha -r ts-node/register test/**/*.test.ts"
   },
   "keywords": [],
   "author": "",

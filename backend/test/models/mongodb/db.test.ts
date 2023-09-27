@@ -1,11 +1,11 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 import request from 'supertest';
 import connectToDatabase from '../../../src/models/mongodb/db';
 
-dotenv.config({ path: '../.env' });
+//dotenv.config({ path: '../.env' });
 
 describe('MongoDB Database Connection', () => {
   before(async () => {

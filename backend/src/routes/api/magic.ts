@@ -1,7 +1,7 @@
 import express from 'express';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { Model, Prompt, Log } from '../../models/allModels';
+import { Model, Prompt, Log, Variable } from '../../models/allModels';
 import handlebars from 'handlebars';
 
 dotenv.config();
@@ -12,12 +12,23 @@ const router = express.Router();
 var model_db = new Model();
 var prompt_db = new Prompt();
 var log_db = new Log();
+var variable_db = new Variable();
 
 function variable_object(prompt_variables:any) {
 
     var variables = {}
     for (var key in prompt_variables) {
-        (variables as any)[key] = prompt_variables[key]['value']
+        var parsed = false
+        try {
+            (variables as any)[key] = JSON.stringify(JSON.parse(prompt_variables[key]['value']))
+            console.log(key, prompt_variables[key]['value'])
+            parsed = true
+        } catch (error) {
+            //console.log(error)
+        }
+        if (!parsed) {
+            (variables as any)[key] = prompt_variables[key]['value']
+        }
     }
 
     return variables
@@ -58,6 +69,11 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     }
 
     var start = Date.now()
+
+    //get variables from variables db
+    var variables_db = await variable_db.findVariablesByModel(model_id)
+
+    //[{"name": "OPEN_AI_API_KEY", "value": "secret-key-value"}]
 
     var api_call = JSON.stringify(model.api_call) as any;
     var template = handlebars.compile(api_call);

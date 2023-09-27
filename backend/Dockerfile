@@ -6,10 +6,12 @@ COPY package.json ./
 
 RUN npm install
 
-#COPY . ./
+#VOLUME /src
 
-# Add the volume mapping
-VOLUME /src
+#copy this directory to ./frontend
+COPY ../frontend ./frontend
+#copy ../shared to ./shared
+COPY ../shared ./shared
 
 EXPOSE 4000
 
