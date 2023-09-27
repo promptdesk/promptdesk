@@ -5,8 +5,6 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import connectToDatabase from '../../../src/models/mongodb/db';
 
-//dotenv.config({ path: '../.env' });
-
 describe('MongoDB Database Connection', () => {
   before(async () => {
     // Ensure the mongoose default connection is closed before the tests

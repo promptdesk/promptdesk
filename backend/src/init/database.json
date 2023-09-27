@@ -67,7 +67,7 @@
           "url": "https://api.openai.com/v1/chat/completions",
           "method": "POST",
           "headers": {
-            "Authorization": "Bearer {{OPEN_AI_API_KEY}}",
+            "Authorization": "Bearer {{OPEN_AI_KEY}}",
             "Content-Type": "application/json"
           },
           "data": {

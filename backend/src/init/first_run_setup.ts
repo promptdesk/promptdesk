@@ -18,11 +18,11 @@ export default async function setup() {
     var variables:any = new Variable();
     variables = await variables.getVariables();
     
-    //if variables is empyt then create name and value with the OPEN_AI_API_KEY 
+    //if variables is empyt then create name and value with the OPEN_AI_KEY 
     if(variables.length == 0) {
 
         var variable = new Variable();
-        var data = [{ "name": "OPEN_AI_API_KEY", "value": process.env.OPEN_AI_API_KEY }];
+        var data = [{ "name": "OPEN_AI_KEY", "value": process.env.OPEN_AI_KEY }];
         await variable.createVariables(data);
 
         var model:any = new Model();

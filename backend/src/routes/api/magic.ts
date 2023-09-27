@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 import { Model, Prompt, Log, Variable } from '../../models/allModels';
 import handlebars from 'handlebars';
 
-dotenv.config();
-const environment_variables = dotenv.config({path:'../.env'})['parsed']
-
 const router = express.Router();
 
 var model_db = new Model();
@@ -71,15 +68,30 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     var start = Date.now()
 
     //get variables from variables db
-    var variables_db = await variable_db.findVariablesByModel(model_id)
+    var environment_variables = await variable_db.getVariables()
+    console.log(environment_variables)
 
-    //[{"name": "OPEN_AI_API_KEY", "value": "secret-key-value"}]
+    environment_variables = [{"OPEN_AI_KEY":"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"}]
 
     var api_call = JSON.stringify(model.api_call) as any;
-    var template = handlebars.compile(api_call);
-    api_call = template(environment_variables);
+
+    console.log(api_call)
+
+    //var template = handlebars.compile(api_call);
+    //console.log(template)
+    //api_call = template(environment_variables);
+
+    //replace {{variables}} with values iin environment_variables
+    for (var key in environment_variables) {
+        var variable = environment_variables[key]
+        var variable_name = Object.keys(variable)[0]
+        var variable_value = variable[variable_name]
+        api_call = api_call.replace('{{' + variable_name + '}}', variable_value)
+    }
 
     api_call = JSON.parse(api_call)
+
+    console.log(api_call)
 
     var end = Date.now()
     var elapsed = end - start
@@ -111,6 +123,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     var prompt_data = JSON.stringify(prompt.prompt_data)
     var prompt_data_template = handlebars.compile(prompt_data);
+
     prompt_data = prompt_data_template(variables);
 
     prompt_data = JSON.parse(prompt_data)

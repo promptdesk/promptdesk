@@ -1,27 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router';
-import DropDown from "@/components/Form/DropDown";
-import TagsInput from "@/components/Form/TagsInput";
-import SliderComponent from "@/components/Form/SliderComponent";
 import Editor from "@/components/Editors/Editor";
 import ChatEditor from "@/components/Editors/ChatEditor";
-import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import Modal from "@/components/Modal";
 import VariableModal from "@/components/Editors/VariableModal";
+import TabNavigation from "@/components/TabNavigation";
+import RightPanel from "@/components/RightPanel";
+import ErrorPage from 'next/error';
 import {
-  showPromptHistory,
   shouldShowSaveModal,
+  shouldShowSaveVariableModal,
   promptWorkspaceTabs,
-  shouldShowSaveVariableModal
 } from "@/stores/general";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
-import ErrorPage from 'next/error'
-
 
 export default function Home() {
-  const { push } = useRouter();
-  const router = useRouter();
+  const { push, query } = useRouter();
 
   const {
     show_modal,
@@ -60,27 +55,30 @@ export default function Home() {
     models,
   } = modelStore();
 
-  const { query } = router; // Using destructuring here
-
   useEffect(() => {
-    const id = query.id as string; // Using id from the query object
+    const id = query.id as string;
     setPrompt(id);
-    setActiveTabById(id);
     setModelById(promptObject.id as string);
+    setActiveTabById(id);
   }, [query.id, promptObject.id, setActiveTabById, setModelById, setPrompt]);
-
-  const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
   const changeIdInUrl = (newId: string) => {
     const newUrl = `/prompt/${newId}`;
-    router.push(newUrl);
+    push(newUrl);
   };
+
+  useEffect(() => {
+    // Console log can be commented out or removed in production
+    // console.log("Tabs have changed: ", tabs);
+  }, [tabs]);
 
   const removePlaygroundTab = (e: any, id: string) => {
     e.stopPropagation();
 
     const tab_index = tabs.findIndex((t) => t.prompt_id === id);
     const current = tabs[tab_index].current;
+
+    console.log(id, tab_index, current)
 
     const redirect = tabs.length === 1;
 
@@ -99,7 +97,9 @@ export default function Home() {
         changeIdInUrl(tabs[nextTabIndex].prompt_id);
       }
 
+      console.log("Tabs before removal: ", tabs);
       removeTab(id);
+      console.log("Tabs after removal: ", tabs);
 
       if(redirect) {
         push('/prompts');
@@ -107,18 +107,10 @@ export default function Home() {
     }
   };
 
-  /*useEffect(() => {
-
-    if(tabs.length === 0) {
-      router.push('/prompts');
-    }
-
-  }, [tabs, router]);*/
-
   const newPrompt = async () => {
     const newId = await addNewPrompt();
     setActiveTabById(newId as string);
-    router.push(`/prompt/${newId}`);
+    push(`/prompt/${newId}`);
   };
 
   return (
@@ -129,48 +121,12 @@ export default function Home() {
           <div className="pg-tab-header">
             {/* TABS */}
             <div className="hidden sm:block">
-              <nav aria-label="Tabs" style={{background: "#f2f2f2", paddingTop:"8px"}} className="flex">
-                {tabs.map((tab) => (
-                  <div
-                    key={tab.prompt_id}
-                    style={{width: "188px", borderRadius: "10px 10px 0px 0px", padding: "5px"}}
-                    className={classNames(
-                      tab.current ? 'bg-white text-indigo-700' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50',
-                      'px-2 py-1 text-sm font-medium cursor-pointer pl-4 pr-4 flex justify-between'
-                    )}
-                    aria-current={tab.current ? 'page' : undefined}
-                    onClick={() => {
-                      updatePromptObjectInPrompts(promptObject);
-                      router.push(`/prompt/${tab.prompt_id}`);
-                    }}
-                  >
-                    <span style={{
-                      textOverflow: 'ellipsis',
-                      minWidth: '0px',
-                      overflow: 'hidden',
-                      whiteSpace: 'nowrap',
-                      padding: '4px'
-                    }}>
-                      {tab.name}
-                    </span>
-                    <span onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} className="ml-2 inline-flex items-center rounded-md bg-gray-50 hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">x</span>
-                  </div>
-                ))}
-                <div
-                    key='-1'
-                    className={classNames(
-                      'text-gray-500 hover:text-gray-700 hover:bg-gray-200',
-                      'rounded-md px-3 py-2 text-sm font-medium cursor-pointer',
-                    )}
-                    style={{display: "inline-block", borderRadius: "10px 10px 0px 0px"}}
-                    onClick={() => {
-                      updatePromptObjectInPrompts(promptObject);
-                      newPrompt();
-                    }}
-                  >
-                    <span className="font-bold">+</span>
-                </div>
-              </nav>
+              <TabNavigation 
+                tabs={tabs}
+                updatePromptObjectInPrompts={updatePromptObjectInPrompts}
+                newPrompt={newPrompt}
+                removePlaygroundTab={removePlaygroundTab}
+              />
             </div>
           </div>
           {(!promptObject.id) && (
@@ -190,54 +146,15 @@ export default function Home() {
                     )}
                   </div>
                 </div>
-                <div className="pg-right">
-                  <div className="pg-right-panel-mask" />
-                  <div className="pg-right-content">
-                    <button className="pg-right-panel-mobile-close">×</button>
-                    <div className="parameter-panel">
-                      <div>
-                        <PlaygroundButton
-                          text="Save"
-                          onClick={toggle_modal}
-                        />
-                        <DropDown
-                          label={"Model"}
-                          options={modelListSelector}
-                          selected={selectedModeId}
-                          onChange={(id: any) => {
-                            setModelById(id);
-                            ////console.log("MODEL USED", id)
-                          }}
-                        />
-                        <br />
-                        {modelObject.model_parameters &&
-                          Object.keys(modelObject.model_parameters).map(
-                            (key, index) =>
-                              modelObject.model_parameters[key]["type"] === "slider" ? (
-                                <SliderComponent
-                                  key={index}
-                                  sliderInfo={modelObject.model_parameters[key]}
-                                  value={
-                                    promptObject.prompt_parameters &&
-                                    promptObject.prompt_parameters[key] !== undefined
-                                      ? promptObject.prompt_parameters[key]
-                                      : modelObject.model_parameters[key]
-                                      ? modelObject.model_parameters[key]['default']
-                                      : undefined
-                                  }
-                                  onChange={(value: any): void => {
-                                    setPromptInformation(
-                                      'prompt_parameters.' + key,
-                                      value
-                                    );
-                                  }}
-                                />
-                              ) : null
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <RightPanel
+                  toggle_modal={toggle_modal}
+                  modelListSelector={modelListSelector}
+                  selectedModeId={selectedModeId}
+                  setModelById={setModelById}
+                  modelObject={modelObject}
+                  promptObject={promptObject}
+                  setPromptInformation={setPromptInformation}
+                />
           </div>
           )}
         </div>

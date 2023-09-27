@@ -14,12 +14,12 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
   const { fetchAllPrompts, prompts } = promptStore();
   const { fetchAllModels } = modelStore();
-  const { retreiveTabsFromLocalStorage, tabs } = promptWorkspaceTabs();
+  const { retrieveTabsFromLocalStorage, tabs } = promptWorkspaceTabs();
 
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    retreiveTabsFromLocalStorage();
+    retrieveTabsFromLocalStorage();
     Promise.all([fetchAllPrompts(), fetchAllModels()]) // Wait for both API calls
       .then(() => {
         setLoading(false); // Set loading state to false when both API calls are complete
@@ -29,7 +29,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         console.error("Error fetching data:", error);
         setLoading(false); // Set loading state to false even on error
       });
-  }, [fetchAllPrompts, fetchAllModels, retreiveTabsFromLocalStorage]); // The empty dependency array ensures this effect runs only once on component mount
+  }, [fetchAllPrompts, fetchAllModels, retrieveTabsFromLocalStorage]); // The empty dependency array ensures this effect runs only once on component mount
 
   return (
     <div id="root">

@@ -11,8 +11,6 @@ async function importModule(moduleName: string):Promise<any>{
   return importedModule;
 }
 
-//dotenv.config({ path: '../.env' });
-
 let Prompt:any, Model:any, Log:any, Variable:any;
 
 if (process.env.DATABASE_SELECTION === 'mongodb') {
