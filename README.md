@@ -27,7 +27,17 @@ Before you begin, ensure you have the following installed on your machine:
    cd promptdesk
    ```
 
-3. **Start the Service with Docker Compose**
+3. **Set your port numbers and configuration with environment variables**
+
+   ```bash
+   export PROMPT_SERVER_PORT=4000
+   export PROMPT_FRONTEND_PORT=3000
+   export DATABASE_SELECTION=mongodb
+   export MONGODB_URI=mongodb://localhost:27017/promptdesk
+   export OPEN_AI_API_KEY=sk-abc123
+   ```
+
+4. **Start the Service with Docker Compose**
    
    Run Docker Compose to start the PromptDesk service:
 

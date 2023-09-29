@@ -5,7 +5,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "${PROMPT_FRONTEND_PORT}:3000"
     depends_on:
       - backend
     volumes:
