@@ -9,12 +9,12 @@ var environment = process.env.NODE_ENV;
 if(environment == 'development') {
   console.log("INFO :: DEVELOPMENT ENVIRONMENT")
   dotenv.config({path:'../.env.development.local'})
-  console.log(process.env.MONGODB_URI)
+  console.log(process.env.MONGO_URL)
 
 } else {
   console.log("INFO :: PRODUCTION ENVIRONMENT")
   dotenv.config({path:'../.env'})
-  console.log(process.env.MONGODB_URI)
+  console.log(process.env.MONGO_URL)
 }
 
 

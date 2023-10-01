@@ -28,9 +28,6 @@ function env_variable_object(prompt_variables: any): object {
 }
 
 function variable_object(prompt_variables: any): any {
-    //prompt_variables = { word: { type: 'text', value: 'hello' } }
-    //convert to { word: 'hello' }
-
     var variables: { [key: string]: string } = {};
 
     for (const key in prompt_variables) {

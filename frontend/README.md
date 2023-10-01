@@ -7,8 +7,8 @@ Welcome to our Next.js front-end project! This project is built using the powerf
 1. **Clone the Repository**
 
    ```sh
-   git clone https://github.com/your-repo/nextjs-project.git
-   cd nextjs-project
+   git clone https://github.com/promptdesk/promptdesk.git
+   cd promptdesk
    ```
 
    Install Dependencies

@@ -2,15 +2,12 @@ FROM node:20-slim
 
 WORKDIR /app
 
-COPY backend/package*.json ./backend/
-RUN cd backend && npm install
-
-COPY frontend/package*.json ./frontend/
-RUN cd frontend && npm install
-
 COPY backend ./backend
 COPY frontend ./frontend
 COPY shared ./shared
+
+RUN cd frontend && npm install && npm run build
+RUN cd backend && npm install
 
 ENV PROMPT_SERVER=http://localhost
 ENV PROMPT_SERVER_PORT=4000

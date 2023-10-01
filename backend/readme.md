@@ -28,10 +28,10 @@ Create a .env file in the root directory and configure the necessary environment
 
 ```env
 NODE_ENV=development
-MONGODB_URI=your_mongodb_uri
+MONGO_URL=your_MONGO_URL
 ```
 
-Replace `your_mongodb_uri` with the actual connection URI of your MongoDB server.
+Replace `your_MONGO_URL` with the actual connection URI of your MongoDB server.
 
 ### Available Scripts
 
