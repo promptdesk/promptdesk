@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { shouldShowSaveModal, promptWorkspaceTabs } from "@/stores/general";
 import { promptStore } from "@/stores/PromptStore";
-import router from "next/router";
+import { useRouter } from 'next/router';
 
 const Modal = () => {
   const { show_modal, toggle_modal } = shouldShowSaveModal();
+
+  const { push } = useRouter();
 
 
   const {
@@ -14,12 +16,17 @@ const Modal = () => {
     updateExistingPrompt,
     duplicateExistingPrompt,
     deletePrompt,
+    addToLocalPrompts
   } = promptStore();
 
   const {
-    setActiveTabById,
+    tabs,
     addTab,
-    updateNameById
+    removeTabFromTabs,
+    findBestNextTab,
+    setActiveTab,
+    isActiveTab,
+    setActiveTabById
   } = promptWorkspaceTabs();
 
   const [ formValues, setFormValues ] = useState({
@@ -40,16 +47,57 @@ const Modal = () => {
     setPromptInformation("description", formValues.description);
   }
 
+  const changeIdInUrl = (newId: string) => {
+    const newUrl = `/prompt/${newId}`;
+    push(newUrl);
+  };
+
   const saveExistingButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
-    { label: "Save as new", className: "btn-neutral", action: () => { duplicateExistingPrompt(formValues.name, formValues.description); toggle_modal(); }},
+    { label: "Save as new", className: "btn-neutral", action: async () => {
+        var newPrompt = await duplicateExistingPrompt(formValues.name, formValues.description);
+        toggle_modal();
+        if(newPrompt) {
+          addToLocalPrompts(newPrompt);
+          addTab(newPrompt.name, newPrompt.id, true);
+          push("/prompt/" + newPrompt.id);
+        }
+      }
+    },
     { label: "Update", className: "btn-primary", action: () => { setAllPromptInformation(); updateExistingPrompt(); toggle_modal(); } },
-    { label: "Delete", className: "btn-negative", action: () => { deletePrompt(); toggle_modal(); } },
+    { label: "Delete", className: "btn-negative", action: () => {
+        var id = promptObject.id as string;
+        
+        deletePrompt();
+        toggle_modal();
+
+        //also found in the [id].tsx file
+        if(isActiveTab(id) && tabs.length > 1) {
+          console.log(tabs.length)
+          const bestNextTab = findBestNextTab();
+          bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
+        }
+    
+        var x = removeTabFromTabs(id)?.length
+        
+        if (x === 0) {
+          push("/prompts");
+        }
+
+      }
+    },
   ];
 
   const saveNewButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
-    { label: "Save", className: "btn-primary", action: () => { setAllPromptInformation(); createNewPrompt(); toggle_modal(); } },
+    { label: "Save", className: "btn-primary", action: async () => {
+      setAllPromptInformation();
+      var id = await createNewPrompt();
+      if(id) {
+        toggle_modal();
+        push(`/prompt/${id}`);
+      }
+    } },
   ];
 
   const renderButtons = () => {

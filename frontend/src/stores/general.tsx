@@ -29,20 +29,22 @@ interface Tab {
 
 export interface PromptWorkspaceTabs {
   tabs: Tab[];
+  isActiveTab: (id: string) => boolean | undefined;
   addTab: (name: string, id: string, current: boolean) => void;
-  removeTab: (id: string) => void;
   setActiveTab: (name: string) => void;
   setActiveTabById: (id: string) => void;
   updateNameById: (id: string, newId: string, name: string) => void;
   saveTabsToLocalStorage: () => void;
   retrieveTabsFromLocalStorage: () => void;
   deactivateAllTabs: () => void;
+  removeTabFromTabs: (id: string) => Tab[] | undefined;
+  findBestNextTab: () => Tab | undefined;
 }
 
-const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
+const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   tabs: [],
   saveTabsToLocalStorage() {
-    localStorage.setItem("tabs", JSON.stringify(promptWorkspaceTabs.getState().tabs));
+    localStorage.setItem("tabs", JSON.stringify(get().tabs));
   },
   retrieveTabsFromLocalStorage() {
     const tabs = localStorage.getItem("tabs");
@@ -52,37 +54,58 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set) => ({
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: false })) }));
   },
   addTab(name, prompt_id, current) {
-    promptWorkspaceTabs.getState().deactivateAllTabs();
+    get().deactivateAllTabs();
     set(({ tabs }) => ({ tabs: [...tabs, { name, prompt_id, current }] }));
-    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+    get().saveTabsToLocalStorage();
   },
-  removeTab(id) {
+  removeTabFromTabs(id) {
     set(({ tabs }) => ({ tabs: tabs.filter(tab => tab.prompt_id !== id) }));
-    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+    console.log("1removeTabFromTabs", id, get().tabs);
+    get().saveTabsToLocalStorage();
+    //set tabs
+    promptWorkspaceTabs.setState((state: { tabs: Tab[]; }) => ({
+      tabs: state.tabs.filter(tab => tab.prompt_id !== id)
+    }))
+    console.log("2removeTabFromTabs", id, get().tabs);
+    return get().tabs;
+  },
+  findBestNextTab() {
+    const tabs: Tab[] = get().tabs;
+    const currentTab = tabs.find(tab => tab.current);
+    if (!currentTab) return;
+    const currentTabIndex = tabs.indexOf(currentTab);
+    const nextTab = tabs[currentTabIndex + 1];
+    if (nextTab) return nextTab;
+    const previousTab = tabs[currentTabIndex - 1];
+    if (previousTab) return previousTab;
+    return;
   },
   setActiveTabById(id) {
     if (!id) return;
-    const tab = promptWorkspaceTabs.getState().tabs.find(tab => tab.prompt_id === id);
+    const tab = get().tabs.find(tab => tab.prompt_id === id);
     if (!tab) {
       const name = promptStore.getState().prompts.find(p => p.id === id)?.name;
-      if (name) promptWorkspaceTabs.getState().addTab(name, id, true);
+      if (name) get().addTab(name, id, true);
     } else {
-      promptWorkspaceTabs.getState().deactivateAllTabs();
+      get().deactivateAllTabs();
       set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.prompt_id === id })) }));
-      promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+      get().saveTabsToLocalStorage();
     }
   },
+  isActiveTab(id: string) {
+    return get().tabs.find(tab => tab.prompt_id === id)?.current;
+  },
   setActiveTab(name) {
-    promptWorkspaceTabs.getState().deactivateAllTabs();
+    get().deactivateAllTabs();
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.name === name })) }));
-    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
+    get().saveTabsToLocalStorage();
   },
   updateNameById(id, newId, name) {
     set(({ tabs }) => ({
       tabs: tabs.map(tab => (tab.prompt_id === id ? { ...tab, name, prompt_id: newId } : tab)),
     }));
-    promptWorkspaceTabs.getState().saveTabsToLocalStorage();
-  },
+    get().saveTabsToLocalStorage();
+  }  
 }));
 
 const showPromptHistory = create<SnowPromptHistory>((set) => ({

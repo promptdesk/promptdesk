@@ -19,7 +19,7 @@ function Editor() {
     const context = promptObject?.prompt_data.context || '';
     const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
     processVariables(`${context} ${messages}`);
-  }, [promptObject?.name, promptObject?.prompt_data?.messages.length, processVariables, promptObject?.prompt_data.context, promptObject?.prompt_data.messages]);
+  }, [promptObject?.name, promptObject?.prompt_data?.messages?.length, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
 
   return (
     <div className="flex flex-col">

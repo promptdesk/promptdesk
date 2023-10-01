@@ -18,9 +18,9 @@ interface PromptStore {
     fetchAllPrompts: () => Promise<Prompt[]>;
     onlyFetchPrompts: () => Promise<Prompt[]>;
     setPromptInformation: (key: any, value: any) => void;
-    createNewPrompt: () => void;
+    createNewPrompt: () => Promise<string>;
     updateExistingPrompt: () => void;
-    duplicateExistingPrompt: (name:string, description:string) => void;
+    duplicateExistingPrompt: (name:string, description:string) => Promise<Prompt> | undefined;
     deletePrompt: () => void;
     addMessage: (string: string[]) => void;
     callMagic: () => void;
@@ -33,6 +33,8 @@ interface PromptStore {
     setPromptVariables: (variables: any) => void;
     setSelectedVariable: (variable: string) => void;
     processVariables: (inputValue: string) => void;
+    isValidName: (name: string) => boolean;
+    addToLocalPrompts: (prompt: Prompt) => void;
 }
 
 const defaultPrompt: Prompt = {
@@ -106,8 +108,14 @@ const promptStore = create<PromptStore>((set, get) => ({
 
 
     setPromptInformation: (key: any, value: any) => {
+        console.log(key, value)
         set((state) => {
             const promptObject = { ...state.promptObject };
+            console.log("promptObject", promptObject)
+            //create promptObject['prompt_parameters'] if it doesn't exist
+            if (!promptObject.prompt_parameters) {
+                promptObject.prompt_parameters = {};
+            }
             if (key.startsWith("prompt_parameters.")) {
                 const parameterKey = key.split(".")[1];
                 promptObject.prompt_parameters[parameterKey] = value;
@@ -123,6 +131,7 @@ const promptStore = create<PromptStore>((set, get) => ({
     },
 
     updatePromptObjectInPrompts: (promptObject: Prompt) => {
+        console.log(promptObject)
         set((state) => {
             const prompts = state.prompts.map((prompt) => {
                 if (prompt.id === promptObject.id) {
@@ -180,6 +189,13 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
     },
 
+    addToLocalPrompts: (prompt: Prompt) => {
+        set((state) => {
+            const prompts = [...state.prompts, prompt];
+            return { prompts };
+        });
+    },
+
     removeAtIndex: (index: number) => {
         set((state) => {
             const promptObject = { ...state.promptObject };
@@ -203,7 +219,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         set((state) => {
             const promptObject = { ...state.promptObject };
             const messages = promptObject.prompt_data.messages || [];
-            const lastRole = messages.length > 0 ? messages[messages.length - 1].role : roles[0];
+            const lastRole = messages.length > 0 ? messages[messages.length - 1].role : roles[1];
             const roleIndex = (roles.indexOf(lastRole) + 1) % roles.length;
             const newMessage = { role: roles[roleIndex], content: "" };
             messages.push(newMessage);
@@ -274,8 +290,18 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
     },
 
+    isValidName: (name: string) => {
+        //alert if name is no A-Z, a-z, 0-9, _ or -
+        const regex = /^[a-zA-Z0-9_-]*$/;
+        return regex.test(name);
+    },
+
     createNewPrompt: async () => {
         const prompt = get().promptObject;
+        if(!get().isValidName(prompt.name)) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+            return;
+        }
         prompt.new = undefined;
         const response = await fetch('http://localhost:4000/api/prompt', {
             method: 'POST',
@@ -287,10 +313,15 @@ const promptStore = create<PromptStore>((set, get) => ({
         const data = await response.json();
         await get().fetchAllPrompts();
         promptWorkspaceTabs.getState().updateNameById(prompt.id, data.id, prompt.name);
+        return data.id;
     },
 
     updateExistingPrompt: async () => {
         const existingPrompt = get().promptObject;
+        if(!get().isValidName(existingPrompt.name)) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+            return;
+        }
         if (modelStore.getState().modelObject.type === 'chat') {
             existingPrompt.prompt_data = {
                 context: existingPrompt.prompt_data.context,
@@ -317,10 +348,13 @@ const promptStore = create<PromptStore>((set, get) => ({
     duplicateExistingPrompt: async (name: string, description: string) => {
         const dbPrompts = await get().onlyFetchPrompts();
         const promptToDuplicate = { ...get().promptObject, description, name };
-        const originPrompt = dbPrompts.find((prompt) => prompt.id === promptToDuplicate.id);
         const exists = dbPrompts.some((prompt) => prompt.name === name);
+        if(!get().isValidName(promptToDuplicate.name)) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+            return undefined as any;
+        }
         if (exists) {
-            promptToDuplicate.name = name + " (copy)";
+            promptToDuplicate.name = name + "_copy";
         }
         const response = await fetch('http://localhost:4000/api/prompt', {
             method: 'POST',
@@ -330,17 +364,8 @@ const promptStore = create<PromptStore>((set, get) => ({
             body: JSON.stringify(promptToDuplicate)
         });
         const data = await response.json();
-        const newPrompt = dbPrompts.find((prompt) => prompt.id === data.id);
-        if (!newPrompt) {
-            return;
-        }
-        set((state) => {
-            const prompts = [...state.prompts, newPrompt];
-            return { prompts };
-        });
-        set({ promptObject: originPrompt });
-        promptWorkspaceTabs.getState().addTab(newPrompt.name, data.id, true);
-        router.push(`/prompt/${data.id}`);
+        promptToDuplicate.id = data.id;
+        return promptToDuplicate;
     },
 
     deletePrompt: async () => {
@@ -361,7 +386,7 @@ const promptStore = create<PromptStore>((set, get) => ({
             modelStore.setState({ selectedModeId: defaultModel.id });
         }
         modelStore.setState({ modelObject: defaultModel });
-        promptWorkspaceTabs.getState().removeTab(existingPrompt.id);
+        //promptWorkspaceTabs.getState().removeTab(existingPrompt.id);
     },
 }));
 

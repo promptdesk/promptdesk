@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { logStore } from '@/stores/LogStore';
+import { promptStore } from '@/stores/PromptStore';
+import { modelStore } from '@/stores/ModelStore';
 
 export default function About() {
   const { push } = useRouter();
 
   var { logs, fetchLogs } = logStore();
+
+  var { models } = modelStore();
+  var { prompts } = promptStore();
 
   const initial_page = parseInt(location.search.replace('?page=', ''));
 
@@ -40,13 +45,21 @@ export default function About() {
     fetchLogs(page);
   };
 
-  const renderRow = (log:any) => (
+  function getModelName(id:string) {
+    return models.find((model:any) => model.id === id)?.name || "N/a";
+  }
+
+  function getPromptName(id:string) {
+    return prompts.find((prompt:any) => prompt.id === id)?.name || "N/a";
+  }
+
+  const renderRow = (log: any) => (
     <>
       <tr key={log.id} onClick={() => handleRowClick(log.id)} className="cursor-pointer">
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-          {log.model_id}
+          {getPromptName(log.prompt_id)}
         </td>
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{log.prompt_id}</td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getModelName(log.model_id)}</td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{(log.createdAt.toString())}</td>
         <td
           className={`whitespace-nowrap px-3 py-4 text-sm ${
@@ -59,12 +72,13 @@ export default function About() {
       {(expandedRows as any)[log.id] && (
         <tr>
           <td colSpan={4} className="p-4 bg-gray-100">
-            <pre>{JSON.stringify(log, null, 2)}</pre>
+            {/* Added the white-space property with value "pre-wrap" */}
+            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(log, null, 2)}</pre>
           </td>
         </tr>
       )}
     </>
-  );
+  );  
 
   return (
     <div>

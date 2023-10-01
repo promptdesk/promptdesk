@@ -31,8 +31,10 @@ export default function Home() {
   const {
     tabs,
     addTab,
-    removeTab,
+    removeTabFromTabs,
+    findBestNextTab,
     setActiveTab,
+    isActiveTab,
     setActiveTabById
   } = promptWorkspaceTabs();
 
@@ -67,49 +69,29 @@ export default function Home() {
     push(newUrl);
   };
 
-  useEffect(() => {
-    // Console log can be commented out or removed in production
-    // console.log("Tabs have changed: ", tabs);
-  }, [tabs]);
-
   const removePlaygroundTab = (e: any, id: string) => {
     e.stopPropagation();
 
-    const tab_index = tabs.findIndex((t) => t.prompt_id === id);
-    const current = tabs[tab_index].current;
-
-    console.log(id, tab_index, current)
-
-    const redirect = tabs.length === 1;
-
-    if (tab_index >= 0) {
-      let nextTabIndex = tab_index + 1;
-
-      if (nextTabIndex >= tabs.length) {
-        nextTabIndex = tab_index - 1;
-      }
-
-      if (nextTabIndex >= 0) {
-        if(current) {
-          setActiveTabById(tabs[nextTabIndex].prompt_id);
-        }
-        setPrompt(tabs[nextTabIndex].prompt_id);
-        changeIdInUrl(tabs[nextTabIndex].prompt_id);
-      }
-
-      console.log("Tabs before removal: ", tabs);
-      removeTab(id);
-      console.log("Tabs after removal: ", tabs);
-
-      if(redirect) {
-        push('/prompts');
-      }
+    if(isActiveTab(id) && tabs.length > 1) {
+      console.log(tabs.length)
+      const bestNextTab = findBestNextTab();
+      bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
     }
+
+    var x = removeTabFromTabs(id)?.length
+    
+    if (x === 0) {
+      push("/prompts");
+    }
+
   };
 
   const newPrompt = async () => {
     const newId = await addNewPrompt();
     setActiveTabById(newId as string);
+    setPrompt(newId as string);
+    setModelById(newId as string);
+    ///setActiveTabById(newId);
     push(`/prompt/${newId}`);
   };
 
@@ -126,10 +108,11 @@ export default function Home() {
                 updatePromptObjectInPrompts={updatePromptObjectInPrompts}
                 newPrompt={newPrompt}
                 removePlaygroundTab={removePlaygroundTab}
+                promptObject={promptObject}
               />
             </div>
           </div>
-          {(!promptObject.id) && (
+          {(!promptObject.id && tabs.length === 0) && (
             <ErrorPage statusCode={404} />
           )}
           {promptObject.id && promptObject.id !== "" && (

@@ -39,7 +39,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
               selected={selectedModeId}
               onChange={(id: any) => {
                 setModelById(id);
-                ////console.log("MODEL USED", id)
               }}
             />
             <br />

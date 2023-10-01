@@ -112,6 +112,32 @@ const modelStore = create<ModelStore>((set) => ({
     if (!model) {
       return;
     }
+
+    console.log("MODEL TYPE:", model.type)
+
+    //if model.type == completion => make sure that promptObject.prompt_data.prompt exists or is ""
+    if (model.type === "completion") {
+      if (!promptStore.getState().promptObject.prompt_data.prompt) {
+        promptStore.setState((state) => ({
+          promptObject: { ...state.promptObject, prompt_data: { prompt: "" } }
+        }));
+      }
+    }
+
+    //if model.type == chat => make sure that promptObject.prompt_data.messages exists or is []
+    if (model.type === "chat") {
+      if (!promptStore.getState().promptObject.prompt_data.messages) {
+        promptStore.setState((state) => ({
+          promptObject: { ...state.promptObject, prompt_data: { messages: [] } }
+        }));
+      }
+      if (!promptStore.getState().promptObject.prompt_data.context) {
+        promptStore.setState((state) => ({
+          promptObject: { ...state.promptObject, prompt_data: { context: "" } }
+        }));
+      }
+    }
+
     set({ modelObject: model, selectedModeId: model.id });
     promptStore.setState((state) => ({
       promptObject: { ...state.promptObject, model: model.id },
@@ -122,6 +148,7 @@ const modelStore = create<ModelStore>((set) => ({
         return prompt;
       })
     }));
+
   },
   setModelByName: (name: string) => {
     const model = modelStore.getState().models.find((m) => m.name === name);

@@ -13,13 +13,15 @@ interface TabNavigationProps {
   updatePromptObjectInPrompts: (promptObject: any) => void;
   newPrompt: () => void;
   removePlaygroundTab: (e: any, id: string) => void;
+  promptObject: any;
 }
 
-const TabNavigation: React.FC<TabNavigationProps> = ({ 
+const TabNavigation: React.FC<TabNavigationProps> = ({
   tabs, 
   updatePromptObjectInPrompts, 
   newPrompt,
-  removePlaygroundTab 
+  removePlaygroundTab,
+  promptObject
 }) => {
   const router = useRouter();
 
@@ -37,7 +39,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
           )}
           aria-current={tab.current ? 'page' : undefined}
           onClick={() => {
-            updatePromptObjectInPrompts(tab);
+            updatePromptObjectInPrompts(promptObject);
             router.push(`/prompt/${tab.prompt_id}`);
           }}
         >
@@ -60,7 +62,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
         )}
         style={{ display: "inline-block", borderRadius: "10px 10px 0px 0px" }}
         onClick={() => {
-          updatePromptObjectInPrompts(null); // passing null or any other default object, as the promptObject isn't available here
+          updatePromptObjectInPrompts(promptObject); // passing null or any other default object, as the promptObject isn't available here
           newPrompt();
         }}
       >

@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import setup from './init/first_run_setup';
 
 //get NODE_ENV variable
 var environment = process.env.NODE_ENV;
@@ -10,10 +9,17 @@ var environment = process.env.NODE_ENV;
 if(environment == 'development') {
   console.log("INFO :: DEVELOPMENT ENVIRONMENT")
   dotenv.config({path:'../.env.development.local'})
+  console.log(process.env.MONGODB_URI)
+
 } else {
   console.log("INFO :: PRODUCTION ENVIRONMENT")
   dotenv.config({path:'../.env'})
+  console.log(process.env.MONGODB_URI)
 }
+
+
+import setup from './init/first_run_setup';
+
 
 const app = express();
 

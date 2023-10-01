@@ -11,24 +11,35 @@ var prompt_db = new Prompt();
 var log_db = new Log();
 var variable_db = new Variable();
 
-function variable_object(prompt_variables:any) {
+function env_variable_object(prompt_variables: any): object {
+    var variables: { [key: string]: string } = {};
 
-    var variables = {}
-    for (var key in prompt_variables) {
-        var parsed = false
-        try {
-            (variables as any)[key] = JSON.stringify(JSON.parse(prompt_variables[key]['value']))
-            console.log(key, prompt_variables[key]['value'])
-            parsed = true
-        } catch (error) {
-            //console.log(error)
-        }
-        if (!parsed) {
-            (variables as any)[key] = prompt_variables[key]['value']
-        }
+    console.log(prompt_variables)
+
+    if (!prompt_variables) {
+        return {};
     }
 
-    return variables
+    for (const variable of prompt_variables) {
+        variables[variable.name] = variable.value;
+    }
+
+    return variables;
+}
+
+function variable_object(prompt_variables: any): any {
+    //prompt_variables = { word: { type: 'text', value: 'hello' } }
+    //convert to { word: 'hello' }
+
+    var variables: { [key: string]: string } = {};
+
+    for (const key in prompt_variables) {
+        var variable = prompt_variables[key]
+        variables[key] = variable.value;
+    }
+
+    return variables;
+
 }
 
 // Route for /api/magic/gpt-3.5-turbo
@@ -71,27 +82,18 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     var environment_variables = await variable_db.getVariables()
     console.log(environment_variables)
 
-    environment_variables = [{"OPEN_AI_KEY":"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"}]
-
     var api_call = JSON.stringify(model.api_call) as any;
 
     console.log(api_call)
 
-    //var template = handlebars.compile(api_call);
-    //console.log(template)
-    //api_call = template(environment_variables);
 
-    //replace {{variables}} with values iin environment_variables
-    for (var key in environment_variables) {
-        var variable = environment_variables[key]
-        var variable_name = Object.keys(variable)[0]
-        var variable_value = variable[variable_name]
-        api_call = api_call.replace('{{' + variable_name + '}}', variable_value)
-    }
+    environment_variables = env_variable_object(environment_variables)
+
+    var prompt_api_template = handlebars.compile(api_call);
+
+    api_call = prompt_api_template(environment_variables);
 
     api_call = JSON.parse(api_call)
-
-    console.log(api_call)
 
     var end = Date.now()
     var elapsed = end - start
@@ -106,6 +108,8 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
     var input_format = eval(model.input_format)
     var output_format = eval(model.output_format)
+
+    console.log("prompt.prompt_variables", prompt.prompt_variables)
 
     var variables = req.body.variables || {}
     if(!proxy){

@@ -1,3 +1,5 @@
+//this file ensures that all files in the src folder have a corresponding test file in the test folder
+//this file is run as a pretest script in package.json
 const fs = require('fs');
 const path = require('path');
 
