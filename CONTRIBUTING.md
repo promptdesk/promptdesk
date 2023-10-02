@@ -37,7 +37,7 @@ All contributions will go through a code review process. This helps ensure the q
 
 ## License
 
-By contributing to PromptDesk, you agree that your contributions will be licensed under the GNU Affero General Public License. For more information, please refer to the [LICENSE](https://github.com/promptdesk/promptdesk/blob/main/LICENSE) file in the repository.
+By using or contributing to PromptDesk, you agree that your contributions will be licensed under the GNU Affero General Public License. For more information, please refer to the [LICENSE](https://github.com/promptdesk/promptdesk/blob/main/LICENSE) file in the repository.
 
 ## Contact
 

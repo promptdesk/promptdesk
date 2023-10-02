@@ -1,80 +1,121 @@
 # PromptDesk
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/promptdesk/promptdesk)
+[![PyPI version](https://badge.fury.io/py/promptdesk.svg)](https://badge.fury.io/py/promptdesk)
 
 PromptDesk is a versatile tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
 
+If you’re new to PromptDesk, we recommend starting with the [Quickstart](/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](/docs/building-prompts/) or [Integrate Prompts](/docs/python-sdk/) guides.
+
 ## Prerequisites
-Before you begin, ensure you have the following installed on your machine:
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+
+Before running the PromptDesk Docker image, make sure you have the following environment variables ready:
+
+- `MONGO_URL`: The URL to your MongoDB instance.
+- `OPEN_AI_KEY`: Your OpenAI API key.
 
 ## Installation
 
-1. **Clone the Repository**
-   
-   Open your terminal and run the following command to clone the PromptDesk repository:
+To install the PromptDesk Docker image, pull the latest version from the Docker Hub:
 
-   ```bash
-   git clone git@github.com:promptdesk/promptdesk.git
-   ```
-
-2. **Navigate to the Project Directory**
-   
-   Change to the newly created `promptdesk` directory:
-
-   ```bash
-   cd promptdesk
-   ```
-
-3. **Start the Service with Docker Compose**
-   
-   Run Docker Compose to start the PromptDesk service:
-
-   ```bash
-   docker-compose up -d
-   ```
-
-   This command will download the necessary Docker images and start the services in detached mode.
-
-   After running the above commands, check the status of the Docker containers to ensure that they are up and running:
-
-   ```bash
-   docker ps
-   ```
-
-## Start Building
-
-- Open a web browser and navigate to the application URL (e.g., `http://localhost:port`). The specific port number will be mentioned in the project documentation or Docker Compose file.
-
-  ```bash
-  http://localhost:4000
-  ```
+```shell
+docker pull promptdesk/promptdesk:latest
+```
 
 ## Usage
 
-Once the application is running, you can start creating, organizing, and evaluating prompts and LLMs. Refer to the official [PromptDesk Documentation](https://promptdesk.ai/docs) for detailed instructions and examples.
+To run the PromptDesk Docker image, execute the following command, replacing the placeholder values with your actual information:
+
+```shell
+docker run \
+  -p 80:3000 \
+  -p 4000:4000 \
+  -e "MONGO_URL=[your mongodb:// url]" \
+  -e "OPEN_AI_KEY=[your OpenAI API key]" \
+  promptdesk:latest
+```
+
+## Accessing the App
+
+Once the Docker container is running, open your web browser and navigate to http://localhost:80/ to access the PromptDesk application and start building prompts.
+
+![Alt Text](./screenshots/prompt-builder.png)
+
+Now that you have the PromptDesk application running, you can start building prompts. To get started, access the [prompt building ](/docs/building-prompts/) guide.
+
+That's it! You have successfully set up and run PromptDesk using the Docker image.
+
+## Using the Python Library
+
+To use the PromptDesk library in your Python code, follow these steps:
+
+1. Install the PromptDesk library by running the following command:
+
+   ```shell
+   pip install promptdesk
+   ```
+
+2. Import the library into your Python code:
+
+   ```python
+   import promptdesk
+   ```
+
+3. Set the service URL to the running Docker container:
+
+   ```python
+   promptdesk.SERVICE_URL = "http://localhost:4000"
+   ```
+
+4. Generate a story using the `generate` function:
+
+   ```python
+   story = promptdesk.generate("short-story-generator", {
+       "setting": "A dark and stormy night",
+       "character": "A lonely farmer",
+       "plot": "A farmer is visited by a stranger"
+   })
+   ```
+
+   Replace the values for `setting`, `character`, and `plot` with your desired story prompts.
+
+5. Print the generated story:
+
+   ```python
+   print(story)
+   ```
+
+That's it! You can now use the PromptDesk library to generate stories by calling the `generate` function with your desired prompts.
+
+## Documentation
+
+For more information about PromptDesk, please refer to the following resources:
+
+- [GitHub Repository](https://github.com/promptdesk/promptdesk)
+- [PyPI Package](https://pypi.org/project/promptdesk/)
+- [Docker Hub](https://hub.docker.com/r/promptdesk/promptdesk/)
+- [Official Website](https://promptdesk.ai/)
 
 ## Troubleshooting
 
-If you encounter any issues during installation or usage, please check the [Troubleshooting Guide](#) or [FAQs](#) section. For further assistance, feel free to [raise an issue](https://github.com/promptdesk/promptdesk/issues) on the GitHub repository.
+If you encounter any issues during installation or usage, please check the [Troubleshooting Guide](https://github.com/promptdesk/promptdesk/blob/main/docs/troubleshooting.md) or FAQs section. For further assistance, feel free to raise an issue on the GitHub repository.
 
 ## Contributing
 
-We welcome contributions to improve PromptDesk!
+We welcome contributions to improve PromptDesk! If you would like to contribute, please refer to the [Contribution Guidelines](https://github.com/promptdesk/promptdesk/blob/main/CONTRIBUTING.md).
 
 ## License
 
-PromptDesk is licensed under the [MIT License](#). For more information, please refer to the [LICENSE](#) file in the repository.
+By using or contributing to PromptDesk, you agree that your usage or contributions will be licensed under the GNU Affero General Public License. For more information, please refer to the [LICENSE](https://github.com/promptdesk/promptdesk/blob/main/LICENSE) file in the repository.
 
 ## Contact
 
-For any queries or suggestions, please reach out to us at [feedback@promptdesk.ai](mailto:feedback@promptdesk.ai). This is a shared inbox. We will get back to you as soon as possible.
+If you have any questions or need further assistance, please reach out to us at feedback@promptdesk.ai. We will be happy to help!
 
 ## Thank you
 
-Thank you for your support! We hope you find it useful. If you like the project, please consider giving it a star on GitHub. This is a 100% free, open-source project.
-
+Thank you for your support! We hope you find PromptDesk useful. If you like the project, please consider giving it a star on GitHub. This is a 100% free, open-source project.
+   
 ## Roadmap
 
 ### To-Do
