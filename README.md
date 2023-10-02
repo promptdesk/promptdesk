@@ -5,7 +5,7 @@
 
 PromptDesk is a versatile tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
 
-If you’re new to PromptDesk, we recommend starting with the [Quickstart](/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](/docs/building-prompts/) or [Integrate Prompts](/docs/python-sdk/) guides.
+If you’re new to PromptDesk, we recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
 ## Prerequisites
 
@@ -41,7 +41,7 @@ Once the Docker container is running, open your web browser and navigate to http
 
 ![Alt Text](./screenshots/prompt-builder.png)
 
-Now that you have the PromptDesk application running, you can start building prompts. To get started, access the [prompt building ](/docs/building-prompts/) guide.
+Now that you have the PromptDesk application running, you can start building prompts. To get started, access the [prompt building](https://promptdesk.ai/docs/building-prompts/) guide.
 
 That's it! You have successfully set up and run PromptDesk using the Docker image.
 
@@ -98,7 +98,7 @@ For more information about PromptDesk, please refer to the following resources:
 
 ## Troubleshooting
 
-If you encounter any issues during installation or usage, please check the [Troubleshooting Guide](https://github.com/promptdesk/promptdesk/blob/main/docs/troubleshooting.md) or FAQs section. For further assistance, feel free to raise an issue on the GitHub repository.
+If you encounter any issues or bugs while using PromptDesk, please report them by creating a [new issue](https://github.com/promptdesk/promptdesk/issues) on the GitHub repository. Include as much detail as possible, such as steps to reproduce the issue and any error messages or logs.
 
 ## Contributing
 
