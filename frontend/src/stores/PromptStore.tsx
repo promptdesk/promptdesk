@@ -65,7 +65,7 @@ const promptStore = create<PromptStore>((set, get) => ({
 
     fetchAllPrompts: async () => {
         try {
-            const response = await fetch('http://localhost:4000/api/prompts');
+            const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompts`);
             if (!response.ok) {
                 throw new Error('Failed to fetch prompts');
             }
@@ -242,7 +242,7 @@ const promptStore = create<PromptStore>((set, get) => ({
 
     onlyFetchPrompts: async () => {
       try {
-          const response = await fetch('http://localhost:4000/api/prompts');
+          const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompts`);
           if (!response.ok) {
               throw new Error('Failed to fetch prompts');
           }
@@ -264,7 +264,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         set({ isPromptLoading: true });
         const model = modelStore.getState().modelObject;
         const prompt = get().promptObject;
-        const response = await fetch('http://localhost:4000/api/magic/', {
+        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/magic/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -275,18 +275,19 @@ const promptStore = create<PromptStore>((set, get) => ({
         if (!get().isPromptLoading) {
             return;
         }
+        console.log(data)
         set({ isPromptLoading: false });
-        if (model.type === 'chat' && data.data) {
+        if (model.type === 'chat' && data.message) {
             set((state) => {
                 const promptObject = { ...state.promptObject };
                 const messages = promptObject.prompt_data.messages || [];
-                messages.push(data.data.message);
+                messages.push(data.message);
                 promptObject.prompt_data.messages = messages;
                 return { promptObject };
             });
         }
         if (model.type === 'completion') {
-            set({ generatedText: data.data.trimmed_text });
+            set({ generatedText: data.message });
         }
     },
 
@@ -303,7 +304,7 @@ const promptStore = create<PromptStore>((set, get) => ({
             return;
         }
         prompt.new = undefined;
-        const response = await fetch('http://localhost:4000/api/prompt', {
+        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -333,7 +334,7 @@ const promptStore = create<PromptStore>((set, get) => ({
                 prompt: existingPrompt.prompt_data.prompt
             };
         }
-        const response = await fetch('http://localhost:4000/api/prompt/' + existingPrompt.id, {
+        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt/` + existingPrompt.id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -356,7 +357,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         if (exists) {
             promptToDuplicate.name = name + "_copy";
         }
-        const response = await fetch('http://localhost:4000/api/prompt', {
+        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -370,7 +371,7 @@ const promptStore = create<PromptStore>((set, get) => ({
 
     deletePrompt: async () => {
         const existingPrompt = get().promptObject;
-        const response = await fetch('http://localhost:4000/api/prompt/' + existingPrompt.id, {
+        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt/` + existingPrompt.id, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

@@ -33,7 +33,6 @@ Before you can start contributing, you'll need to set up the development environ
 3. Create a `.env.development.local` file: In the root directory of the cloned repository, create a file named `.env.development.local`. Open the file and add the following content:
 
    ```env
-   PROMPT_SERVER=http://localhost
    PROMPT_SERVER_PORT=4000
    DATABASE_SELECTION=mongodb
    OPEN_AI_KEY=[YOUR OPEN AI API KEY]

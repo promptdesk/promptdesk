@@ -1,40 +1,38 @@
-import connectToDatabase from '../models/mongodb/db';
-import { Model } from '../models/mongodb/model';
-import { Prompt } from '../models/mongodb/prompt';
-import { Variable } from '../models/mongodb/variable';
+import { Model, Prompt, Variable } from '../models/allModels';
 
 //read database.json file
 var fs = require('fs');
 var path = require('path');
-var config = fs.readFileSync(path.join(__dirname, './database.json'));
 
 //parse JSON
-var database_file = JSON.parse(config);
+var seed_data = fs.readFileSync(path.join(__dirname, './database.json'));
+seed_data = JSON.parse(seed_data);
 
 export default async function setup() {
     
-    await connectToDatabase();
-    
-    var variables:any = new Variable();
-    variables = await variables.getVariables();
+    var variable:any = new Variable();
+    var variable_list = await variable.getVariables();
     
     //if variables is empyt then create name and value with the OPEN_AI_KEY 
-    if(variables.length == 0) {
+    if(variable_list.length == 0) {
 
-        var variable = new Variable();
+        var model:any = new Model();
+        var prompt:any = new Prompt();
+
         var data = [{ "name": "OPEN_AI_KEY", "value": process.env.OPEN_AI_KEY }];
         await variable.createVariables(data);
 
-        var model:any = new Model();
-        var model_id = await model.createModel(database_file['models'][0])
-        console.log(model_id)
+        var model_id = await model.createModel(seed_data['models'][0])
     
-        var prompt:any = new Prompt();
-        database_file['prompts'][0]['model'] = model_id
-        prompt = await prompt.createPrompt(database_file['prompts'][0])
-        console.log(prompt)
+        seed_data['prompts'][0]['model'] = model_id
+        await prompt.createPrompt(seed_data['prompts'][0])
 
-        console.log("Database setup complete!")
+        model_id = await model.createModel(seed_data['models'][1])
+    
+        seed_data['prompts'][1]['model'] = model_id
+        await prompt.createPrompt(seed_data['prompts'][1])
+
+        console.log("INFO :: DATABASE SETUP COMPLETE")
 
     }
 

@@ -28,7 +28,6 @@ To run the PromptDesk Docker image, execute the following command, replacing the
 
 ```shell
 docker run \
-  -p 80:3000 \
   -p 4000:4000 \
   -e "MONGO_URL=[your mongodb:// url]" \
   -e "OPEN_AI_KEY=[your OpenAI API key]" \
@@ -37,7 +36,7 @@ docker run \
 
 ## Accessing the App
 
-Once the Docker container is running, open your web browser and navigate to http://localhost:80/ to access the PromptDesk application and start building prompts.
+Once the Docker container is running, open your web browser and navigate to http://localhost:4000/ to access the PromptDesk application and start building prompts.
 
 ![Alt Text](./screenshots/prompt-builder.png)
 

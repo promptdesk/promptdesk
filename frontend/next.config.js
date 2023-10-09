@@ -1,28 +1,19 @@
 /** @type {import('next').NextConfig} */
+
+var dotenv = require('dotenv')
+
+var NODE_ENV = process.env.NODE_ENV || 'development'
+
+dotenv.config({path:`../.env.${NODE_ENV}.local`})
+
+console.log(process.env.PROMPT_SERVER_URL)
+
 const nextConfig = {
-    //output: 'export',
-      // Optional: Change links `/me` -> `/me/` and emit `/me.html` -> `/me/index.html`
-  // trailingSlash: true,
- 
-  // Optional: Prevent automatic `/me` -> `/me/`, instead preserve `href`
-  // skipTrailingSlashRedirect: true,
- 
-  // Optional: Change the output directory `out` -> `dist`
-  // distDir: 'dist',
-  async redirects() {
-    return [
-      {
-        source: '/prompt',
-        destination: '/prompts',
-        permanent: true,
-      },
-      {
-        source: '/',
-        destination: '/prompts',
-        permanent: true,
-      },
-    ]
-  }
+  output: 'export',
+  distDir: './dist',
+  env: {
+    PROMPT_SERVER_URL: process.env.PROMPT_SERVER_URL,
+  },
 }
 
 module.exports = nextConfig

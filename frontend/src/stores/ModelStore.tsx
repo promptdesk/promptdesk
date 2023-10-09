@@ -22,7 +22,7 @@ const modelStore = create<ModelStore>((set) => ({
   modelObject: {type:"chat"} as Model,
   fetchAllModels: async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/models');
+      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/models`);
       const models = await response.json();
       console.log("FETCH", models)
       set({ models });
@@ -42,7 +42,7 @@ const modelStore = create<ModelStore>((set) => ({
   },
   saveModel: async (model: Model) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/model/${model.id}`, {
+      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model/${model.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const modelStore = create<ModelStore>((set) => ({
       if (exists) {
         model.name = model.name + " (copy)";
       }
-      const response = await fetch('http://localhost:4000/api/model', {
+      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ const modelStore = create<ModelStore>((set) => ({
   deleteModel: async (model: Model) => {
     try {
       const modelId = model.id;
-      const response = await fetch(`http://localhost:4000/api/model/${modelId}`, {
+      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model/${modelId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'

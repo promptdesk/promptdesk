@@ -2,7 +2,11 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "target": "es2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -21,9 +25,24 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*", "../shared/*"]
+      "@/*": [
+        "./src/*",
+        "../shared/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "pages/_app.js"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "pages/_app.js",
+    "dist/types/**/*.ts",
+    "../dist/types/**/*.ts",
+    "../backend/dist/types/**/*.ts",
+    "./dist/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
