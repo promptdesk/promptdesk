@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { shouldShowSaveModal, promptWorkspaceTabs } from "@/stores/general";
+import { shouldShowSaveModal } from "@/stores/GeneralStore";
+import { promptWorkspaceTabs } from "@/stores/TabStore";
 import { promptStore } from "@/stores/PromptStore";
 import { useRouter } from 'next/router';
 
@@ -73,7 +74,6 @@ const Modal = () => {
 
         //also found in the [id].tsx file
         if(isActiveTab(id) && tabs.length > 1) {
-          console.log(tabs.length)
           const bestNextTab = findBestNextTab();
           bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
         }

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Prompt as PromptInterface } from '@/interfaces/prompt';
 
 const promptSchema = mongoose.model(
   'PromptX',
@@ -9,45 +10,49 @@ const promptSchema = mongoose.model(
     prompt_variables: mongoose.Schema.Types.Mixed,
     prompt_parameters: mongoose.Schema.Types.Mixed,
     prompt_data: mongoose.Schema.Types.Mixed,
-    model_type: String
+    model_type: String,
+    organization_id: String,
   }, {
     timestamps: true
   })
 );
 
 class Prompt {
-  async createPrompt(promptData:any) {
+
+  async createPrompt(promptData:PromptInterface, organization_id:string) {
+    //add organization_id to promptData
+    promptData.organization_id = organization_id;
     const prompt = new promptSchema(promptData);
     await prompt.save();
     return prompt._id.toString();
   }
 
-  async findPrompt(id:any) {
-    const prompt = await promptSchema.findById(id);
+  async findPrompt(id:any, organization_id:string) {
+    const prompt = await promptSchema.findOne({ _id: id, organization_id });
     return prompt ? this.transformPrompt(prompt) : null;
   }
 
-  async findPromptByName(name:any) {
-    const prompt = await promptSchema.findOne({ name });
+  async findPromptByName(name:any, organization_id:string) {
+    const prompt = await promptSchema.findOne({ name, organization_id });
     return prompt ? this.transformPrompt(prompt) : null;
   }
 
-  async updatePromptById(updatedPrompt:any) {
+  async updatePrompt(updatedPrompt:any, organization_id:string) {
     const { id, ...promptData } = updatedPrompt;
-    await promptSchema.findByIdAndUpdate(id, promptData);
+    await promptSchema.findOneAndUpdate({ _id: id, organization_id }, promptData);
   }
 
-  async deletePrompt(id:any) {
-    await promptSchema.findByIdAndDelete(id);
+  async deletePrompt(id:any, organization_id:string) {
+    await promptSchema.findOneAndDelete({ _id: id, organization_id });
     return id;
   }
 
-  async countPrompts() {
-    return promptSchema.countDocuments();
+  async countPrompts(organization_id:string) {
+    return promptSchema.countDocuments({ organization_id });
   }
 
-  async listPrompts() {
-    const prompts = await promptSchema.find();
+  async listPrompts(organization_id:string) {
+    const prompts = await promptSchema.find({ organization_id});
     return prompts.map(this.transformPrompt);
   }
 
@@ -59,4 +64,4 @@ class Prompt {
   }
 }
 
-export { Prompt }
+export { Prompt, promptSchema }

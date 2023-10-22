@@ -6,8 +6,6 @@ var NODE_ENV = process.env.NODE_ENV || 'development'
 
 dotenv.config({path:`../.env.${NODE_ENV}.local`})
 
-console.log(process.env.PROMPT_SERVER_URL)
-
 const nextConfig = {
   output: 'export',
   distDir: './dist',

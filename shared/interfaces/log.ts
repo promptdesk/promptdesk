@@ -7,4 +7,5 @@ export interface Log {
     model_id: string;
     prompt_id: string;
     createdAt: Date;
+    organization_id: string;
 }

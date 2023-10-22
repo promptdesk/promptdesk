@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
-import { promptWorkspaceTabs } from '@/stores/general';
+import { promptWorkspaceTabs } from '@/stores/TabStore';
 import PlaygroundButton from '@/components/Form/PlaygroundButton';
 import Link from 'next/link';
 import { Prompt } from '@/interfaces/prompt';
@@ -19,7 +19,6 @@ export default function About() {
     const fetchPrompts = async () => {
       const promptList = await Promise.all(
         JSON.parse(JSON.stringify(prompts)).map(async (prompt:Prompt) => {
-          console.log("models", models)
           const model = models.find((model) => model.id === prompt.model);
           if (model) {
             prompt.model = model.name;

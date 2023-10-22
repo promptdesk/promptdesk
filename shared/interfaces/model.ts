@@ -8,4 +8,5 @@ export interface Model {
     output_format: string;
     model_parameters: any;
     default: boolean;
+    organization_id: string;
 }

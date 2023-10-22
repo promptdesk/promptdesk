@@ -34,7 +34,6 @@ Before you can start contributing, you'll need to set up the development environ
 
    ```env
    PROMPT_SERVER_PORT=4000
-   DATABASE_SELECTION=mongodb
    OPEN_AI_KEY=[YOUR OPEN AI API KEY]
    MONGO_URL=[YOUR MONGODB CONNECTION URI]
    ```

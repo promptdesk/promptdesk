@@ -66,8 +66,5 @@ const missingTestFiles = srcFileNames.filter((file) => {
 });
 
 if (missingTestFiles.length > 0) {
-    console.log('Missing test files for: ', missingTestFiles);
-    console.log("- Please create test files for the above files and run 'npm run test' again.")
-    console.log("- If a test file is not needed, please describe why it is not needed as a comment in the file.")
     process.exit(1);
 }

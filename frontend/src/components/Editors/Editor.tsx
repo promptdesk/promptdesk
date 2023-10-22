@@ -3,7 +3,6 @@ import { promptStore } from '@/stores/PromptStore';
 import EditorFooter from './Components/EditorFooter';
 import GeneratedOutput from './Components/GeneratedOutput';
 import Variables from '@/components/Editors/Variables';
-import Handlebars from 'handlebars';
 
 function Editor() {
     const { promptObject, setPromptInformation, setPromptVariables, processVariables } = promptStore();

@@ -4,6 +4,9 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
+import { apiKeyMiddleware, frontendAuthMiddleware } from './utils/authorization';
+
+//import basicAuth from 'express-basic-auth';
 
 //get NODE_ENV variable
 var environment = process.env.NODE_ENV;
@@ -28,6 +31,7 @@ import promptsRouter from './routes/api/prompts';
 import magicRouter from './routes/api/magic';
 import logsRouter from './routes/api/logs';
 import variablesRouter from './routes/api/variables';
+import organizationRouter from './routes/api/organization';
 
 // Middleware
 app.use(cors());
@@ -42,19 +46,24 @@ app.use(express.json());
 app.use(cors());
 
 // heartbeat route
-app.get('/api/ping', (req, res) => {
+app.get(['/api/ping', '/ping'], (req, res) => {
   return res.send('pong');
 });
+
+app.use('/api', apiKeyMiddleware);
 
 app.use('/api', magicRouter);
 app.use('/api', promptsRouter);
 app.use('/api', logsRouter);
 app.use('/api', modelsRouter);
 app.use('/api', variablesRouter);
+app.use('/api', organizationRouter);
 
 app.all('/api/*', (req, res) => {
-  return res.status(404).send({message: 'Not found'});
+  return res.status(404).send({error: 'Not found'});
 })
+
+app.use('/*', frontendAuthMiddleware)
 
 //serve static files
 app.use(express.static('./dist'))

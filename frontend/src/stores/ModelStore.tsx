@@ -1,7 +1,7 @@
-/* Refactored on September 4th 2023 */
-import { create } from 'zustand'
+import { create } from 'zustand';
 import { promptStore } from '@/stores/PromptStore';
 import { Model } from '@/interfaces/model';
+import { fetchFromPromptdesk } from '@/services/PromptdeskService'
 
 interface ModelStore {
   modelListSelector: { id: any; name: any; }[];
@@ -15,148 +15,82 @@ interface ModelStore {
   deleteModel: (model: Model) => Promise<void>;
 }
 
-const modelStore = create<ModelStore>((set) => ({
-  modelListSelector: [],
-  models: [],
-  selectedModeId: "",
-  modelObject: {type:"chat"} as Model,
-  fetchAllModels: async () => {
-    try {
-      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/models`);
-      const models = await response.json();
-      console.log("FETCH", models)
-      set({ models });
-      const dropdownModelList = models.map((model: Model) => ({
-        id: model.id,
-        name: model.name,
-      }));
-      set({ modelListSelector: dropdownModelList });
-      const defaultModel = models.find((model:any) => model.default === true);
-      set({ modelObject: defaultModel });
-      set({ selectedModeId: defaultModel?.id });
-      return models;
-    } catch (error) {
-      console.error('Error:', error);
-      return [];
-    }
-  },
-  saveModel: async (model: Model) => {
-    try {
-      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model/${model.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+const modelStore = create<ModelStore>(set => {
+
+    const fetchAllModels = async () => {
+        const models = await fetchFromPromptdesk('/api/models');
+        const dropdownModelList = models.map(({ id, name }: Model) => ({ id, name }));
+        const defaultModel = models.find((model: any) => model.default === true);
+
+        set({ 
+            models,
+            modelListSelector: dropdownModelList,
+            modelObject: defaultModel,
+            selectedModeId: defaultModel?.id
+        });
+
+        return models;
+    };
+
+    return {
+        modelListSelector: [],
+        models: [],
+        selectedModeId: "",
+        modelObject: { type: "chat" } as Model,
+
+        fetchAllModels,
+
+        setModelById: (id: string) => {
+            const model = modelStore.getState().models.find(m => m.id === id);
+            if (!model) return;
+
+            const updateData: any = {};
+            if (model.type === "completion") {
+                updateData.prompt_data = { prompt: "" };
+            } else if (model.type === "chat") {
+                updateData.prompt_data = { messages: [], context: "" };
+            }
+
+            set({ modelObject: model, selectedModeId: model.id });
+
+            promptStore.setState(state => ({
+                promptObject: { ...state.promptObject, ...updateData, model: model.id },
+                prompts: state.prompts.map(prompt => {
+                    if (prompt.id === state.promptObject.id) {
+                        return { ...prompt, model: model.id };
+                    }
+                    return prompt;
+                })
+            }));
         },
-        body: JSON.stringify(model),
-      });
-      const data = await response.json();
-      const models = await modelStore.getState().fetchAllModels();
-      const dropdownModelList = models.map((m: Model) => ({
-        id: m.id,
-        name: m.name,
-      }));
-      set({
-        models,
-        modelListSelector: dropdownModelList,
-      });
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  },
-  duplicateModel: async (model: Model) => {
-    try {
-      const models = modelStore.getState().models;
-      const exists = models.some((m: { name: any; }) => m.name === model.name);
-      if (exists) {
-        model.name = model.name + " (copy)";
-      }
-      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+
+        saveModel: async (model: Model) => {
+            await fetchFromPromptdesk(`/api/model/${model.id}`, 'PUT', model);
+            await fetchAllModels();
         },
-        body: JSON.stringify(model)
-      });
-      const data = await response.json();
-      const updatedModels = await modelStore.getState().fetchAllModels();
-      const dropdownModelList = updatedModels.map((m) => ({
-        id: m.id,
-        name: m.name
-      }));
-      set({ models: updatedModels, modelListSelector: dropdownModelList });
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  },
-  deleteModel: async (model: Model) => {
-    try {
-      const modelId = model.id;
-      const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/model/${modelId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
+
+        duplicateModel: async (model: Model) => {
+            const exists = modelStore.getState().models.some(m => m.name === model.name);
+            if (exists) {
+                model.name += " (copy)";
+                (model as any).id = undefined;
+            }
+
+            await fetchFromPromptdesk(`/api/model`, 'POST', model);
+            await fetchAllModels();
         },
-        body: JSON.stringify(model)
-      });
-      //call fetchAllModels
-      const updatedModels = await modelStore.getState().fetchAllModels();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  },
-  setModelById: (id: string) => {
-    if (!id) {
-      return;
-    }
-    const model = modelStore.getState().models.find((m) => m.id === id);
-    if (!model) {
-      return;
-    }
 
-    console.log("MODEL TYPE:", model.type)
+        deleteModel: async (model: Model) => {
+            await fetchFromPromptdesk(`/api/model/${model.id}`, 'DELETE');
+            await fetchAllModels();
+        },
 
-    //if model.type == completion => make sure that promptObject.prompt_data.prompt exists or is ""
-    if (model.type === "completion") {
-      if (!promptStore.getState().promptObject.prompt_data.prompt) {
-        promptStore.setState((state) => ({
-          promptObject: { ...state.promptObject, prompt_data: { prompt: "" } }
-        }));
-      }
-    }
-
-    //if model.type == chat => make sure that promptObject.prompt_data.messages exists or is []
-    if (model.type === "chat") {
-      if (!promptStore.getState().promptObject.prompt_data.messages) {
-        promptStore.setState((state) => ({
-          promptObject: { ...state.promptObject, prompt_data: { messages: [] } }
-        }));
-      }
-      if (!promptStore.getState().promptObject.prompt_data.context) {
-        promptStore.setState((state) => ({
-          promptObject: { ...state.promptObject, prompt_data: { context: "" } }
-        }));
-      }
-    }
-
-    set({ modelObject: model, selectedModeId: model.id });
-    promptStore.setState((state) => ({
-      promptObject: { ...state.promptObject, model: model.id },
-      prompts: state.prompts.map((prompt) => {
-        if (prompt.id === state.promptObject.id) {
-          return { ...prompt, model: model.id };
+        setModelByName: (name: string) => {
+            const model = modelStore.getState().models.find(m => m.name === name);
+            set({ modelObject: model, selectedModeId: model?.id });
+            promptStore.setState(state => ({ promptObject: { ...(state as any).promptObject, model: model?.id } }));
         }
-        return prompt;
-      })
-    }));
+    };
+});
 
-  },
-  setModelByName: (name: string) => {
-    const model = modelStore.getState().models.find((m) => m.name === name);
-    set({ modelObject: model, selectedModeId: model?.id });
-    promptStore.setState((state:any) => ({
-      promptObject: { ...state.promptObject, model: model?.id },
-    }));
-  }
-}));
-
-export { modelStore }
+export { modelStore };

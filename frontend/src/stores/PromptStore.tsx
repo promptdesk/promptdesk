@@ -2,17 +2,16 @@
 import { create } from 'zustand'
 import { modelStore } from '@/stores/ModelStore';
 import { Model } from '@/interfaces/model';
-import { promptWorkspaceTabs } from '@/stores/general';
-import router from 'next/router';
+import { Tab } from '@/interfaces/tab';
+import { promptWorkspaceTabs } from '@/stores/TabStore';
 import Handlebars from 'handlebars';
+import { fetchFromPromptdesk } from '@/services/PromptdeskService'
 
 import { Prompt } from "@/interfaces/prompt"
 
 interface PromptStore {
     promptObject: Prompt;
     prompts: Array<Prompt>;
-    isPromptLoading: boolean;
-    generatedText: string | undefined;
     defaultPrompt: Prompt;
     selectedVariable: string;
     fetchAllPrompts: () => Promise<Prompt[]>;
@@ -23,7 +22,6 @@ interface PromptStore {
     duplicateExistingPrompt: (name:string, description:string) => Promise<Prompt> | undefined;
     deletePrompt: () => void;
     addMessage: (string: string[]) => void;
-    callMagic: () => void;
     setPrompt: (id: string) => void;
     editMessageAtIndex: (index: number, message: string) => void;
     toggleRoleAtIndex: (index: number, roles: string[]) => void;
@@ -52,7 +50,8 @@ const defaultPrompt: Prompt = {
     },
     prompt_variables: {},
     new: true,
-    model_type: undefined
+    model_type: undefined,
+    organization_id: ""
 }
 
 const promptStore = create<PromptStore>((set, get) => ({
@@ -62,21 +61,6 @@ const promptStore = create<PromptStore>((set, get) => ({
     isPromptLoading: false,
     generatedText: undefined,
     selectedVariable: "",
-
-    fetchAllPrompts: async () => {
-        try {
-            const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompts`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch prompts');
-            }
-            const prompts = await response.json();
-            set({ prompts });
-            return prompts;
-        } catch (error) {
-            console.error('Error fetching prompts:', error);
-            throw error;
-        }
-    },
 
     setSelectedVariable: (variable: string) => {
         set({ selectedVariable: variable });
@@ -108,10 +92,8 @@ const promptStore = create<PromptStore>((set, get) => ({
 
 
     setPromptInformation: (key: any, value: any) => {
-        console.log(key, value)
         set((state) => {
             const promptObject = { ...state.promptObject };
-            console.log("promptObject", promptObject)
             //create promptObject['prompt_parameters'] if it doesn't exist
             if (!promptObject.prompt_parameters) {
                 promptObject.prompt_parameters = {};
@@ -131,7 +113,6 @@ const promptStore = create<PromptStore>((set, get) => ({
     },
 
     updatePromptObjectInPrompts: (promptObject: Prompt) => {
-        console.log(promptObject)
         set((state) => {
             const prompts = state.prompts.map((prompt) => {
                 if (prompt.id === promptObject.id) {
@@ -207,10 +188,20 @@ const promptStore = create<PromptStore>((set, get) => ({
     editMessageAtIndex: (index: number, newValue: string) => {
         set((state) => {
             const promptObject = { ...state.promptObject };
-            console.log("promptObject --", promptObject.id)
             promptObject.prompt_data.messages[index].content = newValue;
-            
             promptStore.setState({ promptObject });
+
+            //set promptObject in prompts
+            promptStore.setState((state: { prompts: Prompt[]; }) => ({
+                prompts: state.prompts.map((prompt) => {
+                    if (prompt.id === promptObject.id) {
+                        return promptObject;
+                    } else {
+                        return prompt;
+                    }
+                })
+            }));
+
             return { promptObject };
         });
     },
@@ -240,55 +231,15 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
     },
 
-    onlyFetchPrompts: async () => {
-      try {
-          const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompts`);
-          if (!response.ok) {
-              throw new Error('Failed to fetch prompts');
-          }
-          const prompts = await response.json();
-          return prompts;
-      } catch (error) {
-          console.error('Error fetching prompts:', error);
-          throw error;
-      }
-  },
+    fetchAllPrompts: async () => {
+        const prompts = await fetchFromPromptdesk('/api/prompts')
+        set({ prompts });
+        return prompts;
+    },
 
-    callMagic: async () => {
-        if (get().isPromptLoading) {
-            set({ isPromptLoading: false });
-            set({ generatedText: undefined });
-            return;
-        }
-        set({ generatedText: "Loading..." });
-        set({ isPromptLoading: true });
-        const model = modelStore.getState().modelObject;
-        const prompt = get().promptObject;
-        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/magic/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(prompt)
-        });
-        const data = await response.json();
-        if (!get().isPromptLoading) {
-            return;
-        }
-        console.log(data)
-        set({ isPromptLoading: false });
-        if (model.type === 'chat' && data.message) {
-            set((state) => {
-                const promptObject = { ...state.promptObject };
-                const messages = promptObject.prompt_data.messages || [];
-                messages.push(data.message);
-                promptObject.prompt_data.messages = messages;
-                return { promptObject };
-            });
-        }
-        if (model.type === 'completion') {
-            set({ generatedText: data.message });
-        }
+    onlyFetchPrompts: async () => {
+        const prompts = await fetchFromPromptdesk('/api/prompts')
+        return prompts;
     },
 
     isValidName: (name: string) => {
@@ -304,14 +255,7 @@ const promptStore = create<PromptStore>((set, get) => ({
             return;
         }
         prompt.new = undefined;
-        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(prompt)
-        });
-        const data = await response.json();
+        const data = await fetchFromPromptdesk('/api/prompt', 'POST', prompt);
         await get().fetchAllPrompts();
         promptWorkspaceTabs.getState().updateNameById(prompt.id, data.id, prompt.name);
         return data.id;
@@ -334,61 +278,53 @@ const promptStore = create<PromptStore>((set, get) => ({
                 prompt: existingPrompt.prompt_data.prompt
             };
         }
-        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt/` + existingPrompt.id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(existingPrompt)
-        });
-        await response.json();
+        await fetchFromPromptdesk(`/api/prompt/${existingPrompt.id}`, 'PUT', existingPrompt);
         await get().fetchAllPrompts();
         promptWorkspaceTabs.getState().updateNameById(existingPrompt.id, existingPrompt.id, existingPrompt.name);
     },
 
     duplicateExistingPrompt: async (name: string, description: string) => {
-        const dbPrompts = await get().onlyFetchPrompts();
-        const promptToDuplicate = { ...get().promptObject, description, name };
-        const exists = dbPrompts.some((prompt) => prompt.name === name);
-        if(!get().isValidName(promptToDuplicate.name)) {
-            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+        const { onlyFetchPrompts, promptObject, isValidName } = await get();
+        const dbPrompts = await onlyFetchPrompts();
+    
+        // Create a shallow copy of the prompt object and override the name and description
+        const promptToDuplicate = { ...promptObject, description, name };
+    
+        const nameIsValid = /^[A-Za-z0-9_-]+$/.test(promptToDuplicate.name);
+        const nameExists = dbPrompts.some((prompt) => prompt.name === name);
+    
+        if (!nameIsValid) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -");
             return undefined as any;
         }
-        if (exists) {
-            promptToDuplicate.name = name + "_copy";
+    
+        if (nameExists) {
+            promptToDuplicate.name += "_copy";
         }
-        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(promptToDuplicate)
-        });
-        const data = await response.json();
+    
+        const data = await fetchFromPromptdesk('/api/prompt', 'POST', promptToDuplicate);
         promptToDuplicate.id = data.id;
         return promptToDuplicate;
     },
+    
 
     deletePrompt: async () => {
-        const existingPrompt = get().promptObject;
-        const response = await fetch(`${process.env.PROMPT_SERVER_URL}/api/prompt/` + existingPrompt.id, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(existingPrompt)
+        const { promptObject } = get();
+        await fetchFromPromptdesk(`/api/prompt/${promptObject.id}`, 'DELETE', promptObject);
+        
+        set((state) => ({
+            prompts: state.prompts.filter((prompt) => prompt.id !== promptObject.id),
+            promptObject: defaultPrompt
+        }));
+        
+        const { models } = modelStore.getState();
+        const defaultModel = models.find((model) => model.default);
+        modelStore.setState({
+            selectedModeId: defaultModel?.id,
+            modelObject: defaultModel
         });
-        await response.json();
-        await get().fetchAllPrompts();
-        set({ promptObject: defaultPrompt });
-        const models: Model[] = modelStore.getState().models;
-        const defaultModel = models.find((model) => model.default === true);
-        if (defaultModel) {
-            modelStore.setState({ selectedModeId: defaultModel.id });
-        }
-        modelStore.setState({ modelObject: defaultModel });
-        //promptWorkspaceTabs.getState().removeTab(existingPrompt.id);
-    },
+    }
+    
 }));
 
 export { promptStore };

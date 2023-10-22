@@ -1,20 +1,17 @@
 import express from 'express';
 import axios from 'axios';
-import dotenv from 'dotenv';
-import { Model, Prompt, Log, Variable } from '../../models/allModels';
+import { Model, Prompt, Log, Variable} from '../../models/allModels';
 import handlebars from 'handlebars';
+
+let model_db = new Model();
+let prompt_db = new Prompt();
+let log_db = new Log();
+let variable_db = new Variable();
 
 const router = express.Router();
 
-var model_db = new Model();
-var prompt_db = new Prompt();
-var log_db = new Log();
-var variable_db = new Variable();
-
 function env_variable_object(prompt_variables: any): object {
     var variables: { [key: string]: string } = {};
-
-    console.log(prompt_variables)
 
     if (!prompt_variables) {
         return {};
@@ -39,52 +36,60 @@ function variable_object(prompt_variables: any): any {
 
 }
 
+async function prompt_model_validation(organization:any, body:any) {
+
+    var prompt = undefined;
+    var proxy = false;
+    var error = undefined;
+
+    if (body.prompt_name) {
+        prompt = await prompt_db.findPromptByName(body.prompt_name, organization.id);
+
+        if (!prompt) {
+            return [undefined, undefined, undefined, { error: 'Prompt name is required', status: 404 }]
+        }
+        proxy = true;
+    } else {
+        prompt = body
+    }
+
+    if(!prompt){
+        return [undefined, undefined, undefined, { error: 'Prompt not found.', status: 404 }]
+    }
+
+    var model_id = prompt.model
+
+    const model = await model_db.findModel(model_id, organization.id);
+
+    if(!model){
+        return [undefined, undefined, undefined, { error: 'Model not found.', status: 404 }]
+    }
+    
+    if(!model.api_call){
+        return [undefined, undefined, undefined, { error: 'Model API not found.', status: 404 }]
+    }
+
+    return [prompt, model, proxy, error]
+}
+
 // Route for /api/magic/gpt-3.5-turbo
 router.all(['/magic', '/magic/generate'], async (req, res) => {
+    const organization = (req as any).organization;
 
     try {
 
-        var prompt = undefined;
-        var proxy = false;
-    
-        //check if prompt_name is provided
-        if (req.body.prompt_name) {
-            prompt = await prompt_db.findPromptByName(req.body.prompt_name);
-            console.log(prompt)
-            if (!prompt) {
-                return res.status(404).json({ error: 'Prompt name is required', status: 404 });
-            }
-            proxy = true;
-        } else {
-            prompt = req.body
+        let [ prompt, model, proxy, error ] = await prompt_model_validation(organization, req.body);
+
+        if(error){
+            return res.status(error.status).json({ error: error.error, status: error.status });
         }
-    
-        if(!prompt){
-            return res.status(404).json({ error: 'Prompt not found.', status: 404 });
-        }
-    
-        var model_id = prompt.model
-    
-        const model = await model_db.findModel(model_id);
-    
-        if(!model){
-            return res.status(404).json({ error: 'Model not found.', status: 404 });
-        }
-        
-        if(!model.api_call){
-            return res.status(404).json({ error: 'Model API not found.', status: 404 });
-        }
-    
+
         var start = Date.now()
     
         //get variables from variables db
-        var environment_variables = await variable_db.getVariables()
-        console.log(environment_variables)
+        var environment_variables = await variable_db.getVariables(organization.id);
     
-        var api_call = JSON.stringify(model.api_call) as any;
-    
-        console.log(api_call)
-    
+        var api_call = JSON.stringify(model.api_call) as any;    
     
         environment_variables = env_variable_object(environment_variables)
     
@@ -107,9 +112,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     
         var input_format = eval(model.input_format)
         var output_format = eval(model.output_format)
-    
-        console.log("prompt.prompt_variables", prompt.prompt_variables)
-    
+        
         var variables = req.body.variables || {}
         if(!proxy){
             variables = variable_object(prompt.prompt_variables)
@@ -121,9 +124,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.', status: 400});
             }
         }
-    
-        //console.log(variables)
-    
+        
         var prompt_data = JSON.stringify(prompt.prompt_data)
         var prompt_data_template = handlebars.compile(prompt_data);
     
@@ -143,13 +144,21 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
             var obj = {
                 message: data,
                 error: false,
-                raw_response: response.data,
-                raw_request: body,
+                raw: {
+                    request: body,
+                    response: response.data
+                },
+                data: {
+                    ...prompt.prompt_data,
+                    ...{
+                        variables: variables
+                    }
+                },
                 status: 200,
-                model_id: model_id,
+                model_id: prompt.model,
                 prompt_id: prompt.id
             } as any;
-            log_db.createLog(obj)
+            log_db.createLog(obj, organization.id)
             return res.status(200).json(obj);
 
         } catch (error:any) {
@@ -157,13 +166,21 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
             var obj = {
                 message: undefined,
                 error: true,
-                raw_response: error,
-                raw_request: body,
-                status: error,
-                model_id: model_id,
+                raw: {
+                    request: body,
+                    response: error.response.data
+                },
+                data: {
+                    ...prompt.prompt_data,
+                    ...{
+                        variables: variables
+                    }
+                },
+                status: error.response.status,
+                model_id: prompt.model,
                 prompt_id: prompt.id
             } as any;
-            log_db.createLog(obj)
+            log_db.createLog(obj, organization.id)
             return res.status(error.response.status).json(obj);
 
         }
@@ -171,15 +188,14 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     } catch (error:any) {
 
         var obj = {
-            message: undefined,
+            message: error.message,
             error: true,
-            raw_response: error.message,
-            raw_request: body,
-            status: error.message,
-            model_id: model_id,
-            prompt_id: prompt.id
+            raw: {
+                request: body
+            },
+            status: 500
         } as any;
-        log_db.createLog(obj)
+        log_db.createLog(obj, organization.id)
         return res.status(500).json(obj);
 
     }

@@ -4,10 +4,11 @@ import AddMessage from './Components/AddMessage';
 import MessageContainer from './Components/MessageContainer';
 import EditorFooter from './Components/EditorFooter';
 import Variables from '@/components/Editors/Variables';
+import GeneratedOutput from './Components/GeneratedOutput';
 import { promptStore } from '@/stores/PromptStore';
 
 function Editor() {
-  const { promptObject, setPromptInformation, setPromptVariables, processVariables } = promptStore();
+  const { promptObject, setPromptInformation, setPromptVariables, processVariables, prompts } = promptStore();
 
   const handleSystemInput = (e:any) => {
     const systemInput = e.target.value;
@@ -19,12 +20,12 @@ function Editor() {
     const context = promptObject?.prompt_data.context || '';
     const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
     processVariables(`${context} ${messages}`);
-  }, [promptObject?.name, promptObject?.prompt_data?.messages?.length, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
+  }, [promptObject?.name, promptObject.id, promptObject?.prompt_data?.messages?.length, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
 
   return (
     <div className="flex flex-col">
       <Variables />
-      <div className="chat-pg-body body-small flex-1">
+      <div className="chat-pg-body body-small flex-1 overflow-hidden">
         <div>
           <div className="text-input-with-header chat-pg-instructions">
             <div className="text-input-header-subheading subheading">System</div>
@@ -52,7 +53,10 @@ function Editor() {
               </div>
             </div>
           </div>
-          <EditorFooter />
+          <div>
+            <GeneratedOutput />
+            <EditorFooter />
+          </div>
         </div>
       </div>
     </div>

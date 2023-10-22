@@ -1,10 +1,18 @@
 "use client";
-import React from 'react';
+import React, { useEffect } from 'react';
 import { promptStore } from "@/stores/PromptStore";
-
+import { promptWorkspaceTabs } from "@/stores/TabStore";
+import { makeMagic } from "@/services/MagicService";
 function EditorFooter() {
 
-  const { callMagic, isPromptLoading } = promptStore();
+  const { getDataById, activeTabeId, tabs } = promptWorkspaceTabs();
+  const [ isPromptLoading, setIsPromptLoading ] = React.useState(false);
+
+  useEffect(() => {
+    const data = getDataById(activeTabeId as string);
+    setIsPromptLoading(data?.loading);
+    }, [activeTabeId, tabs, getDataById]);
+
 
   return (
     <div className="pg-content-footer">
@@ -20,8 +28,8 @@ function EditorFooter() {
           aria-expanded="false"
         >
         <span className="btn-label-wrap">
-            <span className="btn-label-inner" onClick={() => callMagic()}>
-                {isPromptLoading ? "Cancel" : "Submit"}
+            <span className="btn-label-inner" onClick={() => makeMagic(activeTabeId as string)}>
+                {isPromptLoading ? "Processing..." : "Submit"}
             </span>
         </span>
         </button>

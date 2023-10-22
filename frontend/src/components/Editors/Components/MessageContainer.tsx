@@ -1,41 +1,53 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
-import Handlebars from 'handlebars';
 
 interface MessageContainerProps {
   index: number;
 }
 
 const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
-  const { promptObject, editMessageAtIndex, toggleRoleAtIndex, setPromptVariables, processVariables } = promptStore();
+
+  const { 
+    promptObject, 
+    editMessageAtIndex, 
+    toggleRoleAtIndex, 
+    processVariables 
+  } = promptStore();
+  
   const { modelObject } = modelStore();
-
   const textAreaRef = useRef<HTMLDivElement | null>(null);
+  
+  const id = promptObject?.id;
+  const messages = promptObject?.prompt_data?.messages || [];
+  const currentMessage = messages[index] || {};
+  const defaultRole = currentMessage.role || modelObject?.model_parameters.roles[1];
 
-  const { messages } = promptObject?.prompt_data || {};
-  const { role: defaultRole } = messages?.[index] || { role: "user" };
-  const article = defaultRole.charAt(0).toLowerCase() === "u" ? "an" : "a";
-
-  const [message, setMessage] = React.useState(promptObject?.prompt_data?.messages[index]?.content || "");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    setMessage(promptObject?.prompt_data?.messages[index]?.content || "");
-  }, [promptObject.id, promptObject?.prompt_data?.messages, index]);
+      // Instead of using the state, update the contentEditable <div> directly.
+      const messageText = currentMessage.content || "";
+      if (textAreaRef.current) {
+        textAreaRef.current.innerHTML = messageText;
+      }
+  }, [id]);
 
-  const handleTextAreaChange = (e: React.ChangeEvent<HTMLDivElement>) => {
-    console.log("promptObject.id", promptObject.id)
-    editMessageAtIndex(index, e.target.textContent || "");
-    processVariables(`${promptObject.prompt_data.context} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
-  };
 
   const handleRoleToggle = () => {
     const roles = modelObject?.model_parameters.roles;
     toggleRoleAtIndex(index, roles);
   };
 
+  function handleTextAreaChange() {
+    editMessageAtIndex(index, textAreaRef.current?.innerHTML || "");
+    processVariables(`${promptObject.prompt_data.context} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
+  }
+  
+  const article = defaultRole.startsWith("u") ? "an" : "a";
+  
   const placeholder = `Enter ${article} ${defaultRole} message here.`;
 
   return (
@@ -43,7 +55,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
       <div className="chat-message-role">
         <div className="chat-message-subheading subheading">
           <span className="chat-message-role-text" onClick={handleRoleToggle}>
-            {messages[index]?.role}
+            {defaultRole}
           </span>
         </div>
       </div>
@@ -57,7 +69,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
           suppressContentEditableWarning={true}
           onInput={handleTextAreaChange}
         >
-          {message || ""}
+          {message}
         </div>
       </div>
       <RemoveMessage index={index} />

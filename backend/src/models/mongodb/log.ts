@@ -5,11 +5,13 @@ const logSchema = mongoose.model(
   new mongoose.Schema(
     {
       message: mongoose.Schema.Types.Mixed,
-      raw_response: mongoose.Schema.Types.Mixed,
-      raw_request: mongoose.Schema.Types.Mixed,
+      raw: mongoose.Schema.Types.Mixed,
+      data: mongoose.Schema.Types.Mixed,
+      error: Boolean,
       status: Number,
       model_id: String,
-      prompt_id: String
+      prompt_id: String,
+      organization_id: String,
     },
     {
       timestamps: true
@@ -18,20 +20,23 @@ const logSchema = mongoose.model(
 );
 
 class Log {
-  async createLog(logData: any) {
+  async createLog(logData: any, organization_id: string) {
+    //add organization_id to logData
+    logData.organization_id = organization_id;
     const log = new logSchema(logData);
     await log.save();
     return log._id.toString();
   }
 
-  async findLog(id: any) {
-    const log = await logSchema.findById(id);
+  async findLog(id: any, organization_id: string) {
+    const log = await logSchema.findOne({ _id: id, organization_id });
     return log ? this.transformLog(log) : null;
   }
 
-  async getLogs(page:any, limit = 10) {
+  async getLogs(page:any, limit = 10, organization_id: string) {
+
     const skip = (page - 1) * limit;
-    const logs = await logSchema.find()
+    const logs = await logSchema.find({ organization_id })
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 }); // Sort by descending order of creation time
@@ -46,4 +51,4 @@ class Log {
   }
 }
 
-export { Log }
+export { Log, logSchema }

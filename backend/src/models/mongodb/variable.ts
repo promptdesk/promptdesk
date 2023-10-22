@@ -8,31 +8,34 @@ const variableSchema = mongoose.model(
         name: String,
         value: String,
       }
-    ]
+    ],
+    organization_id: String,
   }, {
     timestamps: true
   })
 );
 
 class Variable {
-  async createVariables(data_list:any) {
+
+  async createVariables(data_list:any, organization_id:string) {
     const prompt = new variableSchema({
-      data: data_list
+      data: data_list,
+      organization_id: organization_id
     });
     await prompt.save();
     return prompt._id.toString();
   }
 
-  async updateVariables(data_list: any) {
-    const variables = await variableSchema.findOne();
+  async updateVariables(data_list: any, organization_id: string) {
+    const variables = await variableSchema.findOne({ organization_id });
     const id = variables?._id;
     await variableSchema.findByIdAndUpdate(id, {
       data: data_list
     });
   }
 
-  async getVariables() {
-    var variables:any = await variableSchema.findOne();
+  async getVariables(organization_id:string) {
+    var variables:any = await variableSchema.findOne({ organization_id });
     //convert variables to json
     variables = variables?.toObject();
     if (variables) {
@@ -45,12 +48,12 @@ class Variable {
     }
   }
 
-  async deleteVariables() {
-    //remove all variables
-    await variableSchema.deleteMany({});
+  async deleteVariables(organization_id:string) {
+
+    await variableSchema.deleteOne({ organization_id });
 
   }
 
 }
 
-export { Variable }
+export { Variable, variableSchema }

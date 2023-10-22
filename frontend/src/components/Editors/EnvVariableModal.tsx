@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { variableStore } from "@/stores/VariableStore";
-import { shouldShowEnvVariableModal } from "@/stores/general";
+import { shouldShowEnvVariableModal } from "@/stores/GeneralStore";
 
 const Modal = () => {
 
@@ -33,7 +33,6 @@ const Modal = () => {
       alert("Variable name already exists")
       return 0;
     }
-    console.log("createNewVariable", formValues)
     var newVariable = {
       name: formValues.name,
       value: formValues.value,

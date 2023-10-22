@@ -1,0 +1,4 @@
+export interface Organization {
+    name: string;
+    keys: any[];
+}

@@ -8,7 +8,8 @@ COPY shared ./shared
 COPY entrypoint.sh /entrypoint.sh
 
 ENV PROMPT_SERVER_PORT=4000
-ENV DATABASE_SELECTION=mongodb
+ENV HOSTING=local
+ENV USERNAME=admin
 
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

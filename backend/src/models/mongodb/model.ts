@@ -14,7 +14,8 @@ const modelSchema = mongoose.model(
       input_format: String,
       output_format: String,
       model_parameters: mongoose.Schema.Types.Mixed,
-      default: Boolean
+      default: Boolean,
+      organization_id: String,
     },
     {
       timestamps: true
@@ -23,34 +24,39 @@ const modelSchema = mongoose.model(
 );
 
 class Model {
+
+  //assign modelSchema to variable db
+  db = modelSchema;
   
-  async createModel(modelData:any) {
+  async createModel(modelData:any, organization_id:string) {
+    //add organization_id to modelData
+    modelData.organization_id = organization_id;
     const model = new modelSchema(modelData);
     await model.save();
     return model._id.toString();
   }
 
-  async findModel(id:any) {
-    const model = await modelSchema.findById(id);
+  async findModel(id:any, organization_id:string) {
+    const model = await modelSchema.findOne({ _id: id, organization_id });
     return model ? this.transformModel(model) : null;
   }
 
-  async updateModelById(updatedModel:any) {
+  async updateModelById(updatedModel:any, organization_id:string) {
     const { id, ...modelData } = updatedModel;
-    await modelSchema.findByIdAndUpdate(id, modelData);
+    await modelSchema.updateOne({ _id: id, organization_id }, modelData);
   }
 
-  async deleteModel(id:any) {
-    await modelSchema.findByIdAndDelete(id);
+  async deleteModel(id:any, organization_id:string) {
+    await modelSchema.deleteOne({ _id: id, organization_id });
     return id;
   }
 
-  async countModels() {
-    return modelSchema.countDocuments();
+  async countModels(organization_id:string) {
+    return modelSchema.countDocuments({ organization_id });
   }
 
-  async listModels() {
-    const models = await modelSchema.find();
+  async listModels(organization_id:string) {
+    const models = await modelSchema.find({ organization_id });
     return models.map(this.transformModel);
   }
 
@@ -62,4 +68,4 @@ class Model {
   }
 }
 
-export { Model }
+export { Model, modelSchema }

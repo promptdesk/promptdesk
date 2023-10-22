@@ -10,8 +10,8 @@ import ErrorPage from 'next/error';
 import {
   shouldShowSaveModal,
   shouldShowSaveVariableModal,
-  promptWorkspaceTabs,
-} from "@/stores/general";
+} from "@/stores/GeneralStore";
+import {promptWorkspaceTabs} from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
 
@@ -73,7 +73,6 @@ export default function Home() {
     e.stopPropagation();
 
     if(isActiveTab(id) && tabs.length > 1) {
-      console.log(tabs.length)
       const bestNextTab = findBestNextTab();
       bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
     }

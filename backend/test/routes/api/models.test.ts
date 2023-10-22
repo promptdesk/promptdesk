@@ -2,13 +2,21 @@ import request from 'supertest';
 import app from '../../../src/index'; // Adjust the path as needed
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import { Organization } from '../../../src/models/mongodb/organization';
 
 describe('Model API', function() {
   this.timeout(10000); // Set timeout to 10 seconds for all tests in this describe block
   let modelId = '';
+  let token = '';
+  const organization_db = new Organization();
+
+  before(async () => {
+    const organization = await organization_db.getOrganization();
+    token = organization.keys[0].key
+  })
 
   it('should respond with 200 and have a models array on GET /models', async function() {
-    const res = await request(app).get('/api/models');
+    const res = await request(app).get('/api/models').set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(200);
     expect(res.body).to.be.an('array');
   });
@@ -18,14 +26,14 @@ describe('Model API', function() {
       // Your model data here
     };
     
-    const res = await request(app).post('/api/model').send(modelData);
+    const res = await request(app).post('/api/model').send(modelData).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(201);
     expect(res.body).to.have.property('id');
     modelId = res.body.id;
   });
 
   it('should respond with 200 and the model JSON on GET /model/:id', async function() {
-    const res = await request(app).get(`/api/model/${modelId}`);
+    const res = await request(app).get(`/api/model/${modelId}`).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(200);
     expect(res.body).to.be.an('object');
     // You can add more specific checks for the model JSON properties here
@@ -35,21 +43,19 @@ describe('Model API', function() {
     const updatedModelData = {
       // Your updated model data here
     };
-    
-    const res = await request(app).put(`/api/model/${modelId}`).send(updatedModelData);
+    const res = await request(app).put(`/api/model/${modelId}`).send(updatedModelData).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(200);
-    // Check if the updated data is returned or if necessary, do a GET request to verify updates
   });
 
   it('should delete the model and respond with 200 on DELETE /model/:id', async function() {
-    const res = await request(app).delete(`/api/model/${modelId}`);
+    const res = await request(app).delete(`/api/model/${modelId}`).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('id', modelId);
   });
 
   it('should respond with 404 on GET /model/:id with non-existent id', async function() {
     const nonExistentModelId = modelId;
-    const res = await request(app).get(`/api/model/${nonExistentModelId}`);
+    const res = await request(app).get(`/api/model/${nonExistentModelId}`).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(404);
   });
 

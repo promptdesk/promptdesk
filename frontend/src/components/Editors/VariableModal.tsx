@@ -1,7 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import {
   shouldShowSaveVariableModal
-} from "@/stores/general";
+} from "@/stores/GeneralStore";
 
 import { promptStore } from "@/stores/PromptStore";
 import router from "next/router";
@@ -16,8 +16,6 @@ const Modal = () => {
   const { promptObject } = promptStore(); // Assuming this is the correct usage for the store
 
   var obj = promptObject.prompt_variables
-
-  //console.log("obj", promptObject, obj, promptStore.getState().selectedVariable)
 
   var x = obj[promptStore.getState().selectedVariable].value
 

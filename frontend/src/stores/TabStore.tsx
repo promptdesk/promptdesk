@@ -1,34 +1,11 @@
 import { create } from 'zustand'
 import { promptStore } from './PromptStore';
-
-export interface SnowPromptHistory {
-  show : boolean;
-  toogle: () => void;
-}
-
-export interface SnowShouldShowSaveModal {
-  show_modal: boolean;
-  toggle_modal: () => void; // Corrected property name
-}
-
-export interface shouldShowSaveVariableModal {
-  show_variable_modal: boolean;
-  toggle_variable_modal: (variable_name?: string) => void; // Corrected property name
-}
-
-export interface shouldShowEnvVariableModal {
-  show_env_variable_modal: boolean;
-  toggle_env_variable_modal: () => void; // Corrected property name
-}
-
-interface Tab {
-  name: string;
-  prompt_id: string;
-  current: boolean;
-}
+import { Tab } from '@/interfaces/tab';
 
 export interface PromptWorkspaceTabs {
   tabs: Tab[];
+  activeTabIndex: number | undefined;
+  activeTabeId: string | undefined;
   isActiveTab: (id: string) => boolean | undefined;
   addTab: (name: string, id: string, current: boolean) => void;
   setActiveTab: (name: string) => void;
@@ -39,10 +16,16 @@ export interface PromptWorkspaceTabs {
   deactivateAllTabs: () => void;
   removeTabFromTabs: (id: string) => Tab[] | undefined;
   findBestNextTab: () => Tab | undefined;
+  updateDataById: (id: string, data: any) => void;
+  getDataById: (id: string) => any;
+  getDataByIndex: (index: number) => any;
 }
 
 const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
+
   tabs: [],
+  activeTabIndex: undefined,
+  activeTabeId: undefined,
   saveTabsToLocalStorage() {
     localStorage.setItem("tabs", JSON.stringify(get().tabs));
   },
@@ -52,21 +35,24 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   },
   deactivateAllTabs() {
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: false })) }));
+    //set active tab to undefined
+    promptWorkspaceTabs.setState(() => ({
+      activeTabIndex: undefined,
+      activeTabeId: undefined
+    }))
   },
   addTab(name, prompt_id, current) {
     get().deactivateAllTabs();
-    set(({ tabs }) => ({ tabs: [...tabs, { name, prompt_id, current }] }));
+    set(({ tabs }) => ({ tabs: [...tabs, { name, prompt_id, current, data:{} }] }));
     get().saveTabsToLocalStorage();
   },
   removeTabFromTabs(id) {
     set(({ tabs }) => ({ tabs: tabs.filter(tab => tab.prompt_id !== id) }));
-    console.log("1removeTabFromTabs", id, get().tabs);
     get().saveTabsToLocalStorage();
     //set tabs
     promptWorkspaceTabs.setState((state: { tabs: Tab[]; }) => ({
       tabs: state.tabs.filter(tab => tab.prompt_id !== id)
     }))
-    console.log("2removeTabFromTabs", id, get().tabs);
     return get().tabs;
   },
   findBestNextTab() {
@@ -89,6 +75,11 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
     } else {
       get().deactivateAllTabs();
       set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.prompt_id === id })) }));
+      //set activeTabIndex
+      promptWorkspaceTabs.setState(() => ({
+        activeTabIndex: get().tabs.findIndex(tab => tab.prompt_id === id),
+        activeTabeId: id
+      }))
       get().saveTabsToLocalStorage();
     }
   },
@@ -98,6 +89,11 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   setActiveTab(name) {
     get().deactivateAllTabs();
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.name === name })) }));
+    //set activeTabIndex
+    promptWorkspaceTabs.setState(() => ({
+      activeTabIndex: get().tabs.findIndex(tab => tab.name === name),
+      activeTabeId: get().tabs.find(tab => tab.name === name)?.prompt_id
+    }))
     get().saveTabsToLocalStorage();
   },
   updateNameById(id, newId, name) {
@@ -105,43 +101,24 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
       tabs: tabs.map(tab => (tab.prompt_id === id ? { ...tab, name, prompt_id: newId } : tab)),
     }));
     get().saveTabsToLocalStorage();
-  }  
-}));
-
-const showPromptHistory = create<SnowPromptHistory>((set) => ({
-  show: false,
-  toogle: () => set((state: { show: boolean; }) => ({ show: !state.show })),
-}))
-
-const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
-  show_modal: false,
-  toggle_modal: () => {
-    shouldShowSaveModal.setState((state: { show_modal: boolean; }) => ({
-      show_modal: !state.show_modal
-    }))
   },
-}));
-
-const shouldShowSaveVariableModal = create<shouldShowSaveVariableModal>((set) => ({
-  show_variable_modal: false,
-  toggle_variable_modal: (variableName: string | undefined) => {
-    shouldShowSaveVariableModal.setState((state: { show_variable_modal: boolean; }) => ({
-      show_variable_modal: !state.show_variable_modal
-    }))
-    if(variableName !== undefined) {
-      promptStore.getState().setSelectedVariable(variableName)
+  updateDataById(id:string, data:any) {
+    set(({ tabs }) => ({
+      tabs: tabs.map(tab => (tab.prompt_id === id ? { ...tab, data } : tab)),
+    }));
+    get().saveTabsToLocalStorage();
+  },
+  getDataById(id:string) {
+    return get().tabs.find(tab => tab.prompt_id === id)?.data;
+  },
+  getDataByIndex(index:number) {
+    if(get().tabs[index] === undefined) {
+      return {};
     }
-  },
+    return get().tabs[index].data;
+  }
 }));
 
-const shouldShowEnvVariableModal = create<shouldShowEnvVariableModal>((set) => ({
-  show_env_variable_modal: false,
-  toggle_env_variable_modal: () => {
-    shouldShowEnvVariableModal.setState((state: { show_env_variable_modal: boolean; }) => ({
-      show_env_variable_modal: !state.show_env_variable_modal
-    }))
-  },
-}));
 
 //export both stores
-export { shouldShowSaveModal, showPromptHistory, promptWorkspaceTabs, shouldShowSaveVariableModal, shouldShowEnvVariableModal }
+export { promptWorkspaceTabs }

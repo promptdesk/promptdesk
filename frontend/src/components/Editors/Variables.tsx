@@ -4,7 +4,7 @@ import EditorFooter from './Components/EditorFooter';
 import GeneratedOutput from './Components/GeneratedOutput';
 import VariableModal from '@/components/Editors/VariableModal';
 import Handlebars from 'handlebars';
-import { shouldShowSaveVariableModal } from "@/stores/general";
+import { shouldShowSaveVariableModal } from "@/stores/GeneralStore";
 
 const Variables = () => {
 

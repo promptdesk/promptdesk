@@ -12,7 +12,6 @@ function DeleteButton({ onClick }: DeleteButtonProps) {
     }
   };
 
-
   return (
     <button
     tabIndex={0}

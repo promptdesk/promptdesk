@@ -3,7 +3,7 @@ import Navigation from '@/components/Navigation';
 import React, { useEffect, useState } from 'react'; // Import useEffect and useState
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
-import { promptWorkspaceTabs } from '@/stores/general';
+import { promptWorkspaceTabs } from '@/stores/TabStore';
 
 interface AppProps {
   Component: React.ElementType;

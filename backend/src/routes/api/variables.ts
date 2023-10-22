@@ -6,11 +6,13 @@ const variable_db = new Variable();
 
 // Update a Variable by ID
 router.put('/variables', async (req: Request, res: Response) => {
+
+  const organization = (req as any).organization;
   const variableId: string = req.params.id;
   const data_list = req.body;
 
   try {
-    await variable_db.updateVariables(data_list);
+    await variable_db.updateVariables(data_list, organization.id);
     res.status(200).json({ message: 'Variable updated successfully' });
   } catch (error) {
     console.error(error);
@@ -22,8 +24,10 @@ router.put('/variables', async (req: Request, res: Response) => {
 // Get a Variable by ID
 router.get('/variables', async (req: Request, res: Response) => {
 
+  const organization = (req as any).organization;
+
   try {
-    const variableData = await variable_db.getVariables();
+    const variableData = await variable_db.getVariables(organization.id);
     if (!variableData) {
       return res.status(404).json({ message: 'Variable not found' });
     }
@@ -32,6 +36,7 @@ router.get('/variables', async (req: Request, res: Response) => {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
+
 });
 
 export default router;

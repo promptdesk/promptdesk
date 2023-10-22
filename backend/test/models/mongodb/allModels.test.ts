@@ -1,24 +1,28 @@
 //not running due to errors
 
-/*import request from 'supertest';
+import request from 'supertest';
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
+import { Organization, Log, Model, Prompt, Variable } from '../../../src/models/allModels';
 
 
 
-describe.skip('db', function() {
+describe('allModels', function() {
 
-  it('should set MongoDB models when DATABASE_SELECTION is mongodb', function() {
-    process.env.DATABASE_SELECTION = 'mongodb';
+  it('should initiate each object in allModels', function() {
     
-    // Reload the module to reflect the change in environment variable
-    delete require.cache[require.resolve('../../src/models/allModels')]; // replace with actual path
-    const reloadedModule = require('../../src/models/allModels'); // replace with actual path
+    let organization = new Organization();
+    let log = new Log();
+    let model = new Model();
+    let prompt = new Prompt();
+    let variable = new Variable();
     
-    expect(reloadedModule.Model).to.exist;
-    expect(reloadedModule.Prompt).to.exist;
-    expect(reloadedModule.Log).to.exist;
-    expect(reloadedModule.Variable).to.exist;
+    expect(organization).to.exist;
+    expect(log).to.exist;
+    expect(model).to.exist;
+    expect(prompt).to.exist;
+    expect(variable).to.exist;
+
   });
 
-});*/
+});

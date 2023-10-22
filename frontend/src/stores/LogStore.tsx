@@ -1,6 +1,6 @@
-/* Refactored on September 4th 2023 */
 import { create } from 'zustand'
 import { Log } from '@/interfaces/log';
+import { fetchFromPromptdesk } from '@/services/PromptdeskService'
 
 interface LogStore {
   logs: Log[];
@@ -10,9 +10,9 @@ interface LogStore {
 const logStore = create<LogStore>((set) => ({
   logs: [],
   fetchLogs: async (page) => {
-    const logs = await fetch(`${process.env.PROMPT_SERVER_URL}/api/logs?page=` + page).then((res) => res.json());
-    set({ logs });
-    return logs;
+      const logs = await fetchFromPromptdesk('/api/logs?page=' + page);
+      set({ logs });
+      return logs;
   }
 }));
 

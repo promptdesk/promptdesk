@@ -6,7 +6,7 @@ import { describe, it } from 'mocha';
 describe('Express App Server', () => {
   it('should respond with pong on GET /', (done) => {
     request(app)
-      .get('/ping')
+      .get('/api/ping')
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);

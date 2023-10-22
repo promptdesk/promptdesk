@@ -72,8 +72,44 @@ export default function About() {
       {(expandedRows as any)[log.id] && (
         <tr>
           <td colSpan={4} className="p-4 bg-gray-100">
-            {/* Added the white-space property with value "pre-wrap" */}
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{JSON.stringify(log, null, 2)}</pre>
+          {
+            // If there's no error in log.error
+            !log.error ? (
+              <div className="flex">
+                {/* Display log.data */}
+                <div className="w-1/2" style={{ whiteSpace: 'pre-wrap' }}>
+                  {log.data.prompt || log.data.context ? (
+                    <div className="mt-4">
+                      <h2 className="text-lg font-semibold">Prompt</h2>
+                      <p>{log.data.prompt || log.data.context}</p>
+                    </div>
+                  ) : null}
+                  {log.data.messages ? (
+                    <div className="mt-4">
+                      <h2 className="text-lg font-semibold">Messages</h2>
+                      <ul className="list-disc list-inside">
+                        {log.data.messages.map((message:any) => (
+                          <li key={message}>{message.content}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Display log.message */}
+                <div className="w-1/2" style={{ whiteSpace: 'pre-wrap' }}>
+                  {JSON.stringify(log.message, null, 2)}
+                </div>
+              </div>
+            ) 
+            : 
+            // If there's an error in log.error
+            (
+              <pre style={{ whiteSpace: 'pre-wrap' }}>
+                {JSON.stringify(log, null, 2)}
+              </pre>
+            )
+          }
           </td>
         </tr>
       )}
