@@ -49,7 +49,7 @@ const Modal = () => {
   }
 
   const changeIdInUrl = (newId: string) => {
-    const newUrl = `/prompt/${newId}`;
+    const newUrl = `/workspace/${newId}`;
     push(newUrl);
   };
 
@@ -61,7 +61,7 @@ const Modal = () => {
         if(newPrompt) {
           addToLocalPrompts(newPrompt);
           addTab(newPrompt.name, newPrompt.id, true);
-          push("/prompt/" + newPrompt.id);
+          push("/workspace/" + newPrompt.id);
         }
       }
     },
@@ -95,7 +95,7 @@ const Modal = () => {
       var id = await createNewPrompt();
       if(id) {
         toggle_modal();
-        push(`/prompt/${id}`);
+        push(`/workspace/${id}`);
       }
     } },
   ];

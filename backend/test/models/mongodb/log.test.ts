@@ -34,8 +34,9 @@ describe('Log tests', () => {
         const page = 1;
         const limit = 10; // Set a limit for testing
         const response = await log_db.getLogs(page, limit, organization.id);
-        expect(Array.isArray(response)).to.equal(true);
-        expect(response.length).to.be.lessThanOrEqual(limit);
+        console.log(response);
+        expect(Array.isArray(response.data)).to.equal(true);
+        expect(response.data.length).to.be.lessThanOrEqual(limit);
     });
 
 });

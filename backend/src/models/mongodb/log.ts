@@ -1,3 +1,4 @@
+import { log } from "handlebars/runtime";
 import mongoose from "mongoose";
 
 const logSchema = mongoose.model(
@@ -12,6 +13,7 @@ const logSchema = mongoose.model(
       model_id: String,
       prompt_id: String,
       organization_id: String,
+      duration: Number
     },
     {
       timestamps: true
@@ -35,12 +37,23 @@ class Log {
 
   async getLogs(page:any, limit = 10, organization_id: string) {
 
+    const count = await logSchema.countDocuments({ organization_id });
+
     const skip = (page - 1) * limit;
-    const logs = await logSchema.find({ organization_id })
+    let logs = await logSchema.find({ organization_id })
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 }); // Sort by descending order of creation time
-    return logs.map(this.transformLog);
+      
+    logs = logs.map(this.transformLog)
+
+    return {
+      page: page,
+      per_page: limit,
+      total: count,
+      total_pages: Math.ceil(count / limit),
+      data: logs
+    }
   }
 
   transformLog(log:any) {

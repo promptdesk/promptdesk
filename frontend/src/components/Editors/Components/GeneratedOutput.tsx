@@ -21,7 +21,7 @@ const GeneratedOutput = () => {
       {activeTabIndex != undefined && tabs[activeTabIndex as number] && tabs[activeTabIndex as number].data && (
       <div className={`remove-message-component ${tabs[activeTabIndex as number].data.loading || generatedText ? "visible" : ""}`}>
         {tabs[activeTabIndex as number].data.generatedText && (
-          <div className="generated-output">{tabs[activeTabIndex as number].data.generatedText}</div>
+          <pre className="generated-output">{tabs[activeTabIndex as number].data.generatedText}</pre>
         )}
       </div>
       )}  

@@ -65,7 +65,7 @@ export default function Home() {
   }, [query.id, promptObject.id, setActiveTabById, setModelById, setPrompt]);
 
   const changeIdInUrl = (newId: string) => {
-    const newUrl = `/prompt/${newId}`;
+    const newUrl = `/workspace/${newId}`;
     push(newUrl);
   };
 
@@ -90,8 +90,7 @@ export default function Home() {
     setActiveTabById(newId as string);
     setPrompt(newId as string);
     setModelById(newId as string);
-    ///setActiveTabById(newId);
-    push(`/prompt/${newId}`);
+    push(`/workspace/${newId}`);
   };
 
   return (
@@ -111,7 +110,7 @@ export default function Home() {
               />
             </div>
           </div>
-          {(!promptObject.id && tabs.length === 0) && (
+          {(promptObject.id === "") && (
             <ErrorPage statusCode={404} />
           )}
           {promptObject.id && promptObject.id !== "" && (

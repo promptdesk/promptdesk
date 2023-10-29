@@ -4,10 +4,16 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     //read auth token from local storage if it exists
     let token = undefined;
+    let organization = undefined;
     if (typeof window !== 'undefined') {
 
         token = Cookies.get('token');
+        organization = Cookies.get('organization');
 
+    }
+
+    if(!token && process.env.SERVER_API_KEY) {
+        token = process.env.SERVER_API_KEY;
     }
 
     try {

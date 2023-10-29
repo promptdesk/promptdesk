@@ -2,20 +2,27 @@ import React from 'react';
 
 interface PlaygroundButtonProps {
   text: string;
+  isFull?: boolean;
   onClick: () => void;
 }
 
-function PlaygroundButton({ text, onClick }: PlaygroundButtonProps) {
+function PlaygroundButton({ text, onClick, isFull }: PlaygroundButtonProps) {
   const handleClick = () => {
     if (typeof onClick === 'function') {
       onClick();
     }
   };
 
+  const baseClass = "btn btn-sm btn-filled btn-neutral";
+  const className = isFull ? `${baseClass} w-full` : baseClass;
+
+  console.log("isFull", isFull)
+
   return (
     <button
       tabIndex={0}
-      className="btn btn-sm btn-filled btn-neutral"
+      className={className}
+      
       type="button"
       data-testid="pg-save-btn"
       aria-haspopup="true"
@@ -23,7 +30,7 @@ function PlaygroundButton({ text, onClick }: PlaygroundButtonProps) {
       onClick={handleClick}
     >
       <span className="btn-label-wrap">
-        <span className="btn-label-inner">{text}</span>
+        <span className="btn-label-inner">{text} {isFull}</span>
       </span>
     </button>
   );

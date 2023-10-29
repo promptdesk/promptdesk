@@ -46,7 +46,7 @@ async function prompt_model_validation(organization:any, body:any) {
         prompt = await prompt_db.findPromptByName(body.prompt_name, organization.id);
 
         if (!prompt) {
-            return [undefined, undefined, undefined, { error: 'Prompt name is required', status: 404 }]
+            return [undefined, undefined, undefined, { error:true, message: 'Prompt name is required', status: 404 }]
         }
         proxy = true;
     } else {
@@ -54,7 +54,7 @@ async function prompt_model_validation(organization:any, body:any) {
     }
 
     if(!prompt){
-        return [undefined, undefined, undefined, { error: 'Prompt not found.', status: 404 }]
+        return [undefined, undefined, undefined, { error:true, message: 'Prompt not found.', status: 404 }]
     }
 
     var model_id = prompt.model
@@ -62,7 +62,7 @@ async function prompt_model_validation(organization:any, body:any) {
     const model = await model_db.findModel(model_id, organization.id);
 
     if(!model){
-        return [undefined, undefined, undefined, { error: 'Model not found.', status: 404 }]
+        return [undefined, undefined, undefined, { error:true, message: 'Model not found.', status: 404 }]
     }
     
     if(!model.api_call){
@@ -75,16 +75,15 @@ async function prompt_model_validation(organization:any, body:any) {
 // Route for /api/magic/gpt-3.5-turbo
 router.all(['/magic', '/magic/generate'], async (req, res) => {
     const organization = (req as any).organization;
+    var start_time = Date.now()
 
-    try {
+    //try {
 
         let [ prompt, model, proxy, error ] = await prompt_model_validation(organization, req.body);
 
         if(error){
-            return res.status(error.status).json({ error: error.error, status: error.status });
+            return res.status(error.status).json({ error: true, message: error.error, status: error.status });
         }
-
-        var start = Date.now()
     
         //get variables from variables db
         var environment_variables = await variable_db.getVariables(organization.id);
@@ -99,15 +98,12 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     
         api_call = JSON.parse(api_call)
     
-        var end = Date.now()
-        var elapsed = end - start
-    
         if(!model.input_format){
-            return res.status(404).json({ error: 'Model format function not found.' });
+            return res.status(404).json({ error:true, message: 'Model format function not found.', status: 404 });
         }
-    
+
         if(!model.output_format){
-            return res.status(404).json({ error: 'Model format function not found.' });
+            return res.status(404).json({ error: true, message: 'Model format function not found.', status: 404 });
         }
     
         var input_format = eval(model.input_format)
@@ -124,17 +120,34 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.', status: 400});
             }
         }
+
+        function replace_variables(text:string, variable_object:object) {
+            var template = handlebars.compile(text);
+            var new_text = template(variable_object);
+            return new_text
+        }
         
-        var prompt_data = JSON.stringify(prompt.prompt_data)
-        var prompt_data_template = handlebars.compile(prompt_data);
-    
-        prompt_data = prompt_data_template(variables);
-    
-        prompt_data = JSON.parse(prompt_data)
+        var prompt_data = JSON.parse(JSON.stringify(prompt.prompt_data))
+
+        //if prompt_data has a context key, replace it with the variable markdown
+        if(prompt_data['context']){
+            prompt_data['context'] = replace_variables(prompt_data['context'], variables)
+        }
+        if(prompt_data['prompt']){
+            prompt_data['prompt'] = replace_variables(prompt_data['prompt'], variables)
+        }
+        if(prompt_data['messages']){
+            //loop through each message in messages and replace the variables in the prompt_data['messages']['content']
+            for(var i = 0; i < prompt_data['messages'].length; i++){
+                prompt_data['messages'][i]['content'] = replace_variables(prompt_data['messages'][i]['content'], variables)
+            }
+        }
     
         var body = input_format(prompt_data, prompt.prompt_parameters)
     
         api_call.data = body
+
+        var time_taken = (Date.now() - start_time) / 1000
 
         try {
 
@@ -149,6 +162,9 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                     response: response.data
                 },
                 data: {
+                    ...{
+                        parameters: prompt.prompt_parameters
+                    },
                     ...prompt.prompt_data,
                     ...{
                         variables: variables
@@ -156,7 +172,8 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 },
                 status: 200,
                 model_id: prompt.model,
-                prompt_id: prompt.id
+                prompt_id: prompt.id,
+                duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
             return res.status(200).json(obj);
@@ -164,13 +181,16 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
         } catch (error:any) {
 
             var obj = {
-                message: undefined,
+                message: error.message,
                 error: true,
                 raw: {
                     request: body,
                     response: error.response.data
                 },
                 data: {
+                    ...{
+                        parameters: prompt.prompt_parameters
+                    },
                     ...prompt.prompt_data,
                     ...{
                         variables: variables
@@ -178,14 +198,15 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
                 },
                 status: error.response.status,
                 model_id: prompt.model,
-                prompt_id: prompt.id
+                prompt_id: prompt.id,
+                duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
             return res.status(error.response.status).json(obj);
 
         }
 
-    } catch (error:any) {
+    /*} catch (error:any) {
 
         var obj = {
             message: error.message,
@@ -193,12 +214,13 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
             raw: {
                 request: body
             },
-            status: 500
+            status: 500,
+            duration: (Date.now() - start_time) / 1000
         } as any;
         log_db.createLog(obj, organization.id)
         return res.status(500).json(obj);
 
-    }
+    }*/
 
 });
 

@@ -13,7 +13,7 @@ function Navigation() {
     <div className="app-header">
       <div className="left-menu">
         <div className="branding">
-          <Link href="/prompts" className="logo-link">
+          <Link href="/workspace" className="logo-link">
               <span style={{ fontSize: 22, fontWeight: "bold" }}>
                 Prompt<span style={{ color: "dodgerblue" }}>Desk</span>
               </span>

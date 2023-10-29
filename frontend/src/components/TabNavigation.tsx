@@ -21,49 +21,60 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
 
   const classNames = (...classes: string[]) => classes.filter(Boolean).join(' ');
 
-  const TabComponent = ({ tab }: { tab: Tab }) => (
-    <div
-      key={tab.prompt_id}
-      style={{ width: "188px", borderRadius: "10px 10px 0px 0px"}}
-      className={classNames(
-        tab.current ? 'bg-white text-indigo-700' : 'text-black hover:text-gray-700 hover:bg-gray-50',
-        'font-medium cursor-pointer flex justify-between mr-2'
-      )}
-      aria-current={tab.current ? 'page' : undefined}
-      onClick={() => {
-        updatePromptObjectInPrompts(promptObject);
-        router.push(`/prompt/${tab.prompt_id}`);
-      }}
-      title={tab.name}>
-      <span className="py-1 px-2" style={{
-        textOverflow: 'ellipsis',
-        minWidth: '0px',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        fontSize: '12px',
-        fontWeight: 'bold'
-      }}>{tab.name}</span>
-      <span onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} className="ml-2 inline-flex items-center rounded-md hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600">x</span>
-    </div>
-  );
-
   return (
-    <nav aria-label="Tabs" style={{ background: "#F2F2F2", paddingTop: "8px", overflow: "auto" }} className="flex">
-      {tabs.map(tab => <TabComponent key={tab.prompt_id} tab={tab} />)}
-      <div
-        className={classNames(
-          'text-gray-500 hover:text-gray-700 hover:bg-gray-200',
-          'rounded-md px-3 py-1 text-sm font-medium cursor-pointer',
-        )}
-        style={{ display: "inline-block", borderRadius: "10px 10px 0px 0px" }}
-        onClick={() => {
-          updatePromptObjectInPrompts(promptObject); 
-          newPrompt();
-        }}
-      >
-        <span className="font-bold">+</span>
+    <>
+      <div className="hidden sm:block" style={{maxWidth:'100vw'}}>
+        <nav className="py-2 px-1 flex" aria-label="Tabs" style={{flexWrap: 'nowrap', overflow:'auto', 'whiteSpace': 'nowrap', 'background':'#f3f4f6'}}>
+          {tabs.map((tab) => (
+            <div
+              key={tab.name}
+              className={classNames(
+                tab.current ? 'bg-gray-300 text-gray-800' : 'text-gray-600',
+                'rounded-md px-2 py-1 text-sm font-medium mx-1 hover:bg-gray-200 cursor-pointer flex justify-between'
+              )}
+              title={tab.name}
+              onClick={() => {
+                updatePromptObjectInPrompts(promptObject);
+                router.push(`/workspace/${tab.prompt_id}`);
+              }}
+              style={{
+                width: '188px',
+              }}
+              aria-current={tab.current ? 'page' : undefined}
+            >
+              <span
+                className=""
+                style={{
+                  textOverflow: 'ellipsis',
+                  minWidth: '0px',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  fontWeight: 'bold'
+                }}
+              >
+                {tab.name}
+              </span>
+              <span 
+                onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} 
+                className="ml-2 inline-flex items-center rounded-md hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600 border border-gray-200 hover:border-gray-800"
+              >
+                x
+              </span>
+            </div>
+
+          ))}
+          <div className='mx-1 rounded-md px-2 py-1 text-sm font-medium hover:bg-gray-200 cursor-pointer'
+          style={{
+                display: 'inline-block',
+          }}
+          title="Add prompt"
+          onClick={() => {
+            updatePromptObjectInPrompts(promptObject); 
+            newPrompt();
+          }}>+</div>
+        </nav>
       </div>
-    </nav>
+      </>
   );
 }
 

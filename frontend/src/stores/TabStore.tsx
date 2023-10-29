@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { promptStore } from './PromptStore';
 import { Tab } from '@/interfaces/tab';
+import { organizationStore } from './OrganizationStore';
 
 export interface PromptWorkspaceTabs {
   tabs: Tab[];
@@ -19,6 +20,8 @@ export interface PromptWorkspaceTabs {
   updateDataById: (id: string, data: any) => void;
   getDataById: (id: string) => any;
   getDataByIndex: (index: number) => any;
+  clearLocalTabs: () => void;
+  findActiveTab: () => Tab | undefined;
 }
 
 const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
@@ -27,11 +30,24 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   activeTabIndex: undefined,
   activeTabeId: undefined,
   saveTabsToLocalStorage() {
-    localStorage.setItem("tabs", JSON.stringify(get().tabs));
+    const id = organizationStore.getState().organization?.id
+    localStorage.setItem("tabs:" + id, JSON.stringify(get().tabs));
   },
   retrieveTabsFromLocalStorage() {
-    const tabs = localStorage.getItem("tabs");
+    const id = organizationStore.getState().organization?.id
+    const tabs = localStorage.getItem("tabs:" + id);
+    console.log(tabs, id)
     if (tabs) set({ tabs: JSON.parse(tabs) });
+  },
+  clearLocalTabs() {
+    //get a list of all ids in promptStore.getState().prompts
+    const promptIds = promptStore.getState().prompts.map(p => p.id);
+    //filter out all tabs where prompt_id are not in the promptIds
+    const tabs = get().tabs.filter(tab => promptIds.includes(tab.prompt_id));
+    //set the tabs
+    set({ tabs });
+    //save the tabs
+    get().saveTabsToLocalStorage();
   },
   deactivateAllTabs() {
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: false })) }));
@@ -116,6 +132,9 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
       return {};
     }
     return get().tabs[index].data;
+  },
+  findActiveTab() {
+    return get().tabs.find(tab => tab.current);
   }
 }));
 

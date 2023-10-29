@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "NODE_ENV=development next dev",
     "build": "NODE_ENV=production next build",
+    "debug": "NODE_ENV=debug next dev",
     "start": "next start",
     "lint": "next lint",
     "test": "NODE_ENV=development vitest"
@@ -19,6 +20,7 @@
     "@types/react-dom": "18.2.6",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.16",
+    "axios": "^1.5.1",
     "dotenv": "^16.3.1",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.7",

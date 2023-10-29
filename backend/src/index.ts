@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 import { apiKeyMiddleware, frontendAuthMiddleware } from './utils/authorization';
+import cookieParser from 'cookie-parser';
 
 //import basicAuth from 'express-basic-auth';
 

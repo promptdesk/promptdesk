@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'; // Import useEffect and useS
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/TabStore';
+import { organizationStore } from '@/stores/OrganizationStore';
 
 interface AppProps {
   Component: React.ElementType;
@@ -14,22 +15,27 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
   const { fetchAllPrompts, prompts } = promptStore();
   const { fetchAllModels } = modelStore();
-  const { retrieveTabsFromLocalStorage, tabs } = promptWorkspaceTabs();
+  const { fetchOrganization, organization } = organizationStore();
+  const { retrieveTabsFromLocalStorage, tabs, clearLocalTabs } = promptWorkspaceTabs();
 
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    retrieveTabsFromLocalStorage();
-    Promise.all([fetchAllPrompts(), fetchAllModels()]) // Wait for both API calls
-      .then(() => {
-        setLoading(false); // Set loading state to false when both API calls are complete
+    Promise.all([fetchAllPrompts(), fetchAllModels(), fetchOrganization()]) // Wait for both API calls
+    .then(() => {
+      setLoading(false); // Set loading state to false when both API calls are complete
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+      alert("Error loading application...")
+    });
+  }, [fetchAllPrompts, fetchAllModels, retrieveTabsFromLocalStorage, fetchOrganization]); // The empty dependency array ensures this effect runs only once on component mount
 
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        setLoading(false); // Set loading state to false even on error
-      });
-  }, [fetchAllPrompts, fetchAllModels, retrieveTabsFromLocalStorage]); // The empty dependency array ensures this effect runs only once on component mount
+  useEffect(() => {
+    if (!organization || prompts == undefined || prompts.length < 1) return;
+    retrieveTabsFromLocalStorage();
+    clearLocalTabs();
+  }, [organization, prompts])
 
   return (
     <div id="root">

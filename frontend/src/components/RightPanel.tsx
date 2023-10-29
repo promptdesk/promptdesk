@@ -29,10 +29,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
         <button className="pg-right-panel-mobile-close">×</button>
         <div className="parameter-panel">
           <div>
-            <PlaygroundButton
-              text="Save"
-              onClick={toggle_modal}
-            />
             <DropDown
               label={"Model"}
               options={modelListSelector}

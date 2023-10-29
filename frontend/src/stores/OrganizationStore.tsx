@@ -12,6 +12,7 @@ const organizationStore = create<VariableStore>((set) => ({
   
   fetchOrganization: async () => {
     const organization: Organization = await fetchFromPromptdesk('/api/organization')
+    console.log(organization)
     set({ organization });
     return organization;
   }

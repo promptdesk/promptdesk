@@ -24,8 +24,8 @@ function SliderComponent({ sliderInfo, value, onChange }: SliderComponentProps) 
         <div className="css-1povu0j" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <span className="body-small css-bjbdno">{sliderInfo.name}</span>
           <input
-            className="text-input text-sm"
-            style={{ maxWidth: '4em' }}
+            className="text-input text-sm text-right"
+            style={{ maxWidth: '4em', padding: '0.2em' }}
             type="number"
             min={sliderInfo.min}
             max={sliderInfo.max}

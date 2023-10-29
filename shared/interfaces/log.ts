@@ -8,4 +8,5 @@ export interface Log {
     prompt_id: string;
     createdAt: Date;
     organization_id: string;
+    duration: number;
 }

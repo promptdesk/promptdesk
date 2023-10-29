@@ -8,7 +8,6 @@ export default function About() {
   const { push } = useRouter();
 
   var { logs, fetchLogs } = logStore();
-
   var { models } = modelStore();
   var { prompts } = promptStore();
 
@@ -16,11 +15,6 @@ export default function About() {
 
   const [page, setPage] = useState(initial_page || 1);
   const [expandedRows, setExpandedRows] = useState({});
-
-  useEffect(() => {
-    const page = parseInt(location.search.replace('?page=', ''));
-    if (page) setPage(page);
-  }, [setPage]);
 
   useEffect(() => {
     fetchLogs(page);
@@ -36,13 +30,13 @@ export default function About() {
   const handlePrevious = () => {
     if (page > 1) push(`?page=${page - 1}`);
     setPage(page - 1);
-    fetchLogs(page);
+    //fetchLogs(page);
   };
 
   const handleNext = () => {
     if (page) push(`?page=${page + 1}`);
     setPage(page + 1);
-    fetchLogs(page);
+    //fetchLogs(page);
   };
 
   function getModelName(id:string) {
@@ -61,9 +55,10 @@ export default function About() {
         </td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{getModelName(log.model_id)}</td>
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{(log.createdAt.toString())}</td>
+        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{(log.duration || 0)}</td>
         <td
           className={`whitespace-nowrap px-3 py-4 text-sm ${
-            log.status !== 200 ? 'bg-yellow-300' : '' // Add your yellow background class here
+            log.status && log.status !== 200 ? 'bg-yellow-300' : '' // Add your yellow background class here
           } text-gray-500`}
         >
           {log.status}
@@ -71,34 +66,49 @@ export default function About() {
       </tr>
       {(expandedRows as any)[log.id] && (
         <tr>
-          <td colSpan={4} className="p-4 bg-gray-100">
+          <td colSpan={5} className="bg-gray-100">
           {
             // If there's no error in log.error
-            !log.error ? (
+            !log.error && log.data ? (
               <div className="flex">
-                {/* Display log.data */}
-                <div className="w-1/2" style={{ whiteSpace: 'pre-wrap' }}>
-                  {log.data.prompt || log.data.context ? (
-                    <div className="mt-4">
-                      <h2 className="text-lg font-semibold">Prompt</h2>
-                      <p>{log.data.prompt || log.data.context}</p>
+                <div className="w-1/2 p-4" style={{ whiteSpace: 'pre-wrap' }}>
+                  {log.data.prompt != undefined || log.data.context != undefined ? (
+                    <div className="mb-4">
+                      <fieldset className="border p-2">
+                        <legend  className="w-auto">
+                          {log.data.context ? 'context' : 'prompt'}
+                        </legend>
+                        <p>{log.data.prompt || log.data.context}</p>
+                      </fieldset>
                     </div>
                   ) : null}
                   {log.data.messages ? (
-                    <div className="mt-4">
-                      <h2 className="text-lg font-semibold">Messages</h2>
-                      <ul className="list-disc list-inside">
-                        {log.data.messages.map((message:any) => (
-                          <li key={message}>{message.content}</li>
-                        ))}
-                      </ul>
+                    <div className="mb-4">
+                      {log.data.messages.map((message:any, index:any) => (
+                        <fieldset className="border p-2" key={index}>
+                          <legend  className="w-auto">{message.role}</legend>
+                          <p>{message.content}</p>
+                        </fieldset>
+                      ))}
                     </div>
                   ) : null}
                 </div>
 
                 {/* Display log.message */}
-                <div className="w-1/2" style={{ whiteSpace: 'pre-wrap' }}>
-                  {JSON.stringify(log.message, null, 2)}
+                <div className="w-1/2 p-4" style={{ whiteSpace: 'pre-wrap' }}>
+                  {
+                    typeof log.message === 'string' ? (
+                      <fieldset className="border p-2">
+                        <legend  className="w-auto">output</legend>
+                        <p>{log.message}</p>
+                      </fieldset>
+                    ) : (
+                      <fieldset className="border p-2">
+                        <legend  className="w-auto">{log.message.role}</legend>
+                        <p>{log.message.content}</p>
+                      </fieldset>
+                    )
+                  }
                 </div>
               </div>
             ) 
@@ -117,7 +127,8 @@ export default function About() {
   );  
 
   return (
-    <div>
+    //style with border 1px solid red
+    <div style={{ border: '1px solid red', flex: 1}}>
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
@@ -129,7 +140,6 @@ export default function About() {
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           </div>
         </div>
-
         <div className="mt-8 flow-root markdown-page markdown-content markdown-prompt-blockquote models">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -146,12 +156,15 @@ export default function About() {
                       Date
                     </th>
                     <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                      Duration
+                    </th>
+                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Status
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {logs.map((log) => renderRow(log))}
+                {logs && (logs as any).data ? (logs as any).data.map((log:any) => renderRow(log)) : null}
                 </tbody>
               </table>
             </div>
@@ -159,9 +172,13 @@ export default function About() {
         </div>
       </div>
         <nav className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
-          <div className="hidden sm:block">
+        <div className="hidden sm:block">
+          <p className="text-sm text-gray-700">
+            Showing <span className="font-medium">{page*(logs as any).per_page-10}</span> to <span className="font-medium">{Math.min(page * (logs as any).per_page, (logs as any).total)}</span> of{' '}
+            <span className="font-medium">{(logs as any).total}</span> results
+          </p>
+        </div>
 
-          </div>
           <div className="flex flex-1 justify-between sm:justify-end">
             <button
               onClick={handlePrevious}
@@ -172,7 +189,8 @@ export default function About() {
             </button>
             <button
               onClick={handleNext}
-              className={`relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0`}
+              className={`relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${(logs as any).total_pages === page && "opacity-50 cursor-not-allowed"}`}
+              disabled={(logs as any).total_pages === page}
             >
               Next
             </button>

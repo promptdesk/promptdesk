@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import AddMessage from './Components/AddMessage';
 import MessageContainer from './Components/MessageContainer';
 import EditorFooter from './Components/EditorFooter';
@@ -16,11 +16,25 @@ function Editor() {
     processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
 
+  const [lastLength, setLastLength] = useState(0);
+
   useEffect(() => {
     const context = promptObject?.prompt_data.context || '';
     const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
     processVariables(`${context} ${messages}`);
-  }, [promptObject?.name, promptObject.id, promptObject?.prompt_data?.messages?.length, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
+  }, [promptObject?.name, promptObject.id, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
+
+  useEffect(() => {
+    var element = document.getElementById("myRef");
+    let newLength = promptObject?.prompt_data?.messages?.length;
+
+    if(newLength > lastLength && element) {
+      element.scrollIntoView({behavior:"smooth", block: "end", inline:"nearest"});    
+      console.log("newLength", newLength)
+    }
+
+    setLastLength(promptObject?.prompt_data?.messages?.length);
+  }, [promptObject?.prompt_data?.messages?.length])
 
   return (
     <div className="flex flex-col">
@@ -49,7 +63,7 @@ function Editor() {
                   <MessageContainer key={index} index={index} />
                 ))}
                 <AddMessage />
-                <div className="chat-pg-bottom-div" />
+                <div id="myRef" className="chat-pg-bottom-div" />
               </div>
             </div>
           </div>

@@ -22,6 +22,11 @@ export interface shouldShowEnvVariableModal {
   toggle_env_variable_modal: () => void; // Corrected property name
 }
 
+export interface shouldSnowCodeModal {
+  show_code_modal: boolean;
+  toggle_code_modal: () => void; // Corrected property name
+}
+
 const showPromptHistory = create<SnowPromptHistory>((set) => ({
   show: false,
   toogle: () => set((state: { show: boolean; }) => ({ show: !state.show })),
@@ -32,6 +37,15 @@ const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
   toggle_modal: () => {
     shouldShowSaveModal.setState((state: { show_modal: boolean; }) => ({
       show_modal: !state.show_modal
+    }))
+  },
+}));
+
+const shouldSnowCodeModal = create<shouldSnowCodeModal>((set) => ({
+  show_code_modal: false,
+  toggle_code_modal: () => {
+    shouldSnowCodeModal.setState((state: { show_code_modal: boolean; }) => ({
+      show_code_modal: !state.show_code_modal
     }))
   },
 }));
@@ -58,4 +72,4 @@ const shouldShowEnvVariableModal = create<shouldShowEnvVariableModal>((set) => (
 }));
 
 //export both stores
-export { shouldShowSaveModal, showPromptHistory, shouldShowSaveVariableModal, shouldShowEnvVariableModal }
+export { shouldShowSaveModal, shouldSnowCodeModal, showPromptHistory, shouldShowSaveVariableModal, shouldShowEnvVariableModal }

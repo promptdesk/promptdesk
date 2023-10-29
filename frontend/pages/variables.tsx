@@ -77,9 +77,9 @@ export default function VariablesPage() {
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">Organization</h1>
+            <h1 className="text-base font-semibold leading-6 text-gray-900">PromptDesk API Information</h1>
             <p className="mt-2 text-sm text-gray-700">
-            Your organization information is used to authenticate the PromptDesk calls in python.
+            Use these credentials to access the PromptDesk API.
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">

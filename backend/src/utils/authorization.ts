@@ -46,8 +46,6 @@ const apiKeyMiddleware = async function(req:any, res:any, next:any) {
 //to be used for self-hosted frontend - should be harddened for security
 const frontendAuthMiddleware = async function(req:any, res:any, next:any) {
 
-    console.log("frontendAuthMiddleware")
-
     const auth = {login: process.env.USERNAME, password: process.env.API_KEY} // change this
 
     // parse login and password from headers
@@ -59,6 +57,7 @@ const frontendAuthMiddleware = async function(req:any, res:any, next:any) {
         let db_organization = await organization_db.getOrganization();
         let token = db_organization.keys[0].key;
         res.cookie('token', token, { maxAge: 900000, httpOnly: false });
+        res.cookie('organization', db_organization.id, { maxAge: 900000, httpOnly: false });
         return next()
     }
 
