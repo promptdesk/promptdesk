@@ -128,7 +128,7 @@ export default function About() {
 
   return (
     //style with border 1px solid red
-    <div style={{ border: '1px solid red', flex: 1}}>
+    <div>
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
