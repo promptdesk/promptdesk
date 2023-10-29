@@ -124,10 +124,9 @@ export default function About() {
         </tr>
       )}
     </>
-  );  
+  );
 
   return (
-    //style with border 1px solid red
     <div>
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="sm:flex sm:items-center">
