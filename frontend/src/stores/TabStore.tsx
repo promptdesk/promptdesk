@@ -36,7 +36,6 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   retrieveTabsFromLocalStorage() {
     const id = organizationStore.getState().organization?.id
     const tabs = localStorage.getItem("tabs:" + id);
-    console.log(tabs, id)
     if (tabs) set({ tabs: JSON.parse(tabs) });
   },
   clearLocalTabs() {

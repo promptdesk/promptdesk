@@ -62,6 +62,7 @@ function Navigation() {
             tabIndex={0}
             className="btn btn-md btn-minimal btn-neutral header-support-btn"
             href="https://promptdesk.ai/docs"
+            target="_blank"
           >
             <span className="btn-label-wrap">
               <span className="btn-node">

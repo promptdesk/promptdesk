@@ -4,26 +4,12 @@ import { promptStore } from '@/stores/PromptStore';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService';
 import { Tab } from '@/interfaces/tab';
 
-const updateWorkspaceTabs = (promptId: string, data: any) => {
-    console.log(promptWorkspaceTabs.getState().tabs);
-    promptWorkspaceTabs.setState((state: { tabs: Tab[]; }) => ({
-        tabs: state.tabs.map(tab => {
-            if (tab.prompt_id === promptId) {
-                return { ...tab, data: { ...tab.data, ...data } };
-            }
-            return tab;
-        })
-    }));
-};
-
 const makeMagic = async (promptId: string) => {
     const currentTabData = promptWorkspaceTabs.getState().getDataById(promptId);
 
     if (currentTabData.loading) {
         return;
     }
-
-    updateWorkspaceTabs(promptId, { loading: true });
 
     const model = modelStore.getState().modelObject;
     const prompt = promptStore.getState().promptObject;
@@ -34,7 +20,10 @@ const makeMagic = async (promptId: string) => {
 
     try {
 
+        //updateWorkspaceTabs(promptId, { loading: true });
+        promptWorkspaceTabs.getState().updateDataById(promptId, { loading: true })
         const data = await fetchFromPromptdesk('/api/magic/', 'POST', prompt);
+        promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false })
         const currentPrompt = promptStore.getState().promptObject;
     
         if (model.type === 'chat' && data.message) {
@@ -57,17 +46,16 @@ const makeMagic = async (promptId: string) => {
                     return { prompts };
                 });
             }
-            //updateWorkspaceTabs(promptId, { loading: false });
         }
-    
+
         if (model.type === 'completion') {
-            //updateWorkspaceTabs(promptId, { loading: false, generatedText: data.message });
+            promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, generatedText: data.message })
         }
 
     } catch (error) {
 
         console.error('API Call Error:', error);
-        //updateWorkspaceTabs(promptId, { loading: false });
+        promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false })
         throw error;
 
     }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { promptStore } from "@/stores/PromptStore";
 import { promptWorkspaceTabs } from "@/stores/TabStore";
 import { makeMagic } from "@/services/MagicService";
@@ -13,44 +13,44 @@ import {
 function EditorFooter() {
 
   const { getDataById, activeTabeId, tabs } = promptWorkspaceTabs();
-  const [ isPromptLoading, setIsPromptLoading ] = React.useState(false);
+  const [ data, setData ] = useState(getDataById(activeTabeId as string) || {});
 
   useEffect(() => {
-    const data = getDataById(activeTabeId as string);
-    console.log(data, activeTabeId, tabs)
-    setIsPromptLoading(data?.loading);
-  }, [activeTabeId, tabs, getDataById]);
+    const data = getDataById(activeTabeId as string) || {};
+    setData(data);
+  }, [activeTabeId, getDataById, tabs]);
+
+  const {
+      show_modal,
+      toggle_modal
+    } = shouldShowSaveModal();
 
     const {
-        show_modal,
-        toggle_modal
-      } = shouldShowSaveModal();
-
-      const {
-        show_code_modal,
-        toggle_code_modal
-      } = shouldSnowCodeModal();
+      show_code_modal,
+      toggle_code_modal
+    } = shouldSnowCodeModal();
 
   return (
     <div className="pg-content-footer">
+      <hr></hr>
       <div className="pg-footer-left">
         <button
           tabIndex={0}
           className={`btn btn-sm btn-filled ${
-            isPromptLoading ? 'btn-neutral' : 'btn-primary'
+            data.loading ? 'btn-neutral' : 'btn-primary'
           } pg-submit-btn`}
           type="button"
-          data-testid="pg-submit-btn"
           aria-haspopup="true"
           aria-expanded="false"
         >
         <span className="btn-label-wrap">
-            <span className="btn-label-inner" onClick={() => makeMagic(activeTabeId as string)}>
-                {isPromptLoading ? "Processing..." : "Submit"}
+            <span className="btn-label-inner" onClick={() => {
+              makeMagic(activeTabeId as string);
+            }}>
+            {data.loading ? "Processing..." : "Submit"}
             </span>
         </span>
         </button>
-        {JSON.stringify(isPromptLoading)}
         <PlaygroundButton
               text="Save"
               onClick={toggle_modal}
@@ -66,6 +66,6 @@ function EditorFooter() {
     </div>
   )
 
-                }
+}
 
 export default EditorFooter;

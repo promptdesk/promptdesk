@@ -69,14 +69,26 @@ app.use('/*', frontendAuthMiddleware)
 //serve static files
 app.use(express.static('./dist'))
 
-//serve prompts page
-app.get('/prompts', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/prompts.html'));
+app.get(['/',], (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
+
+app.get(['/workspace/*'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/workspace/[id].html'));
+});
+
+app.get(['/:filename'], (req, res) => {
+  var filename = req.params.filename;
+  try {
+    res.sendFile(path.join(__dirname, '../dist/' + filename + '.html'));
+  } catch (error) {
+    res.sendFile(path.join(__dirname, '../dist/404.html'));
+  }
 });
 
 //redirect all other routes to prompts page - main entry point
-app.get(['/', '/*'], (req, res) => {
-  res.redirect('/prompts');
+app.get(['/*'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/404.html'));
 });
 
 app.listen(port, () => {

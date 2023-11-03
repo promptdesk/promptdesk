@@ -23,7 +23,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     Promise.all([fetchAllPrompts(), fetchAllModels(), fetchOrganization()]) // Wait for both API calls
     .then(() => {
-      setLoading(false); // Set loading state to false when both API calls are complete
+      setLoading(false);
     })
     .catch((error) => {
       console.error("Error fetching data:", error);
