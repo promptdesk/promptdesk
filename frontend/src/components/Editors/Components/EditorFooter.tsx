@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { promptStore } from "@/stores/PromptStore";
 import { promptWorkspaceTabs } from "@/stores/TabStore";
 import { makeMagic } from "@/services/MagicService";
-import Modal from "@/components/Modal";
-import CodeModal from "@/components/Editors/CodeModal";
+import CodeModal from "@/components/Modals/CodeModal";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import {
     shouldShowSaveModal,
@@ -21,7 +19,6 @@ function EditorFooter() {
   }, [activeTabeId, getDataById, tabs]);
 
   const {
-      show_modal,
       toggle_modal
     } = shouldShowSaveModal();
 
@@ -55,7 +52,7 @@ function EditorFooter() {
               text="Save"
               onClick={toggle_modal}
               isFull={true}
-            />
+        />
         <PlaygroundButton
             text="Code"
             onClick={toggle_code_modal}

@@ -3,8 +3,7 @@ import { promptWorkspaceTabs } from "@/stores/TabStore";
 
 
 const GeneratedOutput = () => {
-  const [ isPromptLoading, setIsPromptLoading ] = useState(false);
-  const [ generatedText, setGeneratedText ] = useState("");
+  const [ generatedText ] = useState("");
   const [ data, setData ] = useState({} as any);
   
   const { getDataByIndex, activeTabIndex, tabs} = promptWorkspaceTabs();
@@ -19,7 +18,7 @@ const GeneratedOutput = () => {
   return (
     <>
       {activeTabIndex != undefined && tabs[activeTabIndex as number] && tabs[activeTabIndex as number].data && (
-      <div className={`remove-message-component ${tabs[activeTabIndex as number].data.loading || generatedText ? "visible" : ""}`}>
+      <div className={`${tabs[activeTabIndex as number].data.loading || generatedText ? "visible" : ""}`}>
         {tabs[activeTabIndex as number].data.generatedText && (
           <pre className="generated-output">{tabs[activeTabIndex as number].data.generatedText}</pre>
         )}

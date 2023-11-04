@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AddMessage from './Components/AddMessage';
 import MessageContainer from './Components/MessageContainer';
 import EditorFooter from './Components/EditorFooter';
@@ -8,33 +8,30 @@ import GeneratedOutput from './Components/GeneratedOutput';
 import { promptStore } from '@/stores/PromptStore';
 
 function Editor() {
-  const { promptObject, setPromptInformation, setPromptVariables, processVariables, prompts } = promptStore();
+  const { promptObject, setPromptInformation, processVariables } = promptStore();
 
-  const handleSystemInput = (e:any) => {
+  const { context = '', messages = [] } = promptObject?.prompt_data || {};
+  const messagesLength = messages.length;
+
+  const handleSystemInput = (e: any) => {
     const systemInput = e.target.value;
     setPromptInformation('prompt_data.context', systemInput);
-    processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
 
   const [lastLength, setLastLength] = useState(0);
+  const scrollRef = useRef(null);
 
   useEffect(() => {
-    const context = promptObject?.prompt_data.context || '';
-    const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
-    processVariables(`${context} ${messages}`);
-  }, [promptObject?.name, promptObject.id, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
+    processVariables(`${context} ${JSON.stringify(messages)}`);
+  }, [context, messages, processVariables]);
 
   useEffect(() => {
-    var element = document.getElementById("myRef");
-    let newLength = promptObject?.prompt_data?.messages?.length;
-
-    if(newLength > lastLength && element) {
-      element.scrollIntoView({behavior:"smooth", block: "end", inline:"nearest"});    
-      console.log("newLength", newLength)
+    if (messagesLength > lastLength && scrollRef.current) {
+      (scrollRef.current as any).scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+      console.log("newLength", messagesLength)
     }
-
-    setLastLength(promptObject?.prompt_data?.messages?.length);
-  }, [promptObject?.prompt_data?.messages?.length])
+    setLastLength(messagesLength);
+  }, [messagesLength, lastLength]);
 
   return (
     <div className="flex flex-col">
@@ -54,7 +51,6 @@ function Editor() {
             </div>
           </div>
         </div>
-        <div className="chat-pg-mobile-divider" />
         <div className="chat-pg-right-wrapper">
           <div className="chat-pg-panel-wrapper">
             <div className="chat-pg-exchange-container">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Tab } from '@/interfaces/tab';
+import TabItem from './TabItem';
 
 interface TabNavigationProps {
   tabs: Tab[];
@@ -26,41 +27,13 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
       <div className="hidden sm:block" style={{maxWidth:'100vw'}}>
         <nav className="py-2 px-1 flex" aria-label="Tabs" style={{flexWrap: 'nowrap', overflow:'auto', 'whiteSpace': 'nowrap', 'background':'#f3f4f6'}}>
           {tabs.map((tab) => (
-            <div
+            <TabItem 
               key={tab.name}
-              className={classNames(
-                tab.current ? 'bg-gray-300 text-gray-800' : 'text-gray-600',
-                'rounded-md px-2 py-1 text-sm font-medium mx-1 hover:bg-gray-200 cursor-pointer flex justify-between'
-              )}
-              title={tab.name}
-              onClick={() => {
-                updatePromptObjectInPrompts(promptObject);
-                router.push(`/workspace/${tab.prompt_id}`);
-              }}
-              style={{
-                width: '188px',
-              }}
-              aria-current={tab.current ? 'page' : undefined}
-            >
-              <span
-                className=""
-                style={{
-                  textOverflow: 'ellipsis',
-                  minWidth: '0px',
-                  overflow: 'hidden',
-                  whiteSpace: 'nowrap',
-                  fontWeight: 'bold'
-                }}
-              >
-                {tab.name}
-              </span>
-              <span 
-                onClick={(e) => removePlaygroundTab(e, tab.prompt_id)} 
-                className="ml-2 inline-flex items-center rounded-md hover:bg-gray-200 px-2 py-0 text-xs font-medium text-gray-600 border border-gray-200 hover:border-gray-800"
-              >
-                x
-              </span>
-            </div>
+              tab={tab} 
+              promptObject={promptObject}
+              updatePromptObjectInPrompts={updatePromptObjectInPrompts} 
+              removePlaygroundTab={removePlaygroundTab}
+            />
 
           ))}
           <div className='mx-1 rounded-md px-2 py-1 text-sm font-medium hover:bg-gray-200 cursor-pointer'

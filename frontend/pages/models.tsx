@@ -2,11 +2,6 @@ import React, { useEffect, useState } from "react";
 import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { Model } from "@/interfaces/model";
-import InputField from "@/components/Form/InputField";
-import DropDown from "@/components/Form/DropDown";
-import CodeArea from "@/components/Form/CodeArea";
-import axios from "axios";
-import { testAPI } from "@/services/LLMTests";
 
 export default function About() {
     // Destructure modelStore methods and state

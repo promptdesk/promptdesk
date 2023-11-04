@@ -26,7 +26,6 @@ const RightPanel: React.FC<RightPanelProps> = ({
     <div className="pg-right">
       <div className="pg-right-panel-mask" />
       <div className="pg-right-content">
-        <button className="pg-right-panel-mobile-close">×</button>
         <div className="parameter-panel">
           <div>
             <DropDown

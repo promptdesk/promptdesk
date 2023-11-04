@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React from "react";
 import {
   shouldShowSaveVariableModal
 } from "@/stores/GeneralStore";
@@ -9,7 +9,6 @@ import router from "next/router";
 const Modal = () => {
 
   const {
-    show_variable_modal,
     toggle_variable_modal
   } = shouldShowSaveVariableModal();
 
@@ -17,15 +16,9 @@ const Modal = () => {
 
   var obj = promptObject.prompt_variables
 
-  var x = obj[promptStore.getState().selectedVariable].value
-
-  //const [variableValue, setVariableValue] = useState(x); // State variable for textarea content
-
   function modifyValue(newValue:string) {
-    //setVariableValue(newValue); // Update the state
     obj[promptStore.getState().selectedVariable].value = newValue
     promptStore.getState().setPromptVariables(obj)
-
   }
 
   const saveNewButtonData = [

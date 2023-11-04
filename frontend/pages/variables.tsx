@@ -3,10 +3,10 @@ import { Variable } from '@/interfaces/variable'; // Import your Variable interf
 import { variableStore } from '@/stores/VariableStore';
 import { organizationStore } from '@/stores/OrganizationStore';
 import PlaygroundButton from '@/components/Form/PlaygroundButton';
-import EditButton from '@/components/Form/EditButton';
-import DeleteButton from '@/components/Form/DeleteButton';
-import EnvVariableModal from '@/components/Editors/EnvVariableModal';
+import EnvVariableModal from '@/components/Modals/EnvVariableModal';
 import { shouldShowEnvVariableModal } from '@/stores/GeneralStore';
+import VariablesTable from '@/components/Table/VariablesTable';
+import OrganizationTable from '@/components/Table/OrganizationTable';
 
 export default function VariablesPage() {
 
@@ -57,12 +57,8 @@ export default function VariablesPage() {
 
   const handleDeleteClick = (index: number) => {
     setVariableList(prevList => {
-      // Create a copy of the previous variableList excluding the element at the specified index
       const updatedList = prevList.filter((_, i) => i !== index);
-  
-      // Call updateVariables with the updated list
       updateVariables(updatedList);
-  
       return updatedList;
     });
   };
@@ -89,41 +85,12 @@ export default function VariablesPage() {
         <div className="mt-2 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" style={{width:'300px'}}>
-                      Organization
-                    </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Description
-                    </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0 text-left" style={{width:'100px'}}>
-                      API key
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {organization?.keys.map((variable, index) => (
-                    <tr key={index}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                        {organization.name}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {variable.description}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex">
-                        {variable.key}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              { organization && (
+                <OrganizationTable organization={organization} />
+              )}
             </div>
           </div>
         </div>
-
-
 
         <div className="sm:flex sm:items-center mt-8">
           <div className="sm:flex-auto">
@@ -139,67 +106,17 @@ export default function VariablesPage() {
         <div className="mt-2 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" style={{width:'300px'}}>
-                      Name
-                    </th>
-                    <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Value
-                    </th>
-                    <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0 text-left" style={{width:'100px'}}>
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {variableList.map((variable, index) => (
-                    <tr key={index}>
-                      <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
-                        {editingIndex === index ? (
-                          <input
-                            type="text"
-                            value={editedName}
-                            onChange={(e) => setEditedName(e.target.value)}
-                          />
-                        ) : (
-                          variable.name
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {editingIndex === index ? (
-                          <input
-                            type="text"
-                            value={editedValue}
-                            onChange={(e) => setEditedValue(e.target.value)}
-                          />
-                        ) : variable.value.length <= 4 ? (
-                          variable.value
-                        ) : (
-                          ".".repeat(variable.value.length - 4) + variable.value.substring(variable.value.length - 4)
-                        )}
-                      </td>
-                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex">
-                        {editingIndex !== null ? (
-                          <div>
-                            <PlaygroundButton text="Save" onClick={() => handleSave()} />
-                          </div>
-                        ) : (
-                          <div className="flex">
-                            <div aria-haspopup="true" aria-expanded="false">
-                              <EditButton onClick={() => handleEditClick(index, variable)} />
-                            </div>
-                            <div aria-haspopup="true" aria-expanded="false">
-                              <DeleteButton onClick={() => handleDeleteClick(index)} />
-                            </div>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <VariablesTable 
+                variableList={variableList}
+                editingIndex={editingIndex}
+                editedName={editedName}
+                editedValue={editedValue}
+                setEditedName={setEditedName}
+                setEditedValue={setEditedValue}
+                handleEditClick={handleEditClick}
+                handleSave={handleSave}
+                handleDeleteClick={handleDeleteClick}
+              />
             </div>
           </div>
         </div>

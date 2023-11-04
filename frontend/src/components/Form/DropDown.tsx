@@ -17,7 +17,6 @@ export default function DropDown({
     }
   };
 
-  //if options is array of list, transform to array of objects
   if (options.length > 0 && typeof options[0] === 'string') {
     options = options.map((option) => ({ id: option, name: option }));
   }

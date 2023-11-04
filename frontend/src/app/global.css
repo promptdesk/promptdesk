@@ -6868,11 +6868,14 @@ li code,p code{
 .generated-output {
     margin-top: 1em;
     border: 1px solid var(--gray-300);
-    background: rgba(161, 194, 250, 0.2);
     padding: 1em 2.5em 1em 1em;
     max-height:25vh;
-    overflow-wrap: anywhere!important;
-    overflow-y: auto;
+    border-radius:8px;
+    background:black;
+    color:white;
+    overflow: hidden;
+    max-width:100%;
+    display:block;
 }
 .pg-root .editor-container{
     background-color:#fff
