@@ -1,5 +1,5 @@
 import React from 'react';
-import LogRow from '@/components/LogRow';
+import LogRow from '@/components/Table/LogRow';
 
 interface LogsTableProps {
   logs: any;

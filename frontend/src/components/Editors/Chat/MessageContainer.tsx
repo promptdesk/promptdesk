@@ -1,38 +1,33 @@
 import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
-import { modelStore } from "@/stores/ModelStore";
-import { promptStore } from "@/stores/PromptStore";
-import ChatMessageRole from "@/components/Editors/Components/ChatMessageRole";
+import ChatMessageRole from "@/components/Editors/Chat/ChatMessageRole";
 
 interface MessageContainerProps {
   index: number;
+  message: any;
+  roles: string[];
+  onEditMessage: (index: number, content: string) => void;
+  onToggleRole: (index: number, roles: string[]) => void;
 }
 
-const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
-  const { promptObject, editMessageAtIndex, toggleRoleAtIndex, processVariables } = promptStore();
-  const { modelObject } = modelStore();
+const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, roles, onEditMessage, onToggleRole }) => {
   const textAreaRef = useRef<HTMLDivElement | null>(null);
-
-  const messages = promptObject?.prompt_data?.messages || [];
-  const currentMessage = messages[index] || {};
-  const defaultRole = currentMessage.role || modelObject?.model_parameters.roles[1];
+  const defaultRole = message.role || roles[1];
 
   useEffect(() => {
-    const messageText = currentMessage.content || "";
+    const messageText = message.content || "";
     if (textAreaRef.current) {
       textAreaRef.current.innerHTML = messageText;
     }
-  }, [currentMessage]);
+  }, [message]);
 
   const handleRoleToggle = () => {
-    const roles = modelObject?.model_parameters.roles;
-    toggleRoleAtIndex(index, roles);
+    onToggleRole(index, roles);
   };
 
   const handleTextAreaChange = () => {
-    editMessageAtIndex(index, textAreaRef.current?.innerHTML || "");
-    processVariables(`${promptObject.prompt_data.context} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
+    onEditMessage(index, textAreaRef.current?.innerHTML || "");
   };
   
   const article = defaultRole.startsWith("u") ? "an" : "a";
@@ -59,6 +54,9 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index }) => {
 
 MessageContainer.propTypes = {
   index: PropTypes.number.isRequired,
+  message: PropTypes.object.isRequired,
+  onEditMessage: PropTypes.func.isRequired,
+  onToggleRole: PropTypes.func.isRequired
 };
 
 export default MessageContainer;

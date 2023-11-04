@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from 'next/router';
-import Editor from "@/components/Editors/Editor";
+import Editor from "@/components/Editors/CompletionEditor";
 import ChatEditor from "@/components/Editors/ChatEditor";
 import Modal from "@/components/Modals/Modal";
 import VariableModal from "@/components/Modals/VariableModal";
-import TabNavigation from "@/components/TabNavigation";
-import RightPanel from "@/components/RightPanel";
+import TabNavigation from "@/components/Editors/TabNavigation";
+import RightPanel from "@/components/Editors/RightPanel";
 import ErrorPage from 'next/error';
 import {
   shouldShowSaveModal,

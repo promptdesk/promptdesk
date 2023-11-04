@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { promptStore } from '@/stores/PromptStore';
-import EditorFooter from './Components/EditorFooter';
-import GeneratedOutput from './Components/GeneratedOutput';
+import EditorFooter from '@/components/Editors/EditorFooter';
+import GeneratedOutput from '@/components/Editors/Completion/GeneratedOutput';
 import Variables from '@/components/Editors/Variables';
 
 function Editor() {

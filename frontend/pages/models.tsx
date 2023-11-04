@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { Model } from "@/interfaces/model";
@@ -21,17 +21,11 @@ export default function About() {
     const [modifiedModel, setModifiedModel] = useState("");
     const [isValidJSON, setIsValidJSON] = useState(true);
 
-    // Fetch models and set initial state on component mount
     useEffect(() => {
-        const fetchData = async () => {
-            const fetchedModels = await fetchAllModels();
-            const defaultModel = fetchedModels[0] || { name: "" };
-            setSelectedModel(defaultModel);
-            setModifiedModel(JSON.stringify(defaultModel, null, 2));
-        };
-
-        fetchData();
-    }, [fetchAllModels]);
+        const defaultModel = models[0] || { name: "" };
+        setSelectedModel(defaultModel);
+        setModifiedModel(JSON.stringify(defaultModel, null, 2));
+    }, []);
 
     return (
         <div className="flex flex-row">

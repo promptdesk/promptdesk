@@ -6876,6 +6876,7 @@ li code,p code{
     overflow: hidden;
     max-width:100%;
     display:block;
+    white-space:pre-line;
 }
 .pg-root .editor-container{
     background-color:#fff

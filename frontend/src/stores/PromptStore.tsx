@@ -15,7 +15,6 @@ interface PromptStore {
     defaultPrompt: Prompt;
     selectedVariable: string;
     fetchAllPrompts: () => Promise<Prompt[]>;
-    onlyFetchPrompts: () => Promise<Prompt[]>;
     setPromptInformation: (key: any, value: any) => void;
     createNewPrompt: () => Promise<string>;
     updateExistingPrompt: () => void;
@@ -237,11 +236,6 @@ const promptStore = create<PromptStore>((set, get) => ({
         return prompts;
     },
 
-    onlyFetchPrompts: async () => {
-        const prompts = await fetchFromPromptdesk('/api/prompts')
-        return prompts;
-    },
-
     isValidName: (name: string) => {
         //alert if name is no A-Z, a-z, 0-9, _ or -
         const regex = /^[a-zA-Z0-9_-]*$/;
@@ -284,8 +278,8 @@ const promptStore = create<PromptStore>((set, get) => ({
     },
 
     duplicateExistingPrompt: async (name: string, description: string) => {
-        const { onlyFetchPrompts, promptObject, isValidName } = await get();
-        const dbPrompts = await onlyFetchPrompts();
+        const { fetchAllPrompts, promptObject, isValidName } = await get();
+        const dbPrompts = await fetchAllPrompts();
     
         // Create a shallow copy of the prompt object and override the name and description
         const promptToDuplicate = { ...promptObject, description, name };

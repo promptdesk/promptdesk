@@ -1,37 +1,39 @@
 "use client";
-import React, { useEffect, useState, useRef } from 'react';
-import AddMessage from './Components/AddMessage';
-import MessageContainer from './Components/MessageContainer';
-import EditorFooter from './Components/EditorFooter';
+import React, { use, useEffect, useRef, useState } from 'react';
+import AddMessage from '@/components/Editors/Chat/AddMessage';
+import MessageContainer from '@/components/Editors/Chat/MessageContainer';
+import EditorFooter from '@/components/Editors/EditorFooter';
 import Variables from '@/components/Editors/Variables';
-import GeneratedOutput from './Components/GeneratedOutput';
 import { promptStore } from '@/stores/PromptStore';
 
 function Editor() {
-  const { promptObject, setPromptInformation, processVariables } = promptStore();
+  const { promptObject, setPromptInformation, setPromptVariables, processVariables, prompts } = promptStore();
 
-  const { context = '', messages = [] } = promptObject?.prompt_data || {};
-  const messagesLength = messages.length;
-
-  const handleSystemInput = (e: any) => {
+  const handleSystemInput = (e:any) => {
     const systemInput = e.target.value;
     setPromptInformation('prompt_data.context', systemInput);
+    processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
 
   const [lastLength, setLastLength] = useState(0);
-  const scrollRef = useRef(null);
 
   useEffect(() => {
-    processVariables(`${context} ${JSON.stringify(messages)}`);
-  }, [context, messages, processVariables]);
+    const context = promptObject?.prompt_data.context || '';
+    const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
+    processVariables(`${context} ${messages}`);
+  }, [promptObject?.name, promptObject.id, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
 
   useEffect(() => {
-    if (messagesLength > lastLength && scrollRef.current) {
-      (scrollRef.current as any).scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-      console.log("newLength", messagesLength)
+    var element = document.getElementById("myRef");
+    let newLength = promptObject?.prompt_data?.messages?.length;
+
+    if(newLength > lastLength && element) {
+      element.scrollIntoView({behavior:"smooth", block: "end", inline:"nearest"});    
+      console.log("newLength", newLength)
     }
-    setLastLength(messagesLength);
-  }, [messagesLength, lastLength]);
+
+    setLastLength(promptObject?.prompt_data?.messages?.length);
+  }, [promptObject?.prompt_data?.messages?.length])
 
   return (
     <div className="flex flex-col">
@@ -51,12 +53,24 @@ function Editor() {
             </div>
           </div>
         </div>
+        <div className="chat-pg-mobile-divider" />
         <div className="chat-pg-right-wrapper">
           <div className="chat-pg-panel-wrapper">
             <div className="chat-pg-exchange-container">
               <div className="chat-pg-exchange">
-                {promptObject.prompt_data.messages?.map((_: any, index: any) => (
-                  <MessageContainer key={index} index={index} />
+                {promptObject.prompt_data.messages?.map((message: any, index: any) => (
+                  <MessageContainer
+                    key={index}
+                    index={index}
+                    message={message}
+                    roles={promptObject?.prompt_variables?.roles}
+                    onEditMessage={(message: any) => {
+                      setPromptInformation(`prompt_data.messages[${index}]`, message);
+                    }}
+                    onToggleRole={(role: any) => {
+                      setPromptInformation(`prompt_data.messages[${index}].role`, role);
+                    }}
+                  />
                 ))}
                 <AddMessage />
                 <div id="myRef" className="chat-pg-bottom-div" />
@@ -64,7 +78,6 @@ function Editor() {
             </div>
           </div>
           <div>
-            <GeneratedOutput />
             <EditorFooter />
           </div>
         </div>
