@@ -9,4 +9,5 @@ export interface Log {
     createdAt: Date;
     organization_id: string;
     duration: number;
+    stats:any;
 }

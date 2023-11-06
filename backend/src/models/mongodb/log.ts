@@ -38,6 +38,12 @@ class Log {
   async getLogs(page:any, limit = 10, organization_id: string) {
 
     const count = await logSchema.countDocuments({ organization_id });
+    const average = await logSchema.aggregate([
+      { $match: { organization_id } },
+      { $group: { _id: null, average: { $avg: "$duration" } } }
+    ]);
+    //get total with reponse of 200
+    const all200 = await logSchema.countDocuments({ organization_id, status: 200 });
 
     const skip = (page - 1) * limit;
     let logs = await logSchema.find({ organization_id })
@@ -52,8 +58,14 @@ class Log {
       per_page: limit,
       total: count,
       total_pages: Math.ceil(count / limit),
-      data: logs
+      data: logs,
+      stats: [
+        { name: 'Total Responses', stat: count },
+        { name: 'Avg. Response Time', stat: average[0].average.toFixed(2) },
+        { name: 'Success Rate', stat: (all200/count).toFixed(2) }
+      ]
     }
+  
   }
 
   transformLog(log:any) {
