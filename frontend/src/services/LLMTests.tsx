@@ -9,7 +9,6 @@ const testAPI = async (axios_object:object) => {
         acc[item.name] = item.value;
         return acc;
     }, {});
-    console.log("result", result)
 
     const template = Handlebars.compile(JSON.stringify(axios_object));
     const axios_object_string = template(result);

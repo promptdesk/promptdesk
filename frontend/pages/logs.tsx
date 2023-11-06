@@ -32,13 +32,11 @@ export default function About() {
   const handlePrevious = () => {
     if (page > 1) push(`?page=${page - 1}`);
     setPage(page - 1);
-    //fetchLogs(page);
   };
 
   const handleNext = () => {
     if (page) push(`?page=${page + 1}`);
     setPage(page + 1);
-    //fetchLogs(page);
   };
 
   function getModelName(id:string) {

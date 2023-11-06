@@ -5,9 +5,11 @@ import MessageContainer from '@/components/Editors/Chat/MessageContainer';
 import EditorFooter from '@/components/Editors/EditorFooter';
 import Variables from '@/components/Editors/Variables';
 import { promptStore } from '@/stores/PromptStore';
+import { modelStore } from '@/stores/ModelStore';
 
 function Editor() {
-  const { promptObject, setPromptInformation, setPromptVariables, processVariables, prompts } = promptStore();
+  const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex } = promptStore();
+  const { modelObject } = modelStore();
 
   const handleSystemInput = (e:any) => {
     const systemInput = e.target.value;
@@ -29,7 +31,6 @@ function Editor() {
 
     if(newLength > lastLength && element) {
       element.scrollIntoView({behavior:"smooth", block: "end", inline:"nearest"});    
-      console.log("newLength", newLength)
     }
 
     setLastLength(promptObject?.prompt_data?.messages?.length);
@@ -63,12 +64,12 @@ function Editor() {
                     key={index}
                     index={index}
                     message={message}
-                    roles={promptObject?.prompt_variables?.roles}
-                    onEditMessage={(message: any) => {
-                      setPromptInformation(`prompt_data.messages[${index}]`, message);
+                    roles={modelObject?.model_parameters.roles}
+                    onEditMessage={(index: any, content:string) => {
+                      editMessageAtIndex(index, content);
                     }}
-                    onToggleRole={(role: any) => {
-                      setPromptInformation(`prompt_data.messages[${index}].role`, role);
+                    onToggleRole={(index:any, roles: any) => {
+                      toggleRoleAtIndex(index, roles);
                     }}
                   />
                 ))}

@@ -16,8 +16,6 @@ function PlaygroundButton({ text, onClick, isFull }: PlaygroundButtonProps) {
   const baseClass = "btn btn-sm btn-filled btn-neutral";
   const className = isFull ? `${baseClass} w-full` : baseClass;
 
-  console.log("isFull", isFull)
-
   return (
     <button
       tabIndex={0}

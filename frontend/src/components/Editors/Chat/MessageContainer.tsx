@@ -13,7 +13,8 @@ interface MessageContainerProps {
 
 const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, roles, onEditMessage, onToggleRole }) => {
   const textAreaRef = useRef<HTMLDivElement | null>(null);
-  const defaultRole = message.role || roles[1];
+
+  let defaultRole = message.role || roles[0];
 
   useEffect(() => {
     const messageText = message.content || "";
@@ -56,7 +57,8 @@ MessageContainer.propTypes = {
   index: PropTypes.number.isRequired,
   message: PropTypes.object.isRequired,
   onEditMessage: PropTypes.func.isRequired,
-  onToggleRole: PropTypes.func.isRequired
+  onToggleRole: PropTypes.func.isRequired,
+  roles: PropTypes.array.isRequired,
 };
 
 export default MessageContainer;
