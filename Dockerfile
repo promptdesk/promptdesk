@@ -8,7 +8,6 @@ COPY shared ./shared
 
 ENV PROMPT_SERVER_PORT=4000
 ENV HOSTING=local
-ENV USERNAME=admin
 
 RUN cd frontend && npm install && npm run build
 RUN cd backend && npm install

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db
+    networks:
+      - mongodb-network
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:4000"
+    environment:
+      - MONGO_URL=mongodb://mongodb:27017/app
+      - OPEN_AI_KEY=ENTER_YOUR_KEY_HERE
+      - API_KEY=12345
+      - USERNAME=admin
+    depends_on:
+      - mongodb
+    networks:
+      - mongodb-network
+networks:
+  mongodb-network:
+    driver: bridge

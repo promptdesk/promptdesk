@@ -132,6 +132,7 @@ dist
 
 #any research directory
 research/
+data/
 .DS_Store
 
 #any app-specific repos
