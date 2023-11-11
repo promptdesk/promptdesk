@@ -18,7 +18,13 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     try {
 
-        const endpoint = `${process.env.PROMPT_SERVER_URL}${path}`;
+        let url = ""
+        //check if process.env.PROMPT_SERVER_URL is set
+        if(process.env.PROMPT_SERVER_URL) {
+            url = process.env.PROMPT_SERVER_URL;
+        }
+
+        const endpoint = `${url}${path}`;
 
         const response = await fetch(endpoint, {
             method,

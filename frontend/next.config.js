@@ -10,7 +10,7 @@ const nextConfig = {
   output: 'export',
   distDir: './dist',
   env: {
-    PROMPT_SERVER_URL: process.env.PROMPT_SERVER_URL,
+    PROMPT_SERVER_URL: process.env.PROMPT_SERVER_URL || "",
     ORGANIZATION_API_KEY: process.env.ORGANIZATION_API_KEY
   },
 }
