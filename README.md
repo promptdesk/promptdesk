@@ -3,16 +3,24 @@
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/promptdesk/promptdesk)
 [![PyPI version](https://badge.fury.io/py/promptdesk.svg)](https://badge.fury.io/py/promptdesk)
 
-PromptDesk is a versatile tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
+PromptDesk is a tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
 
 If you’re new to PromptDesk, we recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
+## Quickstart
+
+You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account. Once you have created an account, you can start building prompts and generating stories.
+Hosting is provided for free by the MongoDB and DigitalOcean Startup Programs.
+
+You can also run PromptDesk locally using the Docker image. To do so, follow the instructions in the [Installation](#installation) section below.
+
 ## Prerequisites
 
-Before running the PromptDesk Docker image, make sure you have the following environment variables ready:
+Before running the PromptDesk Docker image, make sure you have the following:
 
-- `MONGO_URL`: The URL to your MongoDB instance.
-- `OPEN_AI_KEY`: Your OpenAI API key.
+- 1 GB of RAM
+- 2 GB of disk space
+- A valid OpenAI API key (used for initial setup)
 
 ## Installation
 

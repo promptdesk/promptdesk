@@ -12,6 +12,4 @@ ENV HOSTING=local
 RUN cd frontend && npm install && npm run build
 RUN cd backend && npm install
 
-RUN cp -r ./frontend/dist ./backend/dist
-
 CMD ["sh", "-c", "cd backend && npm start"]
