@@ -1,10 +1,7 @@
 ![Alt Text](./readme_images/github_banner.png)
-<div class="column" align="middle">
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/promptdesk/promptdesk)
 [![PyPI version](https://badge.fury.io/py/promptdesk.svg)](https://badge.fury.io/py/promptdesk)
-</div>
-
 
 ## What is PromptDesk?
 
