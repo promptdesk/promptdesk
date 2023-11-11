@@ -20,7 +20,7 @@ function Navigation() {
   ];
 
   const footerItems = [
-    { href: '/documentation', label: 'Documentation', icon: Documentation },
+    { href: 'https://app.promptdesk.ai/docs', label: 'Documentation', icon: Documentation, target: '_blank' },
     { href: '/logout', label: 'Logout', icon: Logout }
   ]
 
@@ -69,7 +69,7 @@ function Navigation() {
       </div>
       <div className="app-navigation-footer">
         {footerItems.map(item => (
-          <Link key={item.href} href={item.href} className="app-navigation-menu-item">
+          <Link key={item.href} href={item.href} className="app-navigation-menu-item" target={item.target}>
             <div className="app-navigation-menu-item-icon">
               <item.icon />
             </div>

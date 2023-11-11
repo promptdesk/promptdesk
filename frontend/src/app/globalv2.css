@@ -4054,6 +4054,11 @@ body .DocSearch-Footer {
     padding: 24px
 }
 
+.app-page {
+    width: 100%;
+    padding: 24px
+}
+
 .app-page-content p {
     margin-top: 0
 }

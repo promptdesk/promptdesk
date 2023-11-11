@@ -11,7 +11,7 @@ interface ModelStore {
   fetchAllModels: () => Promise<Model[]>;
   setModelById: (id: string) => void;
   saveModel: (model: Model) => Promise<void>;
-  duplicateModel: (model: Model) => Promise<void>;
+  duplicateModel: (model: Model) => Promise<string>;
   deleteModel: (model: Model) => Promise<void>;
 }
 
@@ -75,9 +75,9 @@ const modelStore = create<ModelStore>(set => {
                 model.name += " (copy)";
                 (model as any).id = undefined;
             }
-
-            await fetchFromPromptdesk(`/api/model`, 'POST', model);
+            let newModel = await fetchFromPromptdesk(`/api/model`, 'POST', model);
             await fetchAllModels();
+            return newModel.id;
         },
 
         deleteModel: async (model: Model) => {

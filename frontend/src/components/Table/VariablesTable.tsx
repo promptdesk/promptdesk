@@ -31,7 +31,7 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
     <table className="min-w-full divide-y divide-gray-300">
       <thead>
         <tr>
-          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" style={{width:'300px'}}>
+          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" style={{width:'200px'}}>
             Name
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
@@ -50,6 +50,7 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
                 <input
                   type="text"
                   value={editedName}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setEditedName(e.target.value)}
                 />
               ) : (
@@ -61,6 +62,7 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
                 <input
                   type="text"
                   value={editedValue}
+                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => setEditedValue(e.target.value)}
                 />
               ) : variable.value.length <= 4 ? (
@@ -70,14 +72,16 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
               )}
             </td>
             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex">
-              {editingIndex !== null ? (
+              {editingIndex === index ? (
                 <div>
                   <PlaygroundButton text="Save" onClick={handleSave} />
                 </div>
               ) : (
                 <div className="flex">
                   <div aria-haspopup="true" aria-expanded="false">
-                    <EditButton onClick={() => handleEditClick(index, variable)} />
+                    <EditButton onClick={() => {
+                      handleEditClick(index, variable)
+                    }} />
                   </div>
                   <div aria-haspopup="true" aria-expanded="false">
                     <DeleteButton onClick={() => handleDeleteClick(index)} />

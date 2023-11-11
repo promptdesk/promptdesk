@@ -57,8 +57,13 @@ export default function About() {
   }
 
   return (
-    <div>
-      <div className="px-4 sm:px-6 lg:px-8 py-4">
+    <div className="page-body full-width flush">
+      <div className="pg-header">
+        <div className="pg-header-section pg-header-title">
+          <h1 className="pg-page-title">Logs</h1>
+        </div>
+      </div>
+      <div className="app-page">
         <Stats
           stats={stats}
         />
@@ -75,13 +80,13 @@ export default function About() {
             </div>
           </div>
         </div>
-      </div>
         <Pagination
           page={page}
           logs={logs as any}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
         />
+      </div>
     </div>
   );
 }
