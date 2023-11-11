@@ -52,8 +52,12 @@ class Organization {
 
   //should only be used in self-hosted mode
   async getOrganizationById(id:string): Promise<any> {
-    let organization:any = await organizationSchema.findOne({_id: id});
-    return organization ? this.transformOrganization(organization) : null;
+    try {
+      let organization:any = await organizationSchema.findOne({_id: id});
+      return organization ? this.transformOrganization(organization) : null;
+    } catch (error) {
+      return null;
+    }
   }
 
   async getOrganizationByKey(key:string, name:string): Promise<any> {

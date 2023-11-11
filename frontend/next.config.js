@@ -11,7 +11,7 @@ const nextConfig = {
   distDir: './dist',
   env: {
     PROMPT_SERVER_URL: process.env.PROMPT_SERVER_URL,
-    SERVER_API_KEY: process.env.SERVER_API_KEY
+    ORGANIZATION_API_KEY: process.env.ORGANIZATION_API_KEY
   },
 }
 

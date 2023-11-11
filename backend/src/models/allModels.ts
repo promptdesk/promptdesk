@@ -4,6 +4,7 @@ import {Prompt as mongoPrompt} from './mongodb/prompt';
 import {Log as mongoLog} from './mongodb/log';
 import {Variable as mongoVariable} from './mongodb/variable';
 import {Organization as mongoOrganization} from './mongodb/organization';
+import connectToDatabase from '../models/mongodb/db';
 
 async function importModule(moduleName: string):Promise<any>{
   const importedModule = await import(moduleName);
@@ -14,6 +15,24 @@ let Prompt:any, Model:any, Log:any, Variable:any, Organization:any;
 
 if (true) {
 
+  setTimeout(async () => {
+    await connectToDatabase();
+    var environment = process.env.NODE_ENV;
+    
+    if(environment == 'development') {
+      var org = new mongoOrganization();
+      org = await org.getOrganization();
+      if(org) {
+        console.log("############### .env ###############")
+        //check if keys exist in organization
+        if((org as any).keys) {
+          console.log("ORGANIZATION_API_KEY=" + (org as any).keys[0]['key'])
+        }
+        console.log("############### .env ###############")
+      }
+    }
+  
+  } , 1000);
   Prompt = mongoPrompt;
   Model = mongoModel;
   Log = mongoLog;

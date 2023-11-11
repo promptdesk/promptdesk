@@ -3,14 +3,11 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
-import fs from 'fs';
-import { apiKeyMiddleware, frontendAuthMiddleware } from './utils/authorization';
-import cookieParser from 'cookie-parser';
+import { apiKeyMiddleware } from './utils/authorization';
 
-//import basicAuth from 'express-basic-auth';
-
-//get NODE_ENV variable
 var environment = process.env.NODE_ENV;
+
+console.log("INFO :: ENVIRONMENT", environment)
 
 if(environment == 'development') {
   console.log("INFO :: DEVELOPMENT ENVIRONMENT")
@@ -21,11 +18,7 @@ if(environment == 'production') {
   dotenv.config({path:'../.env.production.local'})
 }
 
-import setup from './init/first_run_setup';
-
 const app = express();
-
-import './models/allModels';
 
 import modelsRouter from './routes/api/models';
 import promptsRouter from './routes/api/prompts';
@@ -64,9 +57,12 @@ app.all('/api/*', (req, res) => {
   return res.status(404).send({error: 'Not found'});
 })
 
-app.use('/*', frontendAuthMiddleware)
+app.use(express.static('./assets'))
 
-//serve static files
+import {authenticate} from './utils/publicAuth';
+authenticate(app);
+
+app.use(express.static('./public'))
 app.use(express.static('./dist'))
 
 app.get(['/',], (req, res) => {
@@ -95,7 +91,5 @@ app.listen(port, () => {
     console.log('INFO :: INTERNAL SERVER RUNNING ON PORT ' + port)
     console.log('INFO :: EXTERNAL SERVER RUNNING ON ' + process.env.PROMPT_SERVER_URL)
 });
-
-setup();
 
 export default app;

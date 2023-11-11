@@ -1,0 +1,10 @@
+node_modules/
+.env
+.vscode
+.next/
+dist/
+research/
+data/
+.DS_Store
+tmp/
+___*

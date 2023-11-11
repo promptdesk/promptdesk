@@ -11,9 +11,7 @@ services:
     networks:
       - mongodb-network
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: promptdesk/promptdesk:latest
     ports:
       - "8080:4000"
     environment:

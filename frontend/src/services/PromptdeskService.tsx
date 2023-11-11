@@ -12,8 +12,8 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     }
 
-    if(!token && process.env.SERVER_API_KEY) {
-        token = process.env.SERVER_API_KEY;
+    if(!token && process.env.ORGANIZATION_API_KEY) {
+        token = process.env.ORGANIZATION_API_KEY;
     }
 
     try {

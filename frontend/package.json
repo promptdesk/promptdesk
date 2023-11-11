@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_ENV=development next dev",
-    "build": "NODE_ENV=production next build",
+    "build": "NODE_ENV=production next build && rm -rf ../backend/dist && cp -r dist/ ../backend/dist",
     "debug": "NODE_ENV=debug next dev",
     "start": "next start",
     "lint": "next lint",

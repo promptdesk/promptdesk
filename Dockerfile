@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM --platform=$BUILDPLATFORM node:21-slim
 
 WORKDIR /app
 
