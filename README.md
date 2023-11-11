@@ -5,44 +5,36 @@
 
 ## What is PromptDesk?
 
-PromptDesk is a tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
+PromptDesk is 100% free and open-source tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs).
 
 If you’re new to PromptDesk, we recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
 ## Quickstart
 
-You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account. Once you have created an account, you can start building prompts and generating stories.
+PromptDesk is available as a hosted web application and as a Docker image.
+
+### Hosted Web Application
+
+You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account.
 Hosting is provided for free by the MongoDB and DigitalOcean Startup Programs.
 
-You can also run PromptDesk locally using the Docker image. To do so, follow the instructions in the [Installation](#installation) section below.
+The hosted web application will always be free, up-to-date, with full support for all features. However, log storage is limited to 10k records per user.
 
-## Prerequisites
+All data can be exported or transfered at any time.
 
-Before running the PromptDesk Docker image, make sure you have the following:
-
-- 1 GB of RAM
-- 2 GB of disk space
-- A valid OpenAI API key (used for initial setup)
-
-## Installation
-
-To install the PromptDesk Docker image, pull the latest version from the Docker Hub:
+### Docker Image
 
 ```shell
-docker pull promptdesk/promptdesk:latest
+wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
 ```
 
-## Usage
-
-To run the PromptDesk Docker image, execute the following command, replacing the placeholder values with your actual information:
+Start the Docker container:
 
 ```shell
-docker run \
-  -p 4000:4000 \
-  -e "MONGO_URL=[your mongodb:// url]" \
-  -e "OPEN_AI_KEY=[your OpenAI API key]" \
-  promptdesk:latest
+docker compose up
 ```
+
+Open your web browser and navigate to http://localhost:8080/ to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
 ## Accessing the App
 
