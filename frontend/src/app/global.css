@@ -4293,7 +4293,6 @@ body .DocSearch-Footer{
 }
 .app-wrapper{
     --page-header-height:var(--app-header-height);
-    padding-top:var(--app-header-height);
     height:100vh !important;
 }
 .app-wrapper-max-height .app-wrapper{
@@ -4916,7 +4915,8 @@ h1:first-child,h2:first-child,h3:first-child,h4:first-child,h5:first-child,h6:fi
 }
 h1{
     font-size:32px;
-    line-height:40px
+    line-height:40px;
+    font-size: 24px;
 }
 h2{
     font-size:24px;
@@ -6986,8 +6986,8 @@ li code,p code{
 }
 .pg-page-title{
     margin:0;
-    font-size: 18px;
-    line-height: 24px;
+    font-size: 24px;
+    line-height: 32px;
     font-weight:700;
 }
 .pg-preset-select-container{

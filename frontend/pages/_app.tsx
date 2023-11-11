@@ -1,3 +1,4 @@
+import '../src/app/globalv2.css';
 import '../src/app/global.css';
 import Navigation from '@/components/Navigation';
 import React, { useEffect, useState } from 'react'; // Import useEffect and useState
@@ -42,11 +43,13 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       {loading ? ( // Render loading indicator if loading is true
         <div>Loading...</div>
       ) : (
-        <div className="route-container">
-          <div className="page-wrapper app-wrapper">
+        <div className="app-wrapper">
             <Navigation />
-            <Component {...pageProps} />
-          </div>
+            <div className="page-wrapper app-main">
+              <div className="pg-root page-body full-width flush">
+                <Component {...pageProps} />
+              </div>
+            </div>
         </div>
       )}
     </div>
@@ -54,3 +57,14 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 };
 
 export default App;
+
+/*
+
+        <div className="route-container">
+          <div className="page-wrapper app-wrapper">
+            <Navigation />
+            <Component {...pageProps} />
+          </div>
+        </div>
+
+        */

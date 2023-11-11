@@ -96,7 +96,6 @@ export default function Home() {
   return (
     <>
     {(modelObject && promptObject) && (
-      <div className="pg-root page-body full-width flush">
         <div className="pg-main">
           <div className="pg-tab-header">
             {/* TABS */}
@@ -139,7 +138,6 @@ export default function Home() {
           </div>
           )}
         </div>
-    </div>
     )}
     </>
   );

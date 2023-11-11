@@ -70,6 +70,11 @@ export default function VariablesPage() {
       {show_env_variable_modal &&
         <EnvVariableModal/>
       }
+      <div className="pg-header">
+        <div className="pg-header-section pg-header-title">
+          <h1 className="pg-page-title">Settings</h1>
+        </div>
+      </div>
       <div className="px-4 sm:px-6 lg:px-8 py-4">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
