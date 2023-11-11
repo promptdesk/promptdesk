@@ -1,7 +1,12 @@
-# PromptDesk
+![Alt Text](./readme_images/github_banner.png)
+<div class="column" align="middle">
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/promptdesk/promptdesk)
 [![PyPI version](https://badge.fury.io/py/promptdesk.svg)](https://badge.fury.io/py/promptdesk)
+</div>
+
+
+## What is PromptDesk?
 
 PromptDesk is a tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs). This guide will help you set up PromptDesk on your system quickly and efficiently.
 
@@ -46,7 +51,7 @@ docker run \
 
 Once the Docker container is running, open your web browser and navigate to http://localhost:4000/ to access the PromptDesk application and start building prompts.
 
-![Alt Text](./screenshots/prompt-builder.png)
+![Alt Text](./readme_images/prompt-builder.png)
 
 Now that you have the PromptDesk application running, you can start building prompts. To get started, access the [prompt building](https://promptdesk.ai/docs/building-prompts/) guide.
 
