@@ -50,7 +50,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
                 <Component {...pageProps} />
               </div>
             </div>
-            <Notification />
         </div>
       )}
     </div>
