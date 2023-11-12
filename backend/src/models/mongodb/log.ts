@@ -62,7 +62,7 @@ class Log {
       stats: [
         { name: 'Total Responses', stat: count },
         { name: 'Avg. Response Time', stat: average[0].average.toFixed(2) },
-        { name: 'Success Rate', stat: (all200/count).toFixed(2) }
+        { name: 'Success Rate', stat: ((all200 / count) * 100).toFixed(0) + '%' }
       ]
     }
   

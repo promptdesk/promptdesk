@@ -28,7 +28,12 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, rol
   };
 
   const handleTextAreaChange = () => {
-    onEditMessage(index, textAreaRef.current?.innerHTML || "");
+    let text = textAreaRef.current?.innerHTML || "";
+
+    //remove all formatting
+    //text = text.replace(/(<([^>]+)>)/gi, "");
+
+    onEditMessage(index, text);
   };
   
   const article = defaultRole.startsWith("u") ? "an" : "a";
@@ -40,7 +45,7 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, rol
       <div className="text-input-with-focus">
         <div
           className="text-input-md text-input"
-          contentEditable={true}
+          contentEditable={'plaintext-only' as any}
           tabIndex={0}
           ref={textAreaRef}
           placeholder={placeholder}

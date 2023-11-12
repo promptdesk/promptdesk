@@ -6869,11 +6869,11 @@ li code,p code{
     margin-top: 1em;
     border: 1px solid var(--gray-300);
     padding: 1em 2.5em 1em 1em;
-    max-height:25vh;
+    max-height:45vh;
     border-radius:8px;
     background:black;
     color:white;
-    overflow: hidden;
+    overflow-y: auto;
     max-width:100%;
     display:block;
     white-space:pre-line;

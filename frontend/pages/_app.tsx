@@ -6,7 +6,7 @@ import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/TabStore';
 import { organizationStore } from '@/stores/OrganizationStore';
-
+import Notification from '@/components/Notification';
 interface AppProps {
   Component: React.ElementType;
   pageProps: any; // Adjust this type as needed
@@ -50,6 +50,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
                 <Component {...pageProps} />
               </div>
             </div>
+            <Notification />
         </div>
       )}
     </div>

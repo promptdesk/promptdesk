@@ -36,6 +36,11 @@ function Editor() {
     setLastLength(promptObject?.prompt_data?.messages?.length);
   }, [promptObject?.prompt_data?.messages?.length])
 
+  //if promptObject.prompt_data is null, set it to an empty object
+  if(!promptObject.prompt_data) {
+    setPromptInformation('prompt_data', {});
+  }
+
   return (
     <div className="flex flex-col">
       <Variables />
