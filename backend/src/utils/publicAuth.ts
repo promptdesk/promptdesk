@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
+const figlet = require('figlet');
 
 import cookieParser from 'cookie-parser';
 import { Organization, Model, Prompt, Variable } from "../models/allModels";
@@ -28,6 +29,44 @@ const checkIfFirstRun = async function() {
         return true
     }
     return false
+}
+
+figlet("PromptDesk", function (err:any, data:any) {
+    if (err) {
+        console.log("Something went wrong...");
+        console.dir(err);
+        return;
+    }
+    console.log(data);
+});
+
+async function generateInitialOrganization(body:any) {
+    body.password = await bcrypt.hash(body.password, saltRounds)
+    organization = await organization_db.addOrganization(body.organization_api_key);
+    await populateOrganization(organization.id, body.openai_api_key)
+    var user = await user_db.createUser(body.email, body.password, organization.id);
+    isSetupCompleted = false;
+}
+
+async function setup() {
+    if(process.env.SETUP == 'true') {
+        console.log("Setting up organization and models");
+        let isFirstRun = await checkIfFirstRun();
+        if(!isFirstRun) {
+            return;
+        }
+        console.log("Setting up organization and models");
+        let body = {
+            email: process.env.EMAIL,
+            password: process.env.PASSWORD,
+            openai_api_key: process.env.OPENAI_API_KEY,
+            organization_api_key: process.env.ORGANIZATION_API_KEY
+        }
+        await generateInitialOrganization(body);
+        console.log("############### SUCCESS ###############")
+        console.log("Setup successful!")
+        console.log("############### SUCCESS ###############")
+    }
 }
 
 const authenticate = function(app:any) {
@@ -94,11 +133,7 @@ const authenticate = function(app:any) {
             return res.status(400).json({error:"Organization already exists."})
         }
 
-        body.password = await bcrypt.hash(body.password, saltRounds)
-        organization = await organization_db.addOrganization();
-        await populateOrganization(organization.id, body.openai_api_key)
-        var user = await user_db.createUser(body.email, body.password, organization.id);
-        isSetupCompleted = false;
+        await generateInitialOrganization(body);
 
         return res.status(200).json({message:"Setup successful."})
     });
@@ -129,6 +164,8 @@ const authenticate = function(app:any) {
         res.clearCookie('organization');
         res.redirect('/auth/login');
     })
+
+    setup();
 
     app.use(checkAuth);
 

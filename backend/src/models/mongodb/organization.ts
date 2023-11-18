@@ -16,10 +16,13 @@ const organizationSchema = mongoose.model(
 
 class Organization {
 
-  async addOrganization(): Promise<any> {
+  async addOrganization(organization_api_key:any): Promise<any> {
     // Generate a random name for the organization
     const randomName = `org-${crypto.randomBytes(6).toString('hex')}`;
-    const randomApiKey = crypto.randomBytes(16+8).toString('hex');
+    let randomApiKey = crypto.randomBytes(16+8).toString('hex');
+    if(organization_api_key) {
+      randomApiKey = organization_api_key;
+    }
 
     // Create a new organization with the generated name
     const organization = new organizationSchema({

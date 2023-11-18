@@ -10,18 +10,33 @@ services:
       - ./data:/data/db
     networks:
       - mongodb-network
-  app:
+    command: mongod --quiet --logpath /dev/null #used to disable logging
+  back:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend.dev
+    volumes:
+      - ./:/app/
     ports:
-      - "8080:4000"
-    environment:
-      - MONGO_URL=mongodb://mongodb:27017/app
+      - "4000:4000"
     depends_on:
       - mongodb
     networks:
       - mongodb-network
+    command: ["sh", "-c", "cd backend && npm install && npm run dev"]
+  front:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend.dev
+    volumes:
+      - ./:/app/
+    ports:
+      - "3000:3000"
+    networks:
+      - mongodb-network
+    depends_on:
+      - back
+    command: ["sh", "-c", "cd frontend && npm install && npm run dev"]
 networks:
   mongodb-network:
     driver: bridge

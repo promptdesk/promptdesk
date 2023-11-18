@@ -5,9 +5,28 @@
 
 ## What is PromptDesk?
 
-PromptDesk is 100% free and open-source tool designed to facilitate the creation, organization, and evaluation of prompts and Large Language Models (LLMs).
+PromptDesk is 100% free and open-source tool designed to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications and Large Language Models (LLMs).
 
-If you’re new to PromptDesk, we recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. If you’re already familiar with PromptDesk, you can jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
+![Alt Text](./readme_images/flowchart_banner.jpeg)
+
+#### PrompDesk GUI
+
+The PromptDesk GUI is an OpenAI playground clone that makes it easy to build and organize prompt-based applications.
+- Workspace: Build and test completion, code and chat prompts with variables.
+- Prompts: Create and organize prompts.
+- Models: Create, edit, test and add unlimited LLM models.
+- Logs: View, analyze and export prompt calls.
+- Settings: Configure variables and API keys.
+
+#### PrompDesk Python PIP Package
+
+The PrompDesk Python PIP Package is an ultra-lightweight library to call and process prompts remotely or locally.
+- Generate: Call prompts remotely or locally.
+- JSON: Convert prompts to JSON format.
+- Variables: Add variables to prompts.
+- Data validation: Validate prompt data.
+
+We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. You can also jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in python with [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
 ## Quickstart
 

@@ -1,0 +1,6 @@
+FROM --platform=$BUILDPLATFORM node:21-slim
+
+WORKDIR /app
+
+COPY backend ./backend
+COPY shared ./shared

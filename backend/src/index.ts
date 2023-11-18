@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import path from 'path';
 import { apiKeyMiddleware } from './utils/authorization';
+import fs from 'fs';
 
 var environment = process.env.NODE_ENV;
 
@@ -11,7 +12,7 @@ console.log("INFO :: ENVIRONMENT", environment)
 
 if(environment == 'development') {
   console.log("INFO :: DEVELOPMENT ENVIRONMENT")
-  dotenv.config({path:'../.env.development.local'})
+  dotenv.config({path:'../.env'})
 }
 if(environment == 'production') {
   console.log("INFO :: PRODUCTION ENVIRONMENT")
@@ -66,7 +67,10 @@ app.use(express.static('./public'))
 app.use(express.static('./dist'))
 
 app.get(['/',], (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  if(!fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
+    return res.end("You must build the frontend first. Run 'npm run build' in the frontend directory.");
+  }
+  return res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 app.get(['/workspace/*'], (req, res) => {

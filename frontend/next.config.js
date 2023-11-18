@@ -4,7 +4,11 @@ var dotenv = require('dotenv')
 
 var NODE_ENV = process.env.NODE_ENV || 'development'
 
-dotenv.config({path:`../.env.${NODE_ENV}.local`})
+if (NODE_ENV == 'development') {
+  dotenv.config({path:`../.env`})
+} else {
+  dotenv.config({path:`../.env.${NODE_ENV}.local`})
+}
 
 const nextConfig = {
   output: 'export',

@@ -1,5 +1,7 @@
 node_modules/
 .env
+.env.production.local
+.env.development.local
 .vscode
 .next/
 dist/
