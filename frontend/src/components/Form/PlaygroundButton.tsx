@@ -1,12 +1,13 @@
 import React from 'react';
 
 interface PlaygroundButtonProps {
+  id?: string;
   text: string;
   isFull?: boolean;
   onClick: () => void;
 }
 
-function PlaygroundButton({ text, onClick, isFull }: PlaygroundButtonProps) {
+function PlaygroundButton({ id, text, onClick, isFull }: PlaygroundButtonProps) {
   const handleClick = () => {
     if (typeof onClick === 'function') {
       onClick();
@@ -20,7 +21,7 @@ function PlaygroundButton({ text, onClick, isFull }: PlaygroundButtonProps) {
     <button
       tabIndex={0}
       className={className}
-      
+      id={id}
       type="button"
       data-testid="pg-save-btn"
       aria-haspopup="true"

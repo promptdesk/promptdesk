@@ -9,7 +9,7 @@ PromptDesk is 100% free and open-source tool designed to facilitate the creation
 
 ![Alt Text](./readme_images/flowchart_banner.jpeg)
 
-#### PrompDesk GUI
+### PrompDesk Manager
 
 The PromptDesk GUI is an OpenAI playground clone that makes it easy to build and organize prompt-based applications.
 - Workspace: Build and test completion, code and chat prompts with variables.
@@ -18,7 +18,7 @@ The PromptDesk GUI is an OpenAI playground clone that makes it easy to build and
 - Logs: View, analyze and export prompt calls.
 - Settings: Configure variables and API keys.
 
-#### PrompDesk Python PIP Package
+### PromptDesk Python SDK
 
 The PrompDesk Python PIP Package is an ultra-lightweight library to call and process prompts remotely or locally.
 - Generate: Call prompts remotely or locally.
@@ -56,7 +56,12 @@ docker compose up
 Open your web browser and navigate to http://localhost:8080/ to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
 ## Important Links
+
+For more information about PromptDesk, please refer to the following resources:
+
 - [Documentation](https://promptdesk.ai/docs/)
-- [GitHub - Application](https://github.com/promptdesk/promptdesk)
-- [GitHub - Python PIP](https://github.com/promptdesk/promptdesk-py)
-- [Docker Hub](https://hub.docker.com/r/promptdesk/promptdesk)
+- [Application GitHub Repository](https://github.com/promptdesk/promptdesk)
+- [Python GitHub Repository](https://github.com/promptdesk/promptdesk-py)
+- [PyPI Package](https://pypi.org/project/promptdesk/)
+- [Docker Hub](https://hub.docker.com/r/promptdesk/promptdesk/)
+- [Official Website](https://promptdesk.ai/)

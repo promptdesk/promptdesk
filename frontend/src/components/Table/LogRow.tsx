@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface LogRowProps {
+    index: number;
     log: any;
     handleRowClick: (logId: string) => void;
     getPromptName: (id: string) => string;
@@ -8,10 +9,16 @@ interface LogRowProps {
     expandedRows: Record<string, boolean>;
 }
 
-const LogRow: React.FC<LogRowProps> = ({ log, handleRowClick, getPromptName, getModelName, expandedRows }) => {
+const LogRow: React.FC<LogRowProps> = ({ index, log, handleRowClick, getPromptName, getModelName, expandedRows }) => {
     return (
         <>
-            <tr key={log.id} onClick={() => handleRowClick(log.id)} className="cursor-pointer">
+            <tr
+                key={log.id}
+                onClick={() => handleRowClick(log.id)}
+                className="cursor-pointer"
+                //add id if index is 0
+                id={index === 3 ? 'sample-log' : ''}
+                >
                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                     {getPromptName(log.prompt_id)}
                 </td>

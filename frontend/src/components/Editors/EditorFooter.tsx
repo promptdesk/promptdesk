@@ -32,6 +32,7 @@ function EditorFooter() {
       <hr></hr>
       <div className="pg-footer-left">
         <button
+          id="submit-prompt"
           tabIndex={0}
           className={`btn btn-sm btn-filled ${
             data.loading ? 'btn-neutral' : 'btn-primary'
@@ -50,6 +51,7 @@ function EditorFooter() {
         </button>
         <PlaygroundButton
               text="Save"
+              id="save-prompt"
               onClick={toggle_modal}
               isFull={true}
         />

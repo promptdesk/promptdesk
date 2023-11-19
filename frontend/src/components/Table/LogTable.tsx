@@ -41,6 +41,7 @@ const LogTable: React.FC<LogsTableProps> = ({
         {logs && logs.data ? 
           logs.data.map((log: any, index:number) => (
             <LogRow 
+              index={index}
               log={log} 
               key={index}
               handleRowClick={handleRowClick} 

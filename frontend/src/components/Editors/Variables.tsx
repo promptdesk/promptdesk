@@ -23,6 +23,7 @@ const Variables = () => {
             {Object.keys(promptVariableData).map((variable, index) => (
                 <span
                     key={index}
+                    id={index === 0 ? "first-variable" : ""}
                     onClick={() => toggle_variable_modal(variable)}
                     className="cursor-pointer inline-flex items-center gap-x-1.5 rounded-md px-2 py-1 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200 mr-1 mb-2"
                 >
