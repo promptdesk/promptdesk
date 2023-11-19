@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
 import {promptWorkspaceTabs} from "@/stores/TabStore";
+import { promptStore } from '@/stores/PromptStore';
 
 export default function Home() {
   const { push, query } = useRouter();
 
+  var { prompts, addNewPrompt } = promptStore();
+
   const {
     findActiveTab,
+    setActiveTabById,
     tabs
   } = promptWorkspaceTabs();
 
@@ -18,9 +22,15 @@ export default function Home() {
     if (activeTab) {
       changeIdInUrl(activeTab.prompt_id)
     } else {
-      push('/prompts')
+      newPrompt()
     }
   }, [findActiveTab])
+
+  const newPrompt = async () => {
+    const newId = await addNewPrompt();
+    setActiveTabById(newId as string);
+    push(`/workspace/${newId}`);
+  };
 
 
   const changeIdInUrl = (newId: string) => {
