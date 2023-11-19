@@ -104,9 +104,9 @@ export default function About() {
             {selectedModel?.name} ({isValidJSON ? "valid" : "invalid"})
           </div>
           <CodeEditor
-            isValidJSON={isValidJSON}
             handleChange={handleCodeChange}
-            selectedModel={JSON.stringify(selectedModel, null, 2)}
+            code={JSON.stringify(selectedModel, null, 2)}
+            language="json"
           />
         </div>
       </div>
