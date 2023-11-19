@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
+    "@monaco-editor/react": "^4.6.0",
     "@testing-library/react": "^14.0.0",
     "@types/js-cookie": "^3.0.5",
     "@types/node": "20.3.3",
