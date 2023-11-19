@@ -1,113 +1,84 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
-import { Model } from "@/interfaces/model";
 import { ModelList } from "@/components/Models/ModelList";
 import CodeEditor from "@/components/Editors/CodeEditor";
-export default function About() {
-  // Destructure modelStore methods and state
-  const { models, saveModel, duplicateModel, deleteModel } = modelStore();
+import InputField from "@/components/Form/InputField";
+import DropDown from "@/components/Form/DropDown";
 
-  // Initialize state variables
-  const [selectedModel, setSelectedModel] = useState({
-    name: "",
-    id: "",
-  });
-  const [modifiedModel, setModifiedModel] = useState("");
+export default function About() {
+  const { models, saveModel, duplicateModel, deleteModel } = modelStore();
+  const [selectedModel, setSelectedModel] = useState({} as any);
   const [isValidJSON, setIsValidJSON] = useState(true);
 
   useEffect(() => {
-    const defaultModel = models[0] || { name: "" };
-    setSelectedModel(defaultModel);
-    setModifiedModel(JSON.stringify(defaultModel, null, 2));
-  }, []);
+    setSelectedModel(models[0] || {});
+  }, [models]);
 
-  function handleCodeChange(code: string | undefined) {
+  const handleCodeChange = (json_string:any) => {
     try {
-      const parsedJson = JSON.parse(code || "");
-      setModifiedModel(code || "");
+      const parsedJson = JSON.parse(json_string || "{}");
+      setSelectedModel(parsedJson);
       setIsValidJSON(true);
-    } catch (e) {
+    } catch {
       setIsValidJSON(false);
     }
-  }
+  };
 
-  function ModelButtons() {
-    return (
-      <div className="space-x-2">
-        <PlaygroundButton
-          text="Save"
-          onClick={() => {
-            if (!isValidJSON) {
-              alert("Invalid JSON");
-              return;
-            }
-            saveModel(JSON.parse(modifiedModel));
-          }}
-        />
-        <PlaygroundButton
-          text="Duplicate"
-          onClick={async () => {
-            const modelToDuplicate = selectedModel;
-            let newModelId = await duplicateModel(modelToDuplicate as any);
-            if (newModelId as string) {
-              const model = modelStore
-                .getState()
-                .models.find((model) => model.id === newModelId);
-              setSelectedModel(model as any);
-            }
-          }}
-        />
-        <PlaygroundButton
-          text="Delete"
-          onClick={async () => {
-            //find index of selectedModel
-            const index = models.findIndex(
-              (model) => model.id === selectedModel.id
-            );
+  const handleSave = () => {
+    if (!isValidJSON) {
+      alert("Invalid JSON");
+      return;
+    }
+    saveModel(selectedModel);
+  };
 
-            const modelToDelete = selectedModel as Model;
-            await deleteModel(modelToDelete);
+  const handleDuplicate = async () => {
+    const newModelId = await duplicateModel(selectedModel);
+    if (newModelId) {
+      const model = models.find((model) => model.id === newModelId);
+      setSelectedModel(model);
+    }
+  };
 
-            //set selectedModel to the next model in the list if it exists
-            if (index < models.length - 1) {
-              setSelectedModel(models[index + 1]);
-            } else if (index > 0) {
-              setSelectedModel(models[index - 1]);
-            } else {
-              setSelectedModel({ name: "", id: "" });
-            }
-          }}
-        />
-      </div>
-    );
-  }
+  const handleDelete = async () => {
+    await deleteModel(selectedModel);
+    const nextModel = models.find((_, index) => index !== models.indexOf(selectedModel)) || {};
+    setSelectedModel(nextModel);
+  };
+
+  const updateModel = (key:string, value:any) => {
+    const updatedModel = { ...selectedModel, [key]: value };
+    setSelectedModel(updatedModel);
+  };
 
   return (
     <div className="page-body full-width flush">
       <div className="pg-header">
         <div className="pg-header-section pg-header-title flex justify-between">
           <h1 className="pg-page-title">Models</h1>
-          <ModelButtons />
+          <div className="space-x-2">
+            <PlaygroundButton text="Save" onClick={handleSave} />
+            <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
+            <PlaygroundButton text="Delete" onClick={handleDelete} />
+          </div>
         </div>
       </div>
       <div className="flex flex-row">
-        {/* Left column */}
-        <ModelList
-          models={models}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-        />
-        {/* Right column */}
+        <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
         <div className="w-3/4">
-          <div className="p-2 bg-slate-600 text-white">
-            {selectedModel?.name} ({isValidJSON ? "valid" : "invalid"})
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8 grid-cols-6 m-2">
+            <div className="col-span-2">
+              <InputField label="Model Name" value={selectedModel.name} onInputChange={(value) => updateModel("name", value)} />
+            </div>
+            <div className="col-span-2">
+              <DropDown label="Model Type" options={[{ name: "Completion", value: "completion" }, { name: "Chat", value: "chat" }]} selected={selectedModel.type} onChange={(value:any) => updateModel("type", value)} />
+            </div>
+            <div className="col-span-2">
+              <DropDown label="Default model" options={[{ value: true, name: "True" }, { value: false, name: "False" }]} selected={selectedModel.default} onChange={(value:any) => updateModel("default", value === "true")} />
+            </div>
           </div>
-          <CodeEditor
-            handleChange={handleCodeChange}
-            code={JSON.stringify(selectedModel, null, 2)}
-            language="json"
-          />
+          <CodeEditor handleChange={handleCodeChange} code={JSON.stringify(selectedModel, null, 2)} language="json" />
         </div>
       </div>
     </div>

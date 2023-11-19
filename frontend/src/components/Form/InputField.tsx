@@ -4,18 +4,21 @@ interface InputFieldProps {
     onInputChange: (value: string) => void;
     placeholder?: string;
     value?: string;
+    label?: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value }) => {
+const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onInputChange(event.target.value);
     };
 
     return (
         <>
-            <label htmlFor="model-name" className="block text-sm font-medium leading-6 text-gray-900">
-                Model name
-            </label>
+            {label && (
+                <label htmlFor="model-name" className="block text-sm font-medium leading-6 text-gray-900">
+                {label}
+                </label>
+            )}
             <div className="mt-2">
                 <input 
                     id="model-name"
