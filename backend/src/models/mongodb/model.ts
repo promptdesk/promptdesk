@@ -16,6 +16,7 @@ const modelSchema = mongoose.model(
       model_parameters: mongoose.Schema.Types.Mixed,
       default: Boolean,
       organization_id: String,
+      deleted: Boolean
     },
     {
       timestamps: true
@@ -37,7 +38,8 @@ class Model {
   }
 
   async findModel(id:any, organization_id:string) {
-    const model = await modelSchema.findOne({ _id: id, organization_id });
+    //find where id and organization_id match and deleted is not true
+    const model = await modelSchema.findOne({ _id: id, organization_id, deleted: { $ne: true } });
     return model ? this.transformModel(model) : null;
   }
 
@@ -47,16 +49,17 @@ class Model {
   }
 
   async deleteModel(id:any, organization_id:string) {
-    await modelSchema.deleteOne({ _id: id, organization_id });
+    //set deleted to true
+    await modelSchema.updateOne({ _id: id, organization_id }, { deleted: true });
     return id;
   }
 
   async countModels(organization_id:string) {
-    return modelSchema.countDocuments({ organization_id });
+    return modelSchema.countDocuments({ organization_id, deleted: { $ne: true } });
   }
 
   async listModels(organization_id:string) {
-    const models = await modelSchema.find({ organization_id });
+    const models = await modelSchema.find({ organization_id, deleted: { $ne: true } });
     return models.map(this.transformModel);
   }
 

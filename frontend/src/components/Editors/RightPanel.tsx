@@ -33,6 +33,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
               options={modelListSelector}
               selected={selectedModeId}
               onChange={(id: any) => {
+                console.log("selected model", id);
                 setModelById(id);
               }}
             />

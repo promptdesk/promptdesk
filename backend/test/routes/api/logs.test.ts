@@ -43,4 +43,10 @@ describe('Logs API', function() {
     expect(res.status).to.equal(404);
   });
 
+  it('should respond with 200 and the organization stats on GET /stats', async function() {
+      const res = await request(app).get('/api/stats').set('Authorization', 'Bearer ' + token);
+      expect(res.status).to.equal(200);
+      expect(res.body).to.be.an('object');
+  });
+
 });
