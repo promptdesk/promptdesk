@@ -41,11 +41,9 @@ const defaultPrompt: Prompt = {
     model: "",
     prompt_parameters: {},
     prompt_data: {
+        prompt: "",
         context: "",
-        messages: [{
-            role: "user",
-            content: ""
-        }]
+        messages: []
     },
     prompt_variables: {},
     new: true,

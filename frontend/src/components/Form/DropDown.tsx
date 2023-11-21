@@ -11,6 +11,7 @@ export default function DropDown({
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
+      console.log(e.target.value)
       var value = e.target.value as any
       if(e.target.value === 'none') {
         value = undefined;
@@ -45,7 +46,7 @@ export default function DropDown({
         {options.map((option, index) => (
           <option
             key={index}
-            value={option.value || 'none'}
+            value={option.value === undefined ? 'none' : option.value}
           >
             {option.name}
           </option>
