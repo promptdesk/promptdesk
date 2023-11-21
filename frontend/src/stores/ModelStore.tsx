@@ -4,7 +4,7 @@ import { Model } from '@/interfaces/model';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService'
 
 interface ModelStore {
-  modelListSelector: { id: any; name: any; }[];
+  modelListSelector: { value: any; name: any; }[];
   models: Model[];
   selectedModeId: string;
   modelObject: Model;
@@ -19,7 +19,7 @@ const modelStore = create<ModelStore>(set => {
 
     const fetchAllModels = async () => {
         const models = await fetchFromPromptdesk('/api/models');
-        const dropdownModelList = models.map(({ id, name }: Model) => ({ id, name }));
+        const dropdownModelList = models.map(({ id, name }: Model) => ({ value:id, name }));
         const defaultModel = models.find((model: any) => model.default === true);
 
         set({ 

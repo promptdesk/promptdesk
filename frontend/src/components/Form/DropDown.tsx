@@ -11,14 +11,18 @@ export default function DropDown({
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
-      onChange(e.target.value);
+      var value = e.target.value as any
+      if(e.target.value === 'none') {
+        value = undefined;
+      }
+      onChange(value);
     } else {
       
     }
   };
 
-  if (options.length > 0 && typeof options[0] === 'string') {
-    options = options.map((option) => ({ id: option, name: option }));
+  if (options.length > 0 && (typeof options[0] === 'string' || typeof options[0] === 'number')) {
+    options = options.map((option) => ({ value: option, name: option }));
   }
 
   return (
@@ -41,7 +45,7 @@ export default function DropDown({
         {options.map((option, index) => (
           <option
             key={index}
-            value={option.id ? option.id : option.value}
+            value={option.value || 'none'}
           >
             {option.name}
           </option>

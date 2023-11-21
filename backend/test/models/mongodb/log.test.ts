@@ -23,11 +23,19 @@ describe('Log tests', () => {
     it('should create a log', async () => {
         expect(log.id).to.be.a('string');
     });
+    
 
     it('should find a log', async () => {
         const response = await log_db.findLog(log.id, organization.id);
         expect(response).to.not.equal(null);
         expect(response.id).to.equal(log.id);
+    });
+
+    it('should return organization stats', async () => {
+        const response = await log_db.getLogDetails(organization.id);
+        expect(response.models).to.be.an('array');
+        expect(response.prompts).to.be.an('array');
+        expect(response.statusCodes).to.be.an('array');
     });
 
     it('should get logs with pagination', async () => {

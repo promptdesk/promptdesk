@@ -6,11 +6,13 @@ import { modelStore } from '@/stores/ModelStore';
 import LogTable from '@/components/Table/LogTable';
 import Pagination from '@/components/Table/Pagination';
 import Stats from '@/components/Table/Stats';
+import DropDown from '@/components/Form/DropDown';
+import { data } from 'autoprefixer';
 
 export default function About() {
   const { push } = useRouter();
 
-  var { logs, fetchLogs } = logStore();
+  var { logs, fetchLogs, fetchLogDeatils } = logStore();
   var { models } = modelStore();
   var { prompts } = promptStore();
 
@@ -18,12 +20,30 @@ export default function About() {
 
   const [page, setPage] = useState(initial_page || 1);
   const [expandedRows, setExpandedRows] = useState({});
-  const [stats, setStats] = useState([
-  ]);
+  const [stats, setStats] = useState([]);
+
+  const [selectedPrompt, setSelectedPrompt] = useState(undefined);
+  const [selectedModel, setSelectedModel] = useState(undefined);
+  const [selectedStatusCode, setSelectedStatusCode] = useState(undefined);
+  const [logDetails, setlogDetails] = useState({
+    'prompts':[{name:'All prompts', value:undefined}, , {name:'Undefined prompts', value:'undefined'}],
+    'models':[{name:'All models', value:undefined}],
+    'statusCodes':[{name:'All status codes', value:undefined}]
+  });
+
+  async function getSetLogDetails() {
+    let logInfo = await fetchLogDeatils();
+    setlogDetails({
+      'prompts': [{name:'All prompts', value:undefined}, {name:'Undefined prompts', value:'undefined'}].concat(logInfo.prompts),
+      'models': [{name:'All models', value:undefined}].concat(logInfo.models),
+      'statusCodes': [{name:'All status codes', value:undefined}].concat(logInfo.statusCodes)
+    })
+  }
 
   useEffect(() => {
-    fetchLogs(page);
-  }, [fetchLogs, page]);
+    fetchLogs(page, selectedPrompt, selectedModel, selectedStatusCode);
+    getSetLogDetails()
+  }, [fetchLogs, page, selectedPrompt, selectedModel, selectedStatusCode]);
 
   useEffect(() => {
     if(logs && (logs as any).stats) {
@@ -59,8 +79,25 @@ export default function About() {
   return (
     <div className="page-body full-width flush">
       <div className="pg-header">
-        <div className="pg-header-section pg-header-title">
-          <h1 className="pg-page-title">Logs</h1>
+        <div className="pg-header-title">
+          <h1 className="pg-page-title" style={{display:'block'}}>Logs</h1>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8 grid-cols-4">
+            <DropDown
+              options={logDetails.prompts}
+              selected={selectedPrompt}
+              onChange={setSelectedPrompt}
+            />
+            <DropDown
+                options={logDetails.models}
+                selected={selectedModel}
+                onChange={setSelectedModel}
+              />
+            <DropDown
+              options={logDetails.statusCodes}
+              selected={selectedStatusCode}
+              onChange={setSelectedStatusCode}
+            />
+          </div>
         </div>
       </div>
       <div className="app-page">
