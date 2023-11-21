@@ -142,6 +142,11 @@ class Log {
       all200 = await logSchema.countDocuments(query);
     }
 
+    let averageValue = 0;
+    if(average.length > 0) {
+      averageValue = average[0].average
+    }
+
 
     return {
       page: page,
@@ -151,7 +156,7 @@ class Log {
       data: logs,
       stats: [
         { name: 'Total Responses', stat: count },
-        { name: 'Avg. Response Time', stat: average[0].average.toFixed(2) },
+        { name: 'Avg. Response Time', stat: averageValue.toFixed(2) },
         { name: 'Success Rate', stat: ((all200 / count) * 100).toFixed(0) + '%' }
       ]
     }
