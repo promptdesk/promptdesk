@@ -6,6 +6,7 @@ interface LogStore {
   logs: Log[];
   fetchLogs: (page: number, prompt_id?: string, model_id?:string, status?: number) => Promise<any>;
   fetchLogDeatils: () => Promise<any>;
+  fetchLog: (id:string) => Promise<any>;
 }
 
 const logStore = create<LogStore>((set) => ({
@@ -32,6 +33,10 @@ const logStore = create<LogStore>((set) => ({
   fetchLogDeatils: async () => {
       const stats = await fetchFromPromptdesk('/api/logs/details');
       return stats;
+  },
+  fetchLog: async (id:string) => {
+    const log = await fetchFromPromptdesk('/api/logs/' + id);
+    return log;
   }
 }));
 

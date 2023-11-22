@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 
 interface LogRowProps {
     index: number;
@@ -10,6 +11,13 @@ interface LogRowProps {
 }
 
 const LogRow: React.FC<LogRowProps> = ({ index, log, handleRowClick, getPromptName, getModelName, expandedRows }) => {
+
+    const { push } = useRouter();
+
+    function goToLogDetails(id:string) {
+        push(`/logs/${id}`);
+    }
+
     return (
         <>
             <tr
@@ -32,10 +40,13 @@ const LogRow: React.FC<LogRowProps> = ({ index, log, handleRowClick, getPromptNa
                 >
                     {log.status}
                 </td>
+                <td onClick={() => {goToLogDetails(log.id)}} className="px-3 py-4 text-sm font-medium text-right whitespace-nowrap">
+                    View
+                </td>
             </tr>
             {expandedRows[log.id] && (
                 <tr>
-                    <td colSpan={5} className="bg-gray-100">
+                    <td colSpan={6} className="bg-gray-100">
                         {
                             !log.error && log.data ? (
                                 <div className="flex">

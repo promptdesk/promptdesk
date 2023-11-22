@@ -1,15 +1,16 @@
 import React from 'react';
 
 interface InputFieldProps {
-    onInputChange: (value: string) => void;
+    onInputChange?: (value: string) => void;
     placeholder?: string;
     value?: string;
     label?: string;
+    disabled?: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label }) => {
+const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label, disabled }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onInputChange(event.target.value);
+        if (onInputChange) onInputChange(event.target.value);
     };
 
     return (
@@ -22,6 +23,7 @@ const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, val
             <div className="mt-2">
                 <input 
                     id="model-name"
+                    disabled={disabled === true}
                     value={value}
                     placeholder={placeholder}
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

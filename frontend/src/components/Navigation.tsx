@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Help from './Icons/Help';
-import Logo from './Logo';
 import Playground from '@/components/Icons/Playground';
 import Settings from '@/components/Icons/Settings';
 import Logs from '@/components/Icons/Logs';
@@ -9,6 +8,7 @@ import Models from '@/components/Icons/Models';
 import Folder from '@/components/Icons/Folder';
 import Documentation from '@/components/Icons/Documentation';
 import Logout from '@/components/Icons/Logout';
+import Logo from '@/components/Logo';
 
 function Navigation() {
   const navItems = [
@@ -49,7 +49,7 @@ function Navigation() {
       <div className="app-navigation-header">
         <div className="app-navigation-logo">
           <Link href="/workspace">
-            <h1>P</h1>
+            <Logo />
           </Link>
         </div>
       </div>

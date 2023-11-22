@@ -35,6 +35,7 @@ const LogTable: React.FC<LogsTableProps> = ({
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
             Status
           </th>
+          <th></th>
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
