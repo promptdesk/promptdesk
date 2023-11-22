@@ -1,25 +1,36 @@
 import { Editor as MonacoEditor } from "@monaco-editor/react";
+import { useState } from "react";
+import PlaygroundButton from "../Form/PlaygroundButton";
 interface CodeEditorProps {
   code: string;
-  handleChange: (e: string | undefined) => void;
+  onSave: (e: string) => void;
   language: string;
   readOnly?: boolean;
+  height?: string;
 }
 
 const Editor: React.FC<CodeEditorProps> = ({
   code,
-  handleChange,
+  onSave,
   language,
   readOnly,
+  height
 }) => {
+  const [codeText, setCodeText] = useState(() => code);
+
   return (
     <>
+      <div className="my-2">
+      <PlaygroundButton text={`Save ${code === codeText ? '' : '*'}`} onClick={() => onSave(codeText)} />
+      </div>
       <MonacoEditor
-        onChange={handleChange}
-        height="80vh"
+        onChange={(c) => {
+          setCodeText(c ? c : '')
+        }}
+        height={height || "30vh"}
         theme="vs-dark"
         defaultLanguage={language}
-        value={code}
+        value={codeText}
         options={{
           wordWrap: "on",
           minimap: { enabled: false },
