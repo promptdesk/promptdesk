@@ -20,7 +20,7 @@ function Navigation() {
   ];
 
   const footerItems = [
-    { href: 'https://app.promptdesk.ai/docs', label: 'Documentation', icon: Documentation, target: '_blank' },
+    { href: 'https://promptdesk.ai/docs', label: 'Documentation', icon: Documentation, target: '_blank' },
     { href: '/logout', label: 'Logout', icon: Logout }
   ]
 

@@ -29,6 +29,9 @@ const Editor: React.FC<CodeEditorProps> = ({
           minimap: { enabled: false },
           fontSize: 14,
           readOnly,
+          scrollbar: {
+            alwaysConsumeMouseWheel: false
+          }
         }}
       />
     </div>
