@@ -11,22 +11,42 @@ export default function About() {
   const [selectedModel, setSelectedModel] = useState({} as any);
   const [isValidJSON, setIsValidJSON] = useState(true);
 
+  //model components
+  const [api, setApi] = useState({} as any);
+  const [inputFormat, setInputFormat] = useState("" as string);
+  const [outputFormat, setOutputFormat] = useState("" as string);
+  const [parameters, setParameters] = useState({} as any);
+
+  const style = "rounded-xl mb-8 overflow-hidden shadow-lg"
+
   useEffect(() => {
     setSelectedModel(models[0] || {});
   }, [models]);
 
-  const handleCodeChange = (json_string:any) => {
+  useEffect(() => {
+    setApi(selectedModel['api_call'])
+    setInputFormat(selectedModel['input_format'])
+    setOutputFormat(selectedModel['output_format'])
+    setParameters(selectedModel['model_parameters'])
+  }, [selectedModel]);
+
+  const setFormattedApi = (json_string:any) => {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
-      setSelectedModel(parsedJson);
-      setIsValidJSON(true);
+      setApi(parsedJson);
     } catch {
-      setIsValidJSON(false);
+      //setIsValidJSON(false);
     }
-  };
+  }
 
   const handleSave = () => {
-    if (!isValidJSON) {
+    selectedModel['api_call'] = api;
+    selectedModel['input_format'] = inputFormat;
+    selectedModel['output_format'] = outputFormat;
+    selectedModel['model_parameters'] = parameters;
+    try {
+      JSON.parse(JSON.stringify(selectedModel));
+    } catch {
       alert("Invalid JSON");
       return;
     }
@@ -78,7 +98,36 @@ export default function About() {
               <DropDown label="Default model" options={[{ value: true, name: "True" }, { value: false, name: "False" }]} selected={selectedModel.default} onChange={(value:any) => updateModel("default", value === "true")} />
             </div>
           </div>
-          <CodeEditor handleChange={handleCodeChange} code={JSON.stringify(selectedModel, null, 2)} language="json" />
+          <div className="m-2 mt-4">
+            <div>
+              <h3 className="mb-1">API Call</h3>
+            </div>
+            <CodeEditor height="30vh" style={style} code={JSON.stringify(api, null, 4)} language="json"
+              handleChange={(value) => {
+                setFormattedApi(value);
+              }}/>
+            <div>
+              <h3 className="mb-1">Input format</h3>
+            </div>
+            <CodeEditor height="50vh" style={style} code={inputFormat} language="javascript"
+              handleChange={(value) => {
+                setInputFormat(value as string);
+              }}/>
+            <div>
+              <h3 className="mb-1">Output format</h3>
+            </div>
+            <CodeEditor height="30vh" style={style} code={outputFormat} language="javascript"
+              handleChange={(value) => {
+                setOutputFormat(value as string);
+              }}/>
+            <div>
+              <h3 className="mb-1">Model parameters</h3>
+            </div>
+            <CodeEditor height="50vh" style={style} code={JSON.stringify(parameters, null, 4)} language="json"
+              handleChange={(value) => {
+                setParameters(value);
+              }}/>
+          </div>
         </div>
       </div>
     </div>
