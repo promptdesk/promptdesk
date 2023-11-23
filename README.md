@@ -1,32 +1,63 @@
-![Alt Text](https://promptdesk.ai/branding/github_banner.png)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/promptdesk/promptdesk)
-[![PyPI version](https://badge.fury.io/py/promptdesk.svg)](https://badge.fury.io/py/promptdesk)
+<div align="center">
+  <a href="https://promptdesk.ai" target="_blank">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://promptdesk.ai/branding/logo.png">
+    <img alt="Novu Logo" src="https://promptdesk.ai/branding/logo.png" width="280"/>
+  </picture>
+  </a>
+</div>
 
-## What is PromptDesk?
+<br/>
 
-PromptDesk is 100% free and open-source tool designed to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications and Large Language Models (LLMs).
+<p align="center">
+  <a href="https://pypi.org/project/promptdesk/">
+    <img src="https://badge.fury.io/py/promptdesk.svg" alt="pypi">
+  </a>
+  <a href="https://hub.docker.com/r/promptdesk/promptdesk">
+    <img src="https://badgen.net/badge/icon/docker?icon=docker&label" alt="docker">
+  </a>
+  <a href="https://www.gnu.org/licenses/agpl-3.0">
+    <img src="https://img.shields.io/badge/License-AGPL_v3-blue.svg" alt="AGPLv3">
+  </a>
+</p>
+
+<h1 align="center">A simple open-source prompt managment platform.</h1>
+
+<div align="center">
+The best way to build agents and prompt-based applications.
+</div>
+    </br>
+  <p align="center">
+    <a href="https://promptdesk.ai/docs" rel="dofollow"><strong>Explore the docs »</strong></a>
+  </p>
+  
+  <p align="center">
+  Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a>
+  </p>
+
+## ⭐️ Why PromptDesk?
+
+PromptDesk is 100% free and open-source minimalist tool to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications, agents and Large Language Models (LLMs).
 
 ![Alt Text](https://promptdesk.ai/branding/flowchart_banner.png)
 
-PromptDesk comprises a web application for prompt management and a Python SDK for prompt integration.
-
 We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. You can also jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in python with [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
-## Quickstart
+## ✨ Features
 
-PromptDesk is available as a hosted web application and as a Docker image.
+- 👨‍💻 OpenAI-like minimalist prompt builder
+- 🥸 Prompt variable and logic support with Handlebars.js syntax
+- 📊 Complete audit log of all API calls
+- 🌐 Unlimited vendor-agnostic LLM API integrations
+- 📦 Environment variables support
+- 🚀 Easy to set up and integrate (5 minutes)
+- 👨‍💻 Community-driven
+
+## 🚀 Getting Started
+
+PromptDesk is available as a hosted web application and as a Docker image. You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account. Hosting is provided for free by the MongoDB and DigitalOcean Startup Programs.
 
 ### Hosted Web Application
-
-You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account.
-Hosting is provided for free by the MongoDB and DigitalOcean Startup Programs.
-
-The hosted web application will always be free, up-to-date, with full support for all features. However, log storage is limited to 10k records per user.
-
-All data can be exported or transfered at any time.
-
-### Docker Image
 
 ```shell
 wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
@@ -34,13 +65,45 @@ wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/doc
 
 Start the Docker container:
 
+
 ```shell
 docker compose up
 ```
 
 Open your web browser and navigate to http://localhost:8080/ to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
-## Important Links
+## 👨‍💻 Python Integration
+
+To install PromptDesk, use pip:
+
+```shell
+pip install promptdesk
+```
+
+### Usage
+
+You can call the prompt you build in the application by using the generate method.
+
+```python
+from promptdesk import PromptDesk
+
+pd = PromptDesk(
+    #defaults to os.environ.get("PROMPTDESK_API_KEY")
+    api_key = "YOUR_PROMPTDESK_API_KEY"
+    #defaults to https://app.promptdesk.ai
+    service_url = "http://localhost:8080"
+)
+
+story = pd.generate("short-story", {
+    "setting": "dark and stormy night",
+    "character": "lonely farmer",
+    "plot": "visited by a stranger"
+})
+
+print(story)
+```
+
+## 🔗 Important Links
 
 For more information about PromptDesk, please refer to the following resources:
 
