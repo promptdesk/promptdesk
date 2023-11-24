@@ -13,6 +13,13 @@ import "./CustomJSONView.scss";
  */
 export function CustomJSONView(props: any) {
     return <div className={"custom-json-view"}>
-        <ReactJson src={props.src} theme={"shapeshifter:inverted"} />
+        <ReactJson
+            src={props.src}
+            theme={"shapeshifter:inverted"}
+            displayObjectSize={false}
+            displayDataTypes={false}
+            sortKeys={true}
+            name={props.name}
+        />
     </div>
 }

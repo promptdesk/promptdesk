@@ -86,16 +86,19 @@ export default function SingleLogPage() {
 
         <h1>Request</h1>
         <CustomJSONView
+            name="request"
             src={request}
         />
 
         <h1>Response</h1>
         <CustomJSONView
+            name="response"
             src={response}
         />
 
         <h1>Log</h1>
         <CustomJSONView
+            name="log"
             src={log}
         />
       </div>
