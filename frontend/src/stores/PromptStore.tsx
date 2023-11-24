@@ -64,13 +64,32 @@ const promptStore = create<PromptStore>((set, get) => ({
     },
 
     processVariables: (inputValue: string) => {
+        function recursiveDetectVariablesInAST(ast: any): string[] {
+            if (ast.type === "Program") {
+                return ast.body.reduce((acc: string[], node: any) => {
+                    return [...acc, ...recursiveDetectVariablesInAST(node)];
+                }, []);
+            } else if (ast.type === "MustacheStatement") {
+                return [ast.path.original];
+            } else if (ast.type === "BlockStatement") {
+                const params = ast.params.map((param: any) => param.original);
+                return [...params, ...recursiveDetectVariablesInAST(ast.program)];
+            } else {
+                return [];
+            }
+        }
+
         if (!inputValue) {
             return;
         }
         try {
             set((state) => {
                 const ast = Handlebars.parse(inputValue);
-                const variables = [...new Set(ast.body.filter(node => (node as any).path).map(node => (node as any).path.original))];
+                let variables = [...new Set(recursiveDetectVariablesInAST(ast))];
+                variables = variables.filter((varName) => {
+                    return (varName !== "this") && (!varName.startsWith("this."));
+                });
+
                 const promptObject = { ...state.promptObject };
 
                 const newPromptVariableData = variables.reduce((acc, variable) => {
