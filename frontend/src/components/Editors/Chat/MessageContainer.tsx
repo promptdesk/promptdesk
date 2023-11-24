@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
 import ChatMessageRole from "@/components/Editors/Chat/ChatMessageRole";
+import "./MessageContainer.scss";
 
 interface MessageContainerProps {
   index: number;
@@ -44,8 +45,8 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, rol
       <ChatMessageRole defaultRole={defaultRole} onRoleToggle={handleRoleToggle} />
       <div className="text-input-with-focus">
         <div
-          className="text-input-md text-input"
-          contentEditable={'plaintext-only' as any}
+          className="text-input-md text-input chat-message-input"
+          contentEditable={true}
           tabIndex={0}
           ref={textAreaRef}
           placeholder={placeholder}
