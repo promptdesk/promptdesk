@@ -9,7 +9,7 @@ import Stats from '@/components/Table/Stats';
 import DropDown from '@/components/Form/DropDown';
 import { data } from 'autoprefixer';
 
-export default function About() {
+export default function LogListPage() {
   const { push } = useRouter();
 
   var { logs, fetchLogs, fetchLogDeatils } = logStore();

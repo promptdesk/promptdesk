@@ -6,7 +6,7 @@ import CodeEditor from "@/components/Editors/CodeEditor";
 import InputField from "@/components/Form/InputField";
 import DropDown from "@/components/Form/DropDown";
 
-export default function About() {
+export default function ModelsPage() {
   const { models, saveModel, duplicateModel, deleteModel } = modelStore();
   const [selectedModel, setSelectedModel] = useState({} as any);
   const [isValidJSON, setIsValidJSON] = useState(true);

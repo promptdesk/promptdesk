@@ -7,7 +7,7 @@ import PlaygroundButton from '@/components/Form/PlaygroundButton';
 import { Prompt } from '@/interfaces/prompt';
 import PromptsTable from '@/components/Table/PromptsTable';
 
-export default function About() {
+export default function PromptsPage() {
   const { push } = useRouter();
   var { prompts, addNewPrompt } = promptStore();
   const { setActiveTabById } = promptWorkspaceTabs();

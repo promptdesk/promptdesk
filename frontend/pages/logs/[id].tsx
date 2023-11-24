@@ -7,9 +7,21 @@ import moments from 'moment';
 import InputField from '@/components/Form/InputField';
 import { Log } from '@/interfaces/log';
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
+import "./[id].scss";
 
-export default function About() {
+function LogAttribute({ label, value }: {label: string; value: string }) {
+  return (
+      <div className={"log-attribute"}>
+        <InputField
+            label={label}
+            value={value}
+            disabled={true}
+        />
+      </div>
+  );
+}
 
+export default function SingleLogPage() {
   var { logs, fetchLog } = logStore();
   var { prompts } = promptStore();
   var { models } = modelStore();
@@ -55,17 +67,6 @@ export default function About() {
     getLog((query as any).id);
   }, [query.id, prompts, models]);
 
-  function renderInputField(label: any, value: any) {
-      return (
-        <div>
-        <InputField
-        label={label}
-        value={value}
-        disabled={true}
-        /></div>
-      );
-    }
-
   return (
     <div className="page-body full-width flush">
       <div className="pg-header">
@@ -75,17 +76,17 @@ export default function About() {
       </div>
       <div className="app-page">
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 grid-cols-6 mb-4">
-          {renderInputField("Prompt", promptName || "N/a")}
-          {renderInputField("Model", modelName)}
-          {renderInputField("Type", modelType)}
-          {renderInputField("Duration", log.duration)}
-          {renderInputField("Date", moments(log.createdAt).format('YYYY-MM-DD HH:mm:ss'))}
-          {renderInputField("Status", log.status)}
+          <LogAttribute label="Prompt" value={promptName || "N/a"}/>
+          <LogAttribute label="Model" value={modelName || ""}/>
+          <LogAttribute label="Type" value={modelType || ""}/>
+          <LogAttribute label="Duration" value={log.duration?.toString() || ""}/>
+          <LogAttribute label="Date" value={moments(log.createdAt).format('YYYY-MM-DD HH:mm:ss') || ""}/>
+          <LogAttribute label="Status" value={log.status?.toString() || ""}/>
         </div>
 
         <h1>Request</h1>
         <CustomJSONView
-          src={request}
+            src={request}
         />
 
         <h1>Response</h1>
@@ -93,7 +94,7 @@ export default function About() {
             src={response}
         />
 
-        <h1>Raw</h1>
+        <h1>Log</h1>
         <CustomJSONView
             src={log}
         />
