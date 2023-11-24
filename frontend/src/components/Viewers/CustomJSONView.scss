@@ -1,0 +1,43 @@
+
+
+.custom-json-view {
+  padding-left: 17px;
+  .variable-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .variable-value {
+    flex-shrink: 1;
+
+    span {
+      white-space: pre-wrap;
+      user-select: text;
+      cursor: text !important;
+    }
+  }
+
+  .string-value {
+    white-space: pre-wrap;
+    user-select: text;
+    cursor: text !important;
+  }
+
+  .variable-row > span:not(.variable-value) {
+    white-space: nowrap;
+  }
+
+  .object-key {
+    white-space: nowrap;
+  }
+
+  .data-type-label {
+    display: none;
+  }
+
+  .icon-container {
+    margin-left: -17px;
+  }
+}
+

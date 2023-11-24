@@ -3,10 +3,10 @@ import { logStore } from '@/stores/LogStore';
 import { modelStore } from '@/stores/ModelStore';
 import { promptStore } from '@/stores/PromptStore';
 import { useRouter } from 'next/router';
-import CodeEditor from '@/components/Editors/CodeEditor';
 import moments from 'moment';
 import InputField from '@/components/Form/InputField';
 import { Log } from '@/interfaces/log';
+import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 
 export default function About() {
 
@@ -82,25 +82,20 @@ export default function About() {
           {renderInputField("Date", moments(log.createdAt).format('YYYY-MM-DD HH:mm:ss'))}
           {renderInputField("Status", log.status)}
         </div>
-        <CodeEditor
-          language="json"
-          code={JSON.stringify(request, null, 4)}
-          readOnly={true}
-          height="30vh"
-          style={style}
+
+        <h1>Request</h1>
+        <CustomJSONView
+          src={request}
         />
-        <CodeEditor
-          language="json"
-          code={JSON.stringify(response, null, 4)}
-          readOnly={true}
-          height="30vh"
-          style={style}
+
+        <h1>Response</h1>
+        <CustomJSONView
+            src={response}
         />
-        <CodeEditor
-          language="json"
-          code={JSON.stringify(log, null, 4)}
-          readOnly={true}
-          style={style}
+
+        <h1>Raw</h1>
+        <CustomJSONView
+            src={log}
         />
       </div>
     </div>

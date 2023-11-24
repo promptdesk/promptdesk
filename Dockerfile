@@ -9,7 +9,7 @@ COPY shared ./shared
 ENV PROMPT_SERVER_PORT=4000
 ENV HOSTING=local
 
-RUN cd frontend && npm install && npm run build
+RUN cd frontend && npm install --legacy-peer-deps && npm run build
 RUN cd backend && npm install
 
 CMD ["sh", "-c", "cd backend && npm start"]

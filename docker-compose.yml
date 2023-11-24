@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb
+    container_name: mongodb2
     restart: always
     ports:
       - 27017:27017
@@ -36,7 +36,7 @@ services:
       - mongodb-network
     depends_on:
       - back
-    command: ["sh", "-c", "cd frontend && npm install && npm run dev"]
+    command: ["sh", "-c", "cd frontend && npm install --legacy-peer-deps && npm run dev"]
 networks:
   mongodb-network:
     driver: bridge
