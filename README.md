@@ -21,7 +21,7 @@
   </a>
 </p>
 
-<h1 align="center">A simple open-source prompt managment platform.</h1>
+<h1 align="center">A simple open-source prompt management platform.</h1>
 
 <div align="center">
 The best way to build agents and prompt-based applications.
