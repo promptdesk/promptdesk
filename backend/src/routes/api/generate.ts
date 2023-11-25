@@ -12,49 +12,35 @@ const router = express.Router();
 
 function env_variable_object(prompt_variables: any): object {
     var variables: { [key: string]: string } = {};
-
     if (!prompt_variables) {
         return {};
     }
-
     for (const variable of prompt_variables) {
         variables[variable.name] = variable.value;
     }
-
     return variables;
 }
 
 function variable_object(prompt_variables: any): any {
     var variables: { [key: string]: string } = {};
-
     for (const key in prompt_variables) {
         var variable = prompt_variables[key]
         variables[key] = variable.value;
     }
-
     return variables;
-
 }
 
 async function api_variables(api_call: any, organization:any) {
-        //get variables from variables db
         var environment_variables = await variable_db.getVariables(organization.id);
-
         var api_call = JSON.stringify(api_call) as any;    
-    
         environment_variables = env_variable_object(environment_variables)
-    
         var prompt_api_template = handlebars.compile(api_call);
-    
         api_call = prompt_api_template(environment_variables);
-    
         api_call = JSON.parse(api_call)
-
         return api_call
 }
 
 async function prompt_model_validation(organization:any, body:any) {
-
     var prompt = undefined;
     var proxy = false;
     var error = undefined;
@@ -232,7 +218,6 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
 
 router.all(['/generate/test/endpoint'], async (req, res) => {
     const organization = (req as any).organization;
-    console.log(req.body, organization)
 
     //check if data contains api_call
     if(!req.body.api_call){
@@ -258,7 +243,6 @@ router.all(['/generate/test/endpoint'], async (req, res) => {
         var response = await axios(api_call)
         return res.status(200).json({data: response.data, status: response.status});
     } catch (error) {
-        console.log((error as any).response.data)
         return res.status(500).json({ data: (error as any).response.data, status: (error as any).response.status });
     }
 
@@ -266,83 +250,115 @@ router.all(['/generate/test/endpoint'], async (req, res) => {
 
 router.all(['/generate/test/inputformat'], async (req, res) => {
 
-    const organization = (req as any).organization;
+    try {
 
-    //check if data contains api_call
-    if(!req.body.api_call){
-        return res.status(500).json(
-        {
-            error: 'PromptDesk requires you to define API calls in the following format.',
-            format: {
-                "url": "https://api.openai.com/v1/chat/completions",
-                "method": "POST",
-                "headers": {
-                    "Authorization": "Bearer {{OPEN_AI_KEY}}",
-                    "Content-Type": "application/json"
+        const organization = (req as any).organization;
+
+        //check if data contains api_call
+        if(!req.body.api_call){
+            return res.status(500).json(
+            {
+                error: 'PromptDesk requires you to define API calls in the following format.',
+                format: {
+                    "url": "https://api.openai.com/v1/chat/completions",
+                    "method": "POST",
+                    "headers": {
+                        "Authorization": "Bearer {{OPEN_AI_KEY}}",
+                        "Content-Type": "application/json"
+                    }
                 }
+            })
+        }
+
+        if(!req.body.input_format){
+            return res.status(500).json(
+            {
+                error: 'PromptDesk requires you to define input format in the following format.',
+                format: "function(input, parameters){\n\treturn input\n}"
+            })
+        }
+
+        var output_format = undefined;
+        if(req.body.output_format) {
+            output_format = req.body.output_format
+        }
+
+        var input_format = undefined;
+        
+        try {
+            input_format = eval(req.body.input_format)
+        } catch (error) {
+            return res.status(500).json({ error: error, status: 500 });
+        }
+
+        //get JSON data from request body
+        var api_call = req.body.api_call;
+        var api_call = await api_variables(api_call, organization)
+
+        var prompt = {
+            prompt: "Say hello."
+        } as any;
+
+        if(req.body.type == 'chat') {
+            prompt = {
+                "context": "I am a human.",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": "Say hello."
+                    },
+                    {
+                        "role": "assistant",
+                        "content": "Hello."
+                    },
+                    {
+                        "role": "user",
+                        "content": "Say hello."
+                    },
+                ]
             }
-        })
-    }
+        }
 
-    if(!req.body.input_format){
-        return res.status(500).json(
-        {
-            error: 'PromptDesk requires you to define input format in the following format.',
-            format: "function(input, parameters){\n\treturn input\n}"
-        })
-    }
+        var body = input_format(prompt, {})
 
-    var input_format = undefined;
-    
-    try {
-        input_format = eval(req.body.input_format)
+        api_call.data = body
+
+        var response = undefined;
+
+        try {
+            response = await axios(api_call)
+            if(!output_format) {
+                return res.status(200).json({data: response.data, status: response.status});
+            }
+        } catch (error) {
+            return res.status(500).json({ data: (error as any).response.data, status: (error as any).response.status });
+        }
+
+        var output_format = undefined
+        try {
+            output_format = eval(req.body.output_format)
+        } catch (error) {
+            return res.status(500).json({ data: error, status: 500 });
+        }
+
+        var data = undefined;
+        try {
+            data = output_format(response.data)
+        } catch (error) {
+            return res.status(500).json({ data: error, status: 500 });
+        }
+
+        if(req.body.type === 'chat' && (!data.role || !data.content)){
+            return res.status(500).json({ data: data, status: 500 });
+        } else if(req.body.type === 'completion' && typeof data !== 'string'){
+            return res.status(500).json({ data: data, status: 500 });
+        }
+        
+        return res.status(200).json({data: data, status: response.status});
+
     } catch (error) {
-        return res.status(500).json({ error: error, status: 500 });
+        return res.status(500).json({ data: error, status: 500 });
     }
-
-    //get JSON data from request body
-    var api_call = req.body.api_call;
-    var api_call = await api_variables(api_call, organization)
-
-    var prompt = {
-        prompt: "Say hello."
-    } as any;
-
-    prompt = {
-        "context": "I am a human.",
-        "messages": [
-            {
-                "role": "user",
-                "content": "Say hello."
-            },
-            {
-                "role": "assistant",
-                "content": "Hello."
-            },
-            {
-                "role": "user",
-                "content": "Say hello."
-            },
-        ]
-    }
-
-    var body = input_format(prompt, {})
-
-    api_call.data = body
-
-    console.log(api_call)
-
-    try {
-        var response = await axios(api_call)
-        return res.status(200).json({data: response.data, status: response.status});
-    } catch (error) {
-        console.log((error as any).response.data)
-        return res.status(500).json({ data: (error as any).response.data, status: (error as any).response.status });
-    }
-
-});
-
-router.all(['/generate/test/result'], async (req, res) => {
 
 });
 

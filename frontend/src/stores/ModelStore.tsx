@@ -13,6 +13,7 @@ interface ModelStore {
   saveModel: (model: Model) => Promise<void>;
   duplicateModel: (model: Model) => Promise<string>;
   deleteModel: (model: Model) => Promise<void>;
+  importModel: (model: Model) => Promise<string>;
 }
 
 const modelStore = create<ModelStore>(set => {
@@ -91,6 +92,17 @@ const modelStore = create<ModelStore>(set => {
             const model = modelStore.getState().models.find(m => m.name === name);
             set({ modelObject: model, selectedModeId: model?.id });
             promptStore.setState(state => ({ promptObject: { ...(state as any).promptObject, model: model?.id } }));
+        },
+
+        importModel: async (model: Model) => {
+            const exists = modelStore.getState().models.some(m => m.name === model.name);
+            if (exists) {
+                model.name += " (copy)";
+                (model as any).id = undefined;
+            }
+            let newModel = await fetchFromPromptdesk(`/api/model`, 'POST', model);
+            await fetchAllModels();
+            return newModel.id;
         }
     };
 });

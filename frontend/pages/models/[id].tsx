@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
 import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { ModelList } from "@/components/Models/ModelList";
@@ -6,9 +7,12 @@ import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
 
 export default function ModelsPage() {
-  const { models, saveModel, duplicateModel, deleteModel, fetchAllModels } = modelStore();
+
+  const { push, query } = useRouter();
+  const { id } = query;
+
+  const { models, saveModel, duplicateModel, deleteModel, fetchAllModels, importModel } = modelStore();
   const [selectedModel, setSelectedModel] = useState({} as any);
-  const [isValidJSON, setIsValidJSON] = useState(true);
   const [apiResponse, setApiResponse] = useState({} as any);
   const [inputFormatResponse, setInputFormatResponse] = useState({} as any);
   const [outputFormatResponse, setOutputFormatResponse] = useState({} as any);
@@ -19,19 +23,24 @@ export default function ModelsPage() {
   const [inputFormat, setInputFormat] = useState("" as string);
   const [outputFormat, setOutputFormat] = useState("" as string);
 
-  const style = "rounded-xl overflow-hidden shadow-lg"
-
   useEffect(() => {
-    if(Object.keys(selectedModel).length === 0) {
+    if (id) {
+      const model = models.find((model) => model.id === id);
+      setSelectedModel(model);
+    } else {
       setSelectedModel(models[0] || {});
     }
-  }, [models]);
+
+  }, [models, query.id]);
 
   useEffect(() => {
     setApi(selectedModel['api_call'])
     setInputFormat(selectedModel['input_format'])
     setOutputFormat(selectedModel['output_format'])
     setParameters(selectedModel['model_parameters'])
+    setOutputFormatResponse({})
+    setInputFormatResponse({})
+    setApiResponse({})
   }, [selectedModel]);
 
   const setFormattedApi = (json_string:any) => {
@@ -39,7 +48,6 @@ export default function ModelsPage() {
       const parsedJson = JSON.parse(json_string || "{}");
       setApi(parsedJson);
     } catch {
-      //setIsValidJSON(false);
     }
   }
 
@@ -48,7 +56,6 @@ export default function ModelsPage() {
       const parsedJson = JSON.parse(json_string || "{}");
       setParameters(parsedJson);
     } catch {
-      //setIsValidJSON(false);
     }
   }
 
@@ -68,11 +75,8 @@ export default function ModelsPage() {
 
   const handleDuplicate = async () => {
     const newModelId = await duplicateModel(selectedModel);
-    await fetchAllModels();
-    if (newModelId) {
-      const model = models.find((model) => model.id === newModelId);
-      setSelectedModel(model);
-    }
+    const newUrl = `/models/${newModelId}`;
+    push(newUrl);
   };
 
   const handleDelete = async () => {
@@ -81,21 +85,54 @@ export default function ModelsPage() {
     setSelectedModel(nextModel);
   };
 
+  const handleExport = () => {
+    const element = document.createElement("a");
+    var json_file = JSON.parse(JSON.stringify(selectedModel));
+    delete json_file.organization_id;
+    delete json_file.createdAt;
+    delete json_file.updatedAt;
+    delete json_file.__v;
+    delete json_file.id;
+    json_file['default'] = false;
+    const file = new Blob([JSON.stringify(json_file, null, 4)], {type: 'application/json'});
+    element.href = URL.createObjectURL(file);
+    element.download = "model.json";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
+  const handleImport = () => {
+    //import json file and call the importModel function
+    const element = document.createElement("input");
+    element.type = "file";
+    element.accept = ".json";
+    element.onchange = async (event:any) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsText(file, "UTF-8");
+      reader.onload = async (readerEvent:any) => {
+        const content = readerEvent.target.result;
+        const json_file = JSON.parse(content);
+        const newModelId = await importModel(json_file);
+        const newUrl = `/models/${newModelId}`;
+        push(newUrl);
+      }
+    }
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  }
+
   const updateModel = (key:string, value:any) => {
     const updatedModel = { ...selectedModel, [key]: value };
     setSelectedModel(updatedModel);
   };
 
-  function generate_pre_compontent(status:number, contents:any) {
-    return (
-      <>
-      {status === undefined ? <></> : 
-      <pre className="bg-gray-800 text-white text-sm p-4 rounded-xl overflow-auto mb-4" style={{whiteSpace: "pre-wrap"}}>
-RESPONSE STATUS: {status}<br/>
-{contents}
-      </pre>}
-      </>
-    )
+  const setModel = (model:any) => {
+    setSelectedModel(model);
+    const newUrl = `/models/${model.id}`;
+    push(newUrl);
   }
 
   return (
@@ -106,12 +143,14 @@ RESPONSE STATUS: {status}<br/>
           <div className="space-x-2">
             <PlaygroundButton text="Save" onClick={handleSave} />
             <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
+            <PlaygroundButton text="Export" onClick={handleExport} />
+            <PlaygroundButton text="Import" onClick={handleImport} />
             <PlaygroundButton text="Delete" onClick={handleDelete} />
           </div>
         </div>
       </div>
       <div className="flex flex-row">
-        <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+        <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setModel} />
         <ModelSettings
           selectedModel={selectedModel}
           updateModel={updateModel}
