@@ -60,7 +60,7 @@ const ModelSettings = ({
         <div className="w-3/4">
           <div className="grid grid-cols-1 gap-x-6 gap-y-8 grid-cols-8 m-2">
             <div className="col-span-2">
-              <InputField label="Model Name" value={selectedModel.name} onInputChange={(value) => updateModel("name", value)} />
+              <InputField label="Model Name" value={selectedModel.name || ""} onInputChange={(value) => updateModel("name", value)} />
             </div>
             <div className="col-span-2">
               <InputField label="Provider" value={selectedModel.provider || ""} onInputChange={(value) => updateModel("provider", value)} />
