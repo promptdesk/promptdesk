@@ -1,9 +1,9 @@
 <div align="center">
   <a href="https://promptdesk.ai" target="_blank">
-  <picture>
+  <div>
     <source media="(prefers-color-scheme: dark)" srcset="https://promptdesk.ai/branding/logo.png">
-    <img alt="Novu Logo" src="https://promptdesk.ai/branding/logo.png" width="280"/>
-  </picture>
+    <img alt="PromptDesk Logo" src="https://promptdesk.ai/branding/logo.png" width="280"/>
+  </div>
   </a>
 </div>
 
