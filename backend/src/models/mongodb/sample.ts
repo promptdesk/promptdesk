@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import crypto from 'crypto';
+const canonicaljson = require('canonical-json');
 
 const schema = new mongoose.Schema(
     {
@@ -23,8 +24,10 @@ const sampleSchema = mongoose.model(
 
 class Sample {
     async recordSampleDataIfNeeded(variables: any, result: string, prompt_id: string, organization_id: string) {
-        // Compute the hash for the sample using sha256
-        const hashJsonString = JSON.stringify(variables, null, 0);
+        // Compute the hash for the sample using sha256.
+        // Use canonical json to ensure that the hash is
+        // consistent even if values in the json get reordered.
+        const hashJsonString = canonicaljson.stringify(variables);
         const hash = crypto.createHash('sha256').update(hashJsonString).digest('hex');
 
         const newSample = {

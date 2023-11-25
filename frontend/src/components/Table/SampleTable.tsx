@@ -5,16 +5,12 @@ import SampleRow from "@/components/Table/SampleRow";
 interface SamplesTableProps {
   samples: any;
   handleRowClick: (logId: string) => void;
-  getPromptName: (id: string) => string;
-  getModelName: (id: string) => string;
   expandedRows: Record<string, boolean>;
 }
 
 const SampleTable: React.FC<SamplesTableProps> = ({
   samples,
   handleRowClick,
-  getPromptName,
-  getModelName,
   expandedRows,
 }) => {
   return (
@@ -38,8 +34,6 @@ const SampleTable: React.FC<SamplesTableProps> = ({
               sample={sample}
               key={index}
               handleRowClick={handleRowClick}
-              getPromptName={getPromptName}
-              getModelName={getModelName}
               expandedRows={expandedRows}
             />
           ))

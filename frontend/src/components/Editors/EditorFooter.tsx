@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { promptWorkspaceTabs } from "@/stores/TabStore";
-import { makeMagic } from "@/services/GenerateService";
+import { generateResultForPrompt } from "@/services/GenerateService";
 import CodeModal from "@/components/Modals/CodeModal";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import {
@@ -49,7 +49,7 @@ function EditorFooter() {
         >
         <span className="btn-label-wrap">
             <span className="btn-label-inner" onClick={() => {
-              makeMagic(activeTabId as string);
+              generateResultForPrompt(activeTabId as string);
             }}>
             {data.loading ? "Processing..." : "Submit"}
             </span>

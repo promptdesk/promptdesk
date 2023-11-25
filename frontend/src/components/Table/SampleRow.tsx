@@ -1,13 +1,12 @@
 import React from 'react';
 import {useRouter} from 'next/router';
+import { generateResultForPrompt } from "@/services/GenerateService";
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 
 interface SampleRowProps {
     index: number;
     sample: any;
     handleRowClick: (logId: string) => void;
-    getPromptName: (id: string) => string;
-    getModelName: (id: string) => string;
     expandedRows: Record<string, boolean>;
 }
 
@@ -15,12 +14,15 @@ const SampleRow: React.FC<SampleRowProps> = ({
                                                  index,
                                                  sample,
                                                  handleRowClick,
-                                                 getPromptName,
-                                                 getModelName,
-                                                 expandedRows
+                                                 expandedRows,
                                              }) => {
 
-    const {push} = useRouter();
+    const sample_id = sample.id;
+    const prompt_id = sample.prompt_id;
+
+    const handleGenerateClicked = () => {
+        generateResultForPrompt(prompt_id);
+    };
 
     return (
         <>
@@ -40,8 +42,15 @@ const SampleRow: React.FC<SampleRowProps> = ({
                 <td>
                     {sample.result}
                 </td>
-
+                <td onClick={handleGenerateClicked} className="px-3 py-4 text-sm font-medium text-right whitespace-nowrap">
+                    Generate
+                </td>
             </tr>
+
+            {/*{expandedRows[sample.id] ? (*/}
+            {/*    <tr>*/}
+            {/*    </tr>*/}
+            {/*) : null}*/}
             {/*<tr*/}
             {/*    key={log.id}*/}
             {/*    onClick={() => handleRowClick(log.id)}*/}
