@@ -9,4 +9,6 @@ export interface Model {
     model_parameters: any;
     default: boolean;
     organization_id: string;
+    provider: string;
+    deleted: boolean;
 }

@@ -6,6 +6,7 @@ const modelSchema = mongoose.model(
     {
       name: String,
       type: String,
+      provider: String,
       api_call: {
         url: String,
         method: String,

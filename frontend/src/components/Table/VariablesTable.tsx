@@ -68,7 +68,7 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
               ) : variable.value.length <= 4 ? (
                 variable.value
               ) : (
-                ".".repeat(variable.value.length - 4) + variable.value.substring(variable.value.length - 4)
+                ".".repeat(Math.max(0, 20 - Math.min(4, variable.value.length))) + variable.value.slice(-4)
               )}
             </td>
             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex">

@@ -92,9 +92,9 @@ const promptStore = create<PromptStore>((set, get) => ({
 
                 const promptObject = { ...state.promptObject };
 
-                const newPromptVariableData = variables.reduce((acc, variable) => {
-                acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
-                return acc;
+                const newPromptVariableData = variables.reduce((acc:any, variable:any) => {
+                    acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
+                    return acc;
                 }, {});
                 
                 //setPromptVariables with newPromptVariableData

@@ -19,7 +19,7 @@ export function ModelList({ models, selectedModel, setSelectedModel }: ModelList
                             selectedModel.id === model.id ? 'bg-gray-200' : 'hover:bg-gray-100'
                         }`}
                     >
-                        {model.name}
+                        {model.name} ({model.type.slice(0, 4)}{model.type.length > 4 ? '.' : ''}) {model.provider ? `| ${model.provider}` : ''}
                     </li>
                 ))}
             </ul>

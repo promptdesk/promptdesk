@@ -19,7 +19,9 @@ const modelStore = create<ModelStore>(set => {
 
     const fetchAllModels = async () => {
         const models = await fetchFromPromptdesk('/api/models');
-        const dropdownModelList = models.map(({ id, name }: Model) => ({ value:id, name }));
+        const dropdownModelList = models.map(({ id, name, type, provider }: Model) => {
+            return { value: id, name: `${name} (${type.slice(0, 4)}) ${provider ? `| ${provider}` : ''}` };
+        });
         const defaultModel = models.find((model: any) => model.default === true);
 
         set({ 

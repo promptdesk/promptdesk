@@ -2,25 +2,28 @@ import React, { useEffect, useState } from "react";
 import { modelStore } from "@/stores/ModelStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { ModelList } from "@/components/Models/ModelList";
-import CodeEditor from "@/components/Editors/CodeEditor";
-import InputField from "@/components/Form/InputField";
-import DropDown from "@/components/Form/DropDown";
+import { testAPI } from "@/services/LLMTests";
+import ModelSettings from "@/components/Models/ModelSettings";
 
 export default function ModelsPage() {
-  const { models, saveModel, duplicateModel, deleteModel } = modelStore();
+  const { models, saveModel, duplicateModel, deleteModel, fetchAllModels } = modelStore();
   const [selectedModel, setSelectedModel] = useState({} as any);
   const [isValidJSON, setIsValidJSON] = useState(true);
+  const [apiResponse, setApiResponse] = useState({} as any);
+  const [inputFormatResponse, setInputFormatResponse] = useState({} as any);
 
   //model components
   const [api, setApi] = useState({} as any);
+  const [parameters, setParameters] = useState({} as any);
   const [inputFormat, setInputFormat] = useState("" as string);
   const [outputFormat, setOutputFormat] = useState("" as string);
-  const [parameters, setParameters] = useState({} as any);
 
-  const style = "rounded-xl mb-8 overflow-hidden shadow-lg"
+  const style = "rounded-xl overflow-hidden shadow-lg"
 
   useEffect(() => {
-    setSelectedModel(models[0] || {});
+    if(Object.keys(selectedModel).length === 0) {
+      setSelectedModel(models[0] || {});
+    }
   }, [models]);
 
   useEffect(() => {
@@ -34,6 +37,15 @@ export default function ModelsPage() {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
       setApi(parsedJson);
+    } catch {
+      //setIsValidJSON(false);
+    }
+  }
+
+  const setFormattedParameters = (json_string:any) => {
+    try {
+      const parsedJson = JSON.parse(json_string || "{}");
+      setParameters(parsedJson);
     } catch {
       //setIsValidJSON(false);
     }
@@ -55,6 +67,7 @@ export default function ModelsPage() {
 
   const handleDuplicate = async () => {
     const newModelId = await duplicateModel(selectedModel);
+    await fetchAllModels();
     if (newModelId) {
       const model = models.find((model) => model.id === newModelId);
       setSelectedModel(model);
@@ -72,6 +85,18 @@ export default function ModelsPage() {
     setSelectedModel(updatedModel);
   };
 
+  function generate_pre_compontent(status:number, contents:any) {
+    return (
+      <>
+      {status === undefined ? <></> : 
+      <pre className="bg-gray-800 text-white text-sm p-4 rounded-xl overflow-auto mb-4" style={{whiteSpace: "pre-wrap"}}>
+RESPONSE STATUS: {status}<br/>
+{contents}
+      </pre>}
+      </>
+    )
+  }
+
   return (
     <div className="page-body full-width flush">
       <div className="pg-header">
@@ -86,49 +111,23 @@ export default function ModelsPage() {
       </div>
       <div className="flex flex-row">
         <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
-        <div className="w-3/4">
-          <div className="grid grid-cols-1 gap-x-6 gap-y-8 grid-cols-6 m-2">
-            <div className="col-span-2">
-              <InputField label="Model Name" value={selectedModel.name} onInputChange={(value) => updateModel("name", value)} />
-            </div>
-            <div className="col-span-2">
-              <DropDown label="Model Type" options={[{ name: "Completion", value: "completion" }, { name: "Chat", value: "chat" }]} selected={selectedModel.type} onChange={(value:any) => updateModel("type", value)} />
-            </div>
-            <div className="col-span-2">
-              <DropDown label="Default model" options={[{ value: true, name: "True" }, { value: false, name: "False" }]} selected={selectedModel.default} onChange={(value:any) => updateModel("default", value === "true")} />
-            </div>
-          </div>
-          <div className="m-2 mt-4">
-            <div>
-              <h3 className="mb-1">API Call</h3>
-            </div>
-            <CodeEditor height="30vh" style={style} code={JSON.stringify(api, null, 4)} language="json"
-              handleChange={(value) => {
-                setFormattedApi(value);
-              }}/>
-            <div>
-              <h3 className="mb-1">Input format</h3>
-            </div>
-            <CodeEditor height="50vh" style={style} code={inputFormat} language="javascript"
-              handleChange={(value) => {
-                setInputFormat(value as string);
-              }}/>
-            <div>
-              <h3 className="mb-1">Output format</h3>
-            </div>
-            <CodeEditor height="30vh" style={style} code={outputFormat} language="javascript"
-              handleChange={(value) => {
-                setOutputFormat(value as string);
-              }}/>
-            <div>
-              <h3 className="mb-1">Model parameters</h3>
-            </div>
-            <CodeEditor height="50vh" style={style} code={JSON.stringify(parameters, null, 4)} language="json"
-              handleChange={(value) => {
-                setParameters(value);
-              }}/>
-          </div>
-        </div>
+        <ModelSettings
+          selectedModel={selectedModel}
+          updateModel={updateModel}
+          setFormattedApi={setFormattedApi}
+          api={api}
+          apiResponse={apiResponse}
+          setApiResponse={setApiResponse}
+          inputFormatResponse={inputFormatResponse}
+          setInputFormatResponse={setInputFormatResponse}
+          parameters={parameters}
+          inputFormat={inputFormat}
+          setInputFormat={setInputFormat}
+          outputFormat={outputFormat}
+          setOutputFormat={setOutputFormat}
+          handleSave={handleSave}
+          setFormattedParameters={setFormattedParameters}
+          testAPI={testAPI} />
       </div>
     </div>
   );

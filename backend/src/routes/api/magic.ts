@@ -36,6 +36,23 @@ function variable_object(prompt_variables: any): any {
 
 }
 
+async function api_variables(api_call: any, organization:any) {
+        //get variables from variables db
+        var environment_variables = await variable_db.getVariables(organization.id);
+
+        var api_call = JSON.stringify(api_call) as any;    
+    
+        environment_variables = env_variable_object(environment_variables)
+    
+        var prompt_api_template = handlebars.compile(api_call);
+    
+        api_call = prompt_api_template(environment_variables);
+    
+        api_call = JSON.parse(api_call)
+
+        return api_call
+}
+
 async function prompt_model_validation(organization:any, body:any) {
 
     var prompt = undefined;
@@ -77,27 +94,14 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
     const organization = (req as any).organization;
     var start_time = Date.now()
 
-    //try {
+    try {
 
         let [ prompt, model, proxy, error ] = await prompt_model_validation(organization, req.body);
 
         if(error){
             return res.status(error.status).json({ error: true, message: error.error, status: error.status });
         }
-    
-        //get variables from variables db
-        var environment_variables = await variable_db.getVariables(organization.id);
-    
-        var api_call = JSON.stringify(model.api_call) as any;    
-    
-        environment_variables = env_variable_object(environment_variables)
-    
-        var prompt_api_template = handlebars.compile(api_call);
-    
-        api_call = prompt_api_template(environment_variables);
-    
-        api_call = JSON.parse(api_call)
-    
+
         if(!model.input_format){
             return res.status(404).json({ error:true, message: 'Model format function not found.', status: 404 });
         }
@@ -105,6 +109,8 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
         if(!model.output_format){
             return res.status(404).json({ error: true, message: 'Model format function not found.', status: 404 });
         }
+
+        var api_call = await api_variables(model.api_call, organization)
     
         var input_format = eval(model.input_format)
         var output_format = eval(model.output_format)
@@ -206,7 +212,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
         }
 
-    /*} catch (error:any) {
+    } catch (error:any) {
 
         var obj = {
             message: error.message,
@@ -220,7 +226,123 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
         log_db.createLog(obj, organization.id)
         return res.status(500).json(obj);
 
-    }*/
+    }
+
+});
+
+router.all(['/magic/test/endpoint'], async (req, res) => {
+    const organization = (req as any).organization;
+    console.log(req.body, organization)
+
+    //check if data contains api_call
+    if(!req.body.api_call){
+        return res.status(500).json(
+        {
+            error: 'PromptDesk requires you to define API calls in the following format.',
+            format: {
+                "url": "https://api.openai.com/v1/chat/completions",
+                "method": "POST",
+                "headers": {
+                    "Authorization": "Bearer {{OPEN_AI_KEY}}",
+                    "Content-Type": "application/json"
+                }
+            }
+        })
+    }
+
+    //get JSON data from request body
+    var api_call = req.body.api_call;
+    var api_call = await api_variables(api_call, organization)
+
+    try {
+        var response = await axios(api_call)
+        return res.status(200).json({data: response.data, status: response.status});
+    } catch (error) {
+        console.log((error as any).response.data)
+        return res.status(500).json({ data: (error as any).response.data, status: (error as any).response.status });
+    }
+
+});
+
+router.all(['/magic/test/inputformat'], async (req, res) => {
+
+    const organization = (req as any).organization;
+
+    //check if data contains api_call
+    if(!req.body.api_call){
+        return res.status(500).json(
+        {
+            error: 'PromptDesk requires you to define API calls in the following format.',
+            format: {
+                "url": "https://api.openai.com/v1/chat/completions",
+                "method": "POST",
+                "headers": {
+                    "Authorization": "Bearer {{OPEN_AI_KEY}}",
+                    "Content-Type": "application/json"
+                }
+            }
+        })
+    }
+
+    if(!req.body.input_format){
+        return res.status(500).json(
+        {
+            error: 'PromptDesk requires you to define input format in the following format.',
+            format: "function(input, parameters){\n\treturn input\n}"
+        })
+    }
+
+    var input_format = undefined;
+    
+    try {
+        input_format = eval(req.body.input_format)
+    } catch (error) {
+        return res.status(500).json({ error: error, status: 500 });
+    }
+
+    //get JSON data from request body
+    var api_call = req.body.api_call;
+    var api_call = await api_variables(api_call, organization)
+
+    var prompt = {
+        prompt: "Say hello."
+    } as any;
+
+    prompt = {
+        "context": "I am a human.",
+        "messages": [
+            {
+                "role": "user",
+                "content": "Say hello."
+            },
+            {
+                "role": "assistant",
+                "content": "Hello."
+            },
+            {
+                "role": "user",
+                "content": "Say hello."
+            },
+        ]
+    }
+
+    var body = input_format(prompt, {})
+
+    api_call.data = body
+
+    console.log(api_call)
+
+    try {
+        var response = await axios(api_call)
+        return res.status(200).json({data: response.data, status: response.status});
+    } catch (error) {
+        console.log((error as any).response.data)
+        return res.status(500).json({ data: (error as any).response.data, status: (error as any).response.status });
+    }
+
+});
+
+router.all(['/magic/test/result'], async (req, res) => {
 
 });
 
