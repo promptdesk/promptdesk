@@ -13,7 +13,7 @@ import PlaygroundButton from "@/components/Form/PlaygroundButton";
 export default function SamplesListPage() {
     const {push, back, query} = useRouter();
     const {samples, fetchSamples} = sampleStore();
-    const {prompts} = promptStore();
+    const {prompts, setPrompt} = promptStore();
 
     const initial_page = parseInt(location.search.replace('?page=', ''));
 
@@ -21,6 +21,10 @@ export default function SamplesListPage() {
     const [expandedRows, setExpandedRows] = useState({});
 
     const prompt_id = String(query.id);
+
+    useEffect(() => {
+        setPrompt(prompt_id);
+    }, [prompt_id]);
 
     useEffect(() => {
         fetchSamples(0, prompt_id?.toString());
@@ -67,8 +71,6 @@ export default function SamplesListPage() {
                             <SampleTable
                                 samples={samples}
                                 handleRowClick={handleRowClick}
-                                getPromptName={() => ""}
-                                getModelName={() => ""}
                                 expandedRows={{}}
                             />
                             {samples?.data && Object.keys(samples.data).length === 0 ? <p>No samples yet. Try executing this prompt either through the UI or from your client code.</p> : null}
@@ -84,5 +86,5 @@ export default function SamplesListPage() {
             </div>
         </div>
     );
-
 }
+

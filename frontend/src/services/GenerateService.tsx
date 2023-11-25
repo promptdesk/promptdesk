@@ -52,6 +52,7 @@ const generateResultForPrompt = async (promptId: string) => {
             promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, generatedText: data.message })
         }
 
+        return data;
     } catch (error) {
 
         console.error('API Call Error:', error);

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import crypto from 'crypto';
-const canonicaljson = require('canonical-json');
+import {canonical_json_stringify} from "../../utils/canonicalJson";
 
 const schema = new mongoose.Schema(
     {
@@ -27,7 +27,7 @@ class Sample {
         // Compute the hash for the sample using sha256.
         // Use canonical json to ensure that the hash is
         // consistent even if values in the json get reordered.
-        const hashJsonString = canonicaljson.stringify(variables);
+        const hashJsonString = canonical_json_stringify(variables);
         const hash = crypto.createHash('sha256').update(hashJsonString).digest('hex');
 
         const newSample = {
