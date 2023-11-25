@@ -14,6 +14,7 @@ import {
 import {promptWorkspaceTabs} from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
+import Link from "next/link";
 
 export default function Home() {
   const { push, query } = useRouter();
@@ -119,9 +120,9 @@ export default function Home() {
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
                   <div className="pg-content-body">
-                    <a href={`/workspace/${promptObject.id}/samples`}>
+                    <Link href={{pathname: `/workspace/${promptObject.id}/samples`}}>
                       View Samples for Prompt
-                    </a>
+                    </Link>
 
 
                     {modelObject.type === "chat" ? (
