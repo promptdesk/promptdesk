@@ -6,17 +6,19 @@ import CodeModal from "@/components/Modals/CodeModal";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import {
     shouldShowSaveModal,
-    shouldSnowCodeModal
+    shouldShowCodeModal
   } from "@/stores/GeneralStore";
+import Link from "next/link";
+import {useRouter} from "next/router";
 function EditorFooter() {
-
-  const { getDataById, activeTabeId, tabs } = promptWorkspaceTabs();
-  const [ data, setData ] = useState(getDataById(activeTabeId as string) || {});
+  const {push, query} = useRouter();
+  const { getDataById, activeTabId, tabs } = promptWorkspaceTabs();
+  const [ data, setData ] = useState(getDataById(activeTabId as string) || {});
 
   useEffect(() => {
-    const data = getDataById(activeTabeId as string) || {};
+    const data = getDataById(activeTabId as string) || {};
     setData(data);
-  }, [activeTabeId, getDataById, tabs]);
+  }, [activeTabId, getDataById, tabs]);
 
   const {
       toggle_modal
@@ -25,7 +27,11 @@ function EditorFooter() {
     const {
       show_code_modal,
       toggle_code_modal
-    } = shouldSnowCodeModal();
+    } = shouldShowCodeModal();
+
+    const goToSamplesPage = () => {
+        push(`/workspace/${activeTabId}/samples`);
+    }
 
   return (
     <div className="pg-content-footer">
@@ -43,7 +49,7 @@ function EditorFooter() {
         >
         <span className="btn-label-wrap">
             <span className="btn-label-inner" onClick={() => {
-              makeMagic(activeTabeId as string);
+              makeMagic(activeTabId as string);
             }}>
             {data.loading ? "Processing..." : "Submit"}
             </span>
@@ -58,6 +64,11 @@ function EditorFooter() {
         <PlaygroundButton
             text="Code"
             onClick={toggle_code_modal}
+            isFull={true}
+        />
+        <PlaygroundButton
+            text="Samples"
+            onClick={goToSamplesPage}
             isFull={true}
         />
     </div>

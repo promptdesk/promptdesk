@@ -1,5 +1,5 @@
 import React from "react";
-import { shouldSnowCodeModal } from "@/stores/GeneralStore";
+import { shouldShowCodeModal } from "@/stores/GeneralStore";
 import { promptStore } from "@/stores/PromptStore";
 
 const CodeModal = () => {
@@ -22,7 +22,7 @@ pd.API_KEY = "YOUR_API_KEY"
 
 result = pd.generate("${promptObject.name}"${variableCode}`;
 
-  const { show_code_modal, toggle_code_modal } = shouldSnowCodeModal();
+  const { show_code_modal, toggle_code_modal } = shouldShowCodeModal();
 
   const renderButtons = () => (
     <button

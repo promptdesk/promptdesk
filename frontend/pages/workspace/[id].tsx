@@ -120,11 +120,6 @@ export default function Home() {
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
                   <div className="pg-content-body">
-                    <Link href={{pathname: `/workspace/${promptObject.id}/samples`}}>
-                      View Samples for Prompt
-                    </Link>
-
-
                     {modelObject.type === "chat" ? (
                       <ChatEditor />
                     ) : (
