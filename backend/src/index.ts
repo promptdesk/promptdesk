@@ -23,7 +23,7 @@ const app = express();
 
 import modelsRouter from './routes/api/models';
 import promptsRouter from './routes/api/prompts';
-import magicRouter from './routes/api/magic';
+import magicRouter from './routes/api/generate';
 import logsRouter from './routes/api/logs';
 import variablesRouter from './routes/api/variables';
 import organizationRouter from './routes/api/organization';

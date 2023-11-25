@@ -11,6 +11,7 @@ export default function ModelsPage() {
   const [isValidJSON, setIsValidJSON] = useState(true);
   const [apiResponse, setApiResponse] = useState({} as any);
   const [inputFormatResponse, setInputFormatResponse] = useState({} as any);
+  const [outputFormatResponse, setOutputFormatResponse] = useState({} as any);
 
   //model components
   const [api, setApi] = useState({} as any);
@@ -120,6 +121,8 @@ RESPONSE STATUS: {status}<br/>
           setApiResponse={setApiResponse}
           inputFormatResponse={inputFormatResponse}
           setInputFormatResponse={setInputFormatResponse}
+          outputFormatResponse={outputFormatResponse}
+          setOutputFormatResponse={setOutputFormatResponse}
           parameters={parameters}
           inputFormat={inputFormat}
           setInputFormat={setInputFormat}

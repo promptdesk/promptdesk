@@ -16,6 +16,9 @@
   <a href="https://hub.docker.com/r/promptdesk/promptdesk">
     <img src="https://badgen.net/badge/icon/docker?icon=docker&label" alt="docker">
   </a>
+  <a href="https://hub.docker.com/r/promptdesk/promptdesk">
+    <img src="https://img.shields.io/docker/pulls/promptdesk/promptdesk.svg" alt="docker pulls">
+  </a>
   <a href="https://www.gnu.org/licenses/agpl-3.0">
     <img src="https://img.shields.io/badge/License-AGPL_v3-blue.svg" alt="AGPLv3">
   </a>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { promptWorkspaceTabs } from "@/stores/TabStore";
-import { makeMagic } from "@/services/MagicService";
+import { makeMagic } from "@/services/GenerateService";
 import CodeModal from "@/components/Modals/CodeModal";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import {

@@ -5,9 +5,9 @@ import Cookies from 'js-cookie';
 
 const testAPI = async (data:object) => {
 
-    var endpoint = '/api/magic/test/endpoint';
+    var endpoint = '/api/generate/test/endpoint';
     if((data as any).input_format) {
-        endpoint = '/api/magic/test/inputformat';
+        endpoint = '/api/generate/test/inputformat';
     }
     
     try {

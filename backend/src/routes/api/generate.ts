@@ -89,8 +89,8 @@ async function prompt_model_validation(organization:any, body:any) {
     return [prompt, model, proxy, error]
 }
 
-// Route for /api/magic/gpt-3.5-turbo
-router.all(['/magic', '/magic/generate'], async (req, res) => {
+// Route for /api/generate/gpt-3.5-turbo
+router.all(['/generate', '/generate/generate'], async (req, res) => {
     const organization = (req as any).organization;
     var start_time = Date.now()
 
@@ -230,7 +230,7 @@ router.all(['/magic', '/magic/generate'], async (req, res) => {
 
 });
 
-router.all(['/magic/test/endpoint'], async (req, res) => {
+router.all(['/generate/test/endpoint'], async (req, res) => {
     const organization = (req as any).organization;
     console.log(req.body, organization)
 
@@ -264,7 +264,7 @@ router.all(['/magic/test/endpoint'], async (req, res) => {
 
 });
 
-router.all(['/magic/test/inputformat'], async (req, res) => {
+router.all(['/generate/test/inputformat'], async (req, res) => {
 
     const organization = (req as any).organization;
 
@@ -342,7 +342,7 @@ router.all(['/magic/test/inputformat'], async (req, res) => {
 
 });
 
-router.all(['/magic/test/result'], async (req, res) => {
+router.all(['/generate/test/result'], async (req, res) => {
 
 });
 

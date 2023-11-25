@@ -21,6 +21,8 @@ type ModelSettingsProps = {
     setOutputFormat: any;
     handleSave: any;
     setFormattedParameters: any;
+    outputFormatResponse: any;
+    setOutputFormatResponse: any;
     testAPI: any;
 }
 
@@ -34,6 +36,8 @@ const ModelSettings = ({
     inputFormatResponse,
     setInputFormatResponse,
     setFormattedParameters,
+    outputFormatResponse,
+    setOutputFormatResponse,
     parameters,
     inputFormat,
     setInputFormat,
@@ -109,6 +113,8 @@ const ModelSettings = ({
               handleChange={(value) => {
                 setOutputFormat(value as string);
               }}/>
+            {generate_pre_compontent(outputFormatResponse.status, JSON.stringify(outputFormatResponse.data, null, 4))}
+
             <div>
               <h3 className="mb-0">Model parameters</h3>
             </div>
@@ -116,6 +122,7 @@ const ModelSettings = ({
               handleChange={(value) => {
                 setFormattedParameters(value);
               }}/>
+
           </div>
         </div>
     );

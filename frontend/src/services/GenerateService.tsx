@@ -22,7 +22,7 @@ const makeMagic = async (promptId: string) => {
 
         //updateWorkspaceTabs(promptId, { loading: true });
         promptWorkspaceTabs.getState().updateDataById(promptId, { loading: true })
-        const data = await fetchFromPromptdesk('/api/magic/', 'POST', prompt);
+        const data = await fetchFromPromptdesk('/api/generate/', 'POST', prompt);
         promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false })
         const currentPrompt = promptStore.getState().promptObject;
     

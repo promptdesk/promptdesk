@@ -37,10 +37,10 @@ describe('Magic API', async () => {
     await model_db.deleteModel(model_id, organization.id);
   })
 
-  it('should respond with 200 on POST /api/magic/generate', async function() {
+  it('should respond with 200 on POST /api/generate/generate', async function() {
     this.timeout(10000); // Set timeout to 10 seconds
 
-    const res = await request(app).post('/api/magic').send(prompt).set('Authorization', 'Bearer ' + token);
+    const res = await request(app).post('/api/generate').send(prompt).set('Authorization', 'Bearer ' + token);
 
     expect(res.status).to.equal(200);
 
