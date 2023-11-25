@@ -5,7 +5,7 @@ services:
     container_name: mongodb2
     restart: always
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - ./data:/data/db
     networks:

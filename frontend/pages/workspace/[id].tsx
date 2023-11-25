@@ -119,6 +119,11 @@ export default function Home() {
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
                   <div className="pg-content-body">
+                    <a href={`/workspace/${promptObject.id}/samples`}>
+                      View Samples for Prompt
+                    </a>
+
+
                     {modelObject.type === "chat" ? (
                       <ChatEditor />
                     ) : (
