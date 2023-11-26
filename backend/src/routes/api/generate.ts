@@ -1,12 +1,13 @@
 import express from 'express';
 import axios from 'axios';
-import { Model, Prompt, Log, Variable} from '../../models/allModels';
+import { Model, Prompt, Log, Variable, Sample} from '../../models/allModels';
 import handlebars from 'handlebars';
 
 let model_db = new Model();
 let prompt_db = new Prompt();
 let log_db = new Log();
 let variable_db = new Variable();
+let sample_db = new Sample();
 
 const router = express.Router();
 
@@ -168,16 +169,17 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
                 duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
+            await sample_db.recordSampleDataIfNeeded(variables, data, prompt.id, organization.id)
             return res.status(200).json(obj);
 
         } catch (error:any) {
 
             var obj = {
-                message: error.message,
+                message: error.stack || error.message,
                 error: true,
                 raw: {
                     request: body,
-                    response: error.response.data
+                    response: error?.response?.data
                 },
                 data: {
                     ...{
@@ -188,20 +190,18 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
                         variables: variables
                     }
                 },
-                status: error.response.status,
+                status: error?.response?.status,
                 model_id: prompt.model,
                 prompt_id: prompt.id,
                 duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
-            return res.status(error.response.status).json(obj);
-
+            return res.status(error?.response?.status ?? 500).json(obj);
         }
 
     } catch (error:any) {
-
         var obj = {
-            message: error.message,
+            message: error.stack || error.message,
             error: true,
             raw: {
                 request: body

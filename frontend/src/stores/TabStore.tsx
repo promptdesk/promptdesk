@@ -6,7 +6,7 @@ import { organizationStore } from './OrganizationStore';
 export interface PromptWorkspaceTabs {
   tabs: Tab[];
   activeTabIndex: number | undefined;
-  activeTabeId: string | undefined;
+  activeTabId: string | undefined;
   isActiveTab: (id: string) => boolean | undefined;
   addTab: (name: string, id: string, current: boolean) => void;
   setActiveTab: (name: string) => void;
@@ -28,7 +28,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
 
   tabs: [],
   activeTabIndex: undefined,
-  activeTabeId: undefined,
+  activeTabId: undefined,
   saveTabsToLocalStorage() {
     const id = organizationStore.getState().organization?.id
     localStorage.setItem("tabs:" + id, JSON.stringify(get().tabs));
@@ -53,7 +53,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
     //set active tab to undefined
     promptWorkspaceTabs.setState(() => ({
       activeTabIndex: undefined,
-      activeTabeId: undefined
+      activeTabId: undefined
     }))
   },
   addTab(name, prompt_id, current) {
@@ -93,7 +93,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
       //set activeTabIndex
       promptWorkspaceTabs.setState(() => ({
         activeTabIndex: get().tabs.findIndex(tab => tab.prompt_id === id),
-        activeTabeId: id
+        activeTabId: id
       }))
       get().saveTabsToLocalStorage();
     }
@@ -107,7 +107,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
     //set activeTabIndex
     promptWorkspaceTabs.setState(() => ({
       activeTabIndex: get().tabs.findIndex(tab => tab.name === name),
-      activeTabeId: get().tabs.find(tab => tab.name === name)?.prompt_id
+      activeTabId: get().tabs.find(tab => tab.name === name)?.prompt_id
     }))
     get().saveTabsToLocalStorage();
   },

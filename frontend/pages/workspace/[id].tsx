@@ -14,6 +14,7 @@ import {
 import {promptWorkspaceTabs} from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
+import Link from "next/link";
 
 export default function Home() {
   const { push, query } = useRouter();

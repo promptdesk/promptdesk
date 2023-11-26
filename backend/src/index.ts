@@ -23,7 +23,8 @@ const app = express();
 
 import modelsRouter from './routes/api/models';
 import promptsRouter from './routes/api/prompts';
-import magicRouter from './routes/api/generate';
+import generateRouter from './routes/api/generate';
+import samplesRouter from './routes/api/samples';
 import logsRouter from './routes/api/logs';
 import variablesRouter from './routes/api/variables';
 import organizationRouter from './routes/api/organization';
@@ -47,7 +48,8 @@ app.get(['/api/ping', '/ping'], (req, res) => {
 
 app.use('/api', apiKeyMiddleware);
 
-app.use('/api', magicRouter);
+app.use('/api', generateRouter);
+app.use('/api', samplesRouter);
 app.use('/api', promptsRouter);
 app.use('/api', logsRouter);
 app.use('/api', modelsRouter);

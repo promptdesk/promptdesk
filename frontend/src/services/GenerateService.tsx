@@ -4,7 +4,7 @@ import { promptStore } from '@/stores/PromptStore';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService';
 import { Tab } from '@/interfaces/tab';
 
-const makeMagic = async (promptId: string) => {
+const generateResultForPrompt = async (promptId: string) => {
     const currentTabData = promptWorkspaceTabs.getState().getDataById(promptId);
 
     if (currentTabData.loading) {
@@ -52,6 +52,7 @@ const makeMagic = async (promptId: string) => {
             promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, generatedText: data.message })
         }
 
+        return data;
     } catch (error) {
 
         console.error('API Call Error:', error);
@@ -61,4 +62,4 @@ const makeMagic = async (promptId: string) => {
     }
 };
 
-export { makeMagic };
+export { generateResultForPrompt };

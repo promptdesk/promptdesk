@@ -41,10 +41,10 @@ const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
   },
 }));
 
-const shouldSnowCodeModal = create<shouldSnowCodeModal>((set) => ({
+const shouldShowCodeModal = create<shouldSnowCodeModal>((set) => ({
   show_code_modal: false,
   toggle_code_modal: () => {
-    shouldSnowCodeModal.setState((state: { show_code_modal: boolean; }) => ({
+    shouldShowCodeModal.setState((state: { show_code_modal: boolean; }) => ({
       show_code_modal: !state.show_code_modal
     }))
   },
@@ -72,4 +72,4 @@ const shouldShowEnvVariableModal = create<shouldShowEnvVariableModal>((set) => (
 }));
 
 //export both stores
-export { shouldShowSaveModal, shouldSnowCodeModal, showPromptHistory, shouldShowSaveVariableModal, shouldShowEnvVariableModal }
+export { shouldShowSaveModal, shouldShowCodeModal, showPromptHistory, shouldShowSaveVariableModal, shouldShowEnvVariableModal }

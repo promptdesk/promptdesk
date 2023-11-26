@@ -4,6 +4,7 @@ import {Prompt as mongoPrompt} from './mongodb/prompt';
 import {Log as mongoLog} from './mongodb/log';
 import {Variable as mongoVariable} from './mongodb/variable';
 import {Organization as mongoOrganization} from './mongodb/organization';
+import {Sample as mongoSample} from './mongodb/sample';
 import connectToDatabase from '../models/mongodb/db';
 
 async function importModule(moduleName: string):Promise<any>{
@@ -11,7 +12,7 @@ async function importModule(moduleName: string):Promise<any>{
   return importedModule;
 }
 
-let Prompt:any, Model:any, Log:any, Variable:any, Organization:any;
+let Prompt:any, Model:any, Log:any, Variable:any, Organization:any, Sample:any;
 
 if (true) {
 
@@ -38,8 +39,9 @@ if (true) {
   Log = mongoLog;
   Variable = mongoVariable;
   Organization = mongoOrganization;
+  Sample = mongoSample;
   importModule('./mongodb/db');
 
 }
 
-export { Model, Prompt, Log, Variable, Organization };
+export { Model, Prompt, Log, Variable, Organization, Sample };
