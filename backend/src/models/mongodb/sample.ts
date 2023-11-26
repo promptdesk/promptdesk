@@ -38,7 +38,7 @@ class Sample {
             prompt: prompt,
             result: result,
             hash: hash,
-            status: "fresh",
+            status: "new",
             prompt_id: prompt_id,
             organization_id: organization_id,
         }

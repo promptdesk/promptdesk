@@ -14,10 +14,21 @@
     height: 100%;
   }
 
+  .status-selector-wrapper {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 5px;
+  }
+
   .status-selector {
     padding: 5px;
     border: 1px solid #666;
     background: white;
+    min-width: 100px;
   }
 
   .action-buttons {
@@ -39,24 +50,43 @@
     justify-content: stretch;
     align-items: stretch;
 
-    textarea {
+    .prompt-value-display {
+      width: inherit;
+      height: fit-content;
+
+      font-size: 0.85rem;
+      line-height: 1.10rem;
+      font-family: monospace;
+      color: #444 !important;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      cursor: text !important;
+
+      background-color: transparent;
+      border-color: transparent;
+    }
+
+    .sample-row-textarea {
+      width: inherit;
+      height: 100%;
+
+      font-size: 0.85rem;
+      line-height: 1.10rem;
+      font-family: monospace;
+      color: #444 !important;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      cursor: text !important;
+
       &:not(:focus,:hover) {
         background-color: transparent;
         border-color: transparent;
       }
     }
-  }
 
-  .sample-row-input {
-    width: inherit;
-    height: 100%;
-  }
-
-  .prompt-content-area {
-    white-space: pre-wrap;
-    /* Use a monospace font */
-    font-family: "Roboto Mono", monospace;
-    cursor: text;
+    .prompt-value-display, .sample-row-textarea {
+      max-height: 500px;
+    }
   }
 
   .action-button-loader {

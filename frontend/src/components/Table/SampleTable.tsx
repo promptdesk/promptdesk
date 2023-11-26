@@ -22,7 +22,12 @@ const SampleTable: React.FC<SamplesTableProps> = ({
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 result-column">
             Result
           </th>
-          <th className={"action-column"}></th>
+          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 status-column">
+            Status
+          </th>
+          <th className={"action-column"}>
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
