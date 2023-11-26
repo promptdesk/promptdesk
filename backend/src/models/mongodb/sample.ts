@@ -17,7 +17,7 @@ const schema = new mongoose.Schema(
 )
 
 schema.index({organization_id: 1, prompt_id: 1, hash: 1}, {unique: true});
-schema.index({organization_id: 1, prompt_id: 1, status: 1, hash: 1});
+schema.index({organization_id: 1, prompt_id: 1, status: 1, createdAt: 1});
 
 const sampleSchema = mongoose.model(
     'Sample',
@@ -55,7 +55,7 @@ class Sample {
         let samples = await sampleSchema.find(query)
             .skip(skip)
             .limit(limit)
-            .sort({createdAt: -1}); // Sort by descending order of creation time
+            .sort({status: 1, createdAt: -1}); // First sort by status, then by creation time so most recent shows up first.
 
         samples = samples.map(this.transformSample)
 
