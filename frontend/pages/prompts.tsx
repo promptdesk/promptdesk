@@ -6,6 +6,7 @@ import { promptWorkspaceTabs } from '@/stores/TabStore';
 import PlaygroundButton from '@/components/Form/PlaygroundButton';
 import { Prompt } from '@/interfaces/prompt';
 import PromptsTable from '@/components/Table/PromptsTable';
+import Head from "next/head";
 
 export default function PromptsPage() {
   const { push } = useRouter();
@@ -40,6 +41,9 @@ export default function PromptsPage() {
 
   return (
     <div className="page-body full-width flush">
+      <Head>
+        <title>Prompts - PromptDesk</title>
+      </Head>
       <div className="pg-header">
         <div className="pg-header-section pg-header-title flex justify-between">
           <h1 className="pg-page-title">Prompts</h1>

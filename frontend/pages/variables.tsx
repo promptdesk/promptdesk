@@ -7,6 +7,7 @@ import EnvVariableModal from '@/components/Modals/EnvVariableModal';
 import { shouldShowEnvVariableModal } from '@/stores/GeneralStore';
 import VariablesTable from '@/components/Table/VariablesTable';
 import OrganizationTable from '@/components/Table/OrganizationTable';
+import Head from "next/head";
 
 export default function VariablesPage() {
 
@@ -66,6 +67,9 @@ export default function VariablesPage() {
 
   return (
     <div className="page-body full-width flush">
+      <Head>
+        <title>Settings - PromptDesk</title>
+      </Head>
       {/* only show EnvVariableModal if show_env_variable_modal is true */}
       {show_env_variable_modal &&
         <EnvVariableModal/>

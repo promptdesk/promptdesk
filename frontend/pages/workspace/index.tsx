@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import {promptWorkspaceTabs} from "@/stores/TabStore";
 import { promptStore } from '@/stores/PromptStore';
 
-export default function Home() {
+export default function WorkspaceHomeRedirector() {
   const { push, query } = useRouter();
 
   var { prompts, addNewPrompt } = promptStore();

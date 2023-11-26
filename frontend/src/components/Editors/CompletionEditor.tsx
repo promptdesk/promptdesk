@@ -3,9 +3,10 @@ import { promptStore } from '@/stores/PromptStore';
 import EditorFooter from '@/components/Editors/EditorFooter';
 import GeneratedOutput from '@/components/Editors/Completion/GeneratedOutput';
 import Variables from '@/components/Editors/Variables';
+import {ParsingError} from "@/components/Editors/ParsingError";
 
 function Editor() {
-    const { promptObject, setPromptInformation, setPromptVariables, processVariables } = promptStore();
+    const { promptObject, setPromptInformation, setPromptVariables, processVariables, parsingError } = promptStore();
     const [promptVariableData, setPromptVariableData] = useState(promptObject.prompt_variables || {});
 
     useEffect(() => {
@@ -52,6 +53,7 @@ function Editor() {
                 </div>
             </div>
             <GeneratedOutput />
+            <ParsingError error={parsingError} />
             <EditorFooter />
         </div>
     );

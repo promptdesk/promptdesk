@@ -8,6 +8,7 @@ import InputField from '@/components/Form/InputField';
 import { Log } from '@/interfaces/log';
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 import "./[id].scss";
+import Head from "next/head";
 
 function LogAttribute({ label, value }: {label: string; value: string }) {
   return (
@@ -76,6 +77,10 @@ export default function SingleLogPage() {
   }, [query.id, prompts, models]);
 
   return (
+    <>
+    <Head>
+      <title>View Log {log.id} - PromptDesk</title>
+    </Head>
     <div className="page-body full-width flush">
       <div className="pg-header">
         <div className="pg-header-title">
@@ -117,5 +122,6 @@ export default function SingleLogPage() {
         />
       </div>
     </div>
+    </>
   );
 }

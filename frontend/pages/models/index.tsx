@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useRouter } from 'next/router';
 import { modelStore } from "@/stores/ModelStore";
 
-export default function Home() {
+export default function ModelsHomeRedirect() {
   const { push, query } = useRouter();
 
   var { models } = modelStore();

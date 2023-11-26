@@ -5,6 +5,7 @@ import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { ModelList } from "@/components/Models/ModelList";
 import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
+import Head from "next/head";
 
 export default function ModelsPage() {
 
@@ -136,6 +137,10 @@ export default function ModelsPage() {
   }
 
   return (
+    <>
+    <Head>
+      <title>Models - PromptDesk</title>
+    </Head>
     <div className="page-body full-width flush">
       <div className="pg-header">
         <div className="pg-header-section pg-header-title flex justify-between">
@@ -172,5 +177,6 @@ export default function ModelsPage() {
           testAPI={testAPI} />
       </div>
     </div>
+    </>
   );
 }

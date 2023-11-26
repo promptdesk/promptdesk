@@ -15,8 +15,9 @@ import {promptWorkspaceTabs} from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
 import Link from "next/link";
+import Head from "next/head";
 
-export default function Home() {
+export default function SinglePromptEditPage() {
   const { push, query } = useRouter();
 
   const {
@@ -96,6 +97,9 @@ export default function Home() {
 
   return (
     <>
+    <Head>
+      <title>Edit {promptObject.name} - PromptDesk</title>
+    </Head>
     {(modelObject && promptObject) && (
         <div className="pg-main">
           <div className="pg-tab-header">

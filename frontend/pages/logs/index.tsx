@@ -8,6 +8,7 @@ import Pagination from '@/components/Table/Pagination';
 import Stats from '@/components/Table/Stats';
 import DropDown from '@/components/Form/DropDown';
 import { data } from 'autoprefixer';
+import Head from "next/head";
 
 export default function LogListPage() {
   const { push } = useRouter();
@@ -77,6 +78,10 @@ export default function LogListPage() {
   }
 
   return (
+    <>
+    <Head>
+      <title>Logs - PromptDesk</title>
+    </Head>
     <div className="page-body full-width flush">
       <div className="pg-header">
         <div className="pg-header-title">
@@ -125,5 +130,6 @@ export default function LogListPage() {
         />
       </div>
     </div>
+    </>
   );
 }

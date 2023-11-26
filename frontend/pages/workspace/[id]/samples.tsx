@@ -6,6 +6,7 @@ import {promptStore} from "@/stores/PromptStore";
 import Pagination from '@/components/Table/Pagination';
 import "./sample.scss";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
+import Head from "next/head";
 
 /**
  * This page allows you to view all of the unique samples that have accumulated for a particular prompt.
@@ -53,6 +54,10 @@ export default function SamplesListPage() {
     }
 
     return (
+        <>
+        <Head>
+            <title>Samples for {getPromptName(prompt_id)} - PromptDesk</title>
+        </Head>
         <div className="page-body full-width flush samples-list-page">
             <div className="pg-header">
                 <div className="pg-header-title">
@@ -85,6 +90,7 @@ export default function SamplesListPage() {
                 />
             </div>
         </div>
+        </>
     );
 }
 

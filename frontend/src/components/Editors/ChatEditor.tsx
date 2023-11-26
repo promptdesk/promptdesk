@@ -6,9 +6,10 @@ import EditorFooter from '@/components/Editors/EditorFooter';
 import Variables from '@/components/Editors/Variables';
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
+import {ParsingError} from "@/components/Editors/ParsingError";
 
 function Editor() {
-  const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex } = promptStore();
+  const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex, parsingError } = promptStore();
   const { modelObject } = modelStore();
 
   const handleSystemInput = (e:any) => {
@@ -83,6 +84,7 @@ function Editor() {
               </div>
             </div>
           </div>
+          <ParsingError error={parsingError} />
           <div>
             <EditorFooter />
           </div>

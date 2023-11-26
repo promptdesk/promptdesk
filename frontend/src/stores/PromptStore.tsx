@@ -14,6 +14,7 @@ interface PromptStore {
     prompts: Array<Prompt>;
     defaultPrompt: Prompt;
     selectedVariable: string;
+    parsingError: string | null;
     fetchAllPrompts: () => Promise<Prompt[]>;
     setPromptInformation: (key: any, value: any) => void;
     createNewPrompt: () => Promise<string>;
@@ -58,6 +59,7 @@ const promptStore = create<PromptStore>((set, get) => ({
     isPromptLoading: false,
     generatedText: undefined,
     selectedVariable: "",
+    parsingError: null,
 
     setSelectedVariable: (variable: string) => {
         set({ selectedVariable: variable });
@@ -99,10 +101,13 @@ const promptStore = create<PromptStore>((set, get) => ({
                 
                 //setPromptVariables with newPromptVariableData
                 promptObject.prompt_variables = newPromptVariableData;
-                return { promptObject };
+                return { parsingError: "", promptObject };
             })
-        } catch (error) {
-            //ignore errors
+        } catch (error: Error) {
+            // Record the error so it can be displayed to the user.
+            set((state) => {
+                return {parsingError: error};
+            });
         }
     },
 

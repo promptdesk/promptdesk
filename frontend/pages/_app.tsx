@@ -2,6 +2,7 @@ import '../src/app/globalv2.css';
 import '../src/app/global.css';
 import Navigation from '@/components/Navigation';
 import React, { useEffect, useState } from 'react'; // Import useEffect and useState
+import Head from 'next/head';
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
 import { promptWorkspaceTabs } from '@/stores/TabStore';
