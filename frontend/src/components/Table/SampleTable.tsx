@@ -34,9 +34,9 @@ const SampleTable: React.FC<SamplesTableProps> = ({
         {samples && samples ?
           samples.map((sample: any, index:number) => (
             <SampleRow
-              index={index}
-              sample={sample}
-              key={index}
+                key={sample.id}
+                sample={sample}
+                index={index}
             />
           ))
           : null}
