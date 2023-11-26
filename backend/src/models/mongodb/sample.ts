@@ -46,7 +46,7 @@ class Sample {
         }
 
         // Upsert the sample if there isn't already a sample for this prompt and hash
-        await sampleSchema.findOneAndUpdate({hash, prompt_id, organization_id}, {$set: newSample}, {upsert: true});
+        await sampleSchema.findOneAndUpdate({hash, prompt_id, organization_id}, {$setOnInsert: newSample}, {upsert: true});
     }
 
     async getSamples(page: any, limit = 10, organization_id: string, prompt_id: string) {
