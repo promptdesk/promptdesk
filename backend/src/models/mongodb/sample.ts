@@ -9,6 +9,7 @@ const schema = new mongoose.Schema(
         result: String,
         hash: String,
         status: String,
+        sort_order: Number,
         prompt_id: String,
         organization_id: String,
     },
@@ -18,7 +19,7 @@ const schema = new mongoose.Schema(
 )
 
 schema.index({organization_id: 1, prompt_id: 1, hash: 1}, {unique: true});
-schema.index({organization_id: 1, prompt_id: 1, status: 1, createdAt: 1});
+schema.index({organization_id: 1, prompt_id: 1, sort_order: 1, createdAt: 1});
 
 const sampleSchema = mongoose.model(
     'Sample',
@@ -39,6 +40,7 @@ class Sample {
             result: result,
             hash: hash,
             status: "new",
+            sort_order: 0,
             prompt_id: prompt_id,
             organization_id: organization_id,
         }
@@ -57,7 +59,7 @@ class Sample {
         let samples = await sampleSchema.find(query)
             .skip(skip)
             .limit(limit)
-            .sort({status: 1, createdAt: -1}); // First sort by status, then by creation time so most recent shows up first.
+            .sort({sort_order: 1, createdAt: -1}); // First sort by status, then by creation time so most recent shows up first.
 
         samples = samples.map(this.transformSample)
 
@@ -74,6 +76,19 @@ class Sample {
     }
 
     async patchSample(sample_id: string, changes: any, organization_id: string) {
+        if (changes.status === 'new') {
+            changes.sort_order = 0;
+        }
+        else if (changes.status === 'in_review') {
+            changes.sort_order = 1;
+        }
+        else if (changes.status === 'approved') {
+            changes.sort_order = 2;
+        }
+        else if (changes.status === 'rejected') {
+            changes.sort_order = 3;
+        }
+
         await sampleSchema.findOneAndUpdate({ _id: sample_id, organization_id }, {$set: changes});
     }
 
