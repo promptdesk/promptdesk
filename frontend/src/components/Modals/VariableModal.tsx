@@ -4,7 +4,7 @@ import {
 } from "@/stores/GeneralStore";
 
 import { promptStore } from "@/stores/PromptStore";
-import router from "next/router";
+import CodeEditor from "@/components/Editors/CodeEditor";
 
 const Modal = () => {
 
@@ -20,6 +20,8 @@ const Modal = () => {
     obj[promptStore.getState().selectedVariable].value = newValue
     promptStore.getState().setPromptVariables(obj)
   }
+
+  const type = obj[promptStore.getState().selectedVariable].type
 
   const saveNewButtonData = [
     { label: "Okay", className: "btn-neutral", action: () => {
@@ -61,15 +63,27 @@ const Modal = () => {
             <div className="modal-body body-small">
               <div className="css-xeepoz">
                 <div className="body-small mb-2 flex items-center" id="save-modal-description">
-                  <div className="bold mr-2">Description</div>
-                  <div style={{ color: "var(--gray-600)" }}>Optional</div>
+                  <div className="bold mr-2">Value ({type})</div>
                 </div>
+                {type === 'text' ? 
                 <textarea
                   rows = {10}
                   className="text-input-mono text-input text-input-sm text-input-full"
                   value={obj[promptStore.getState().selectedVariable].value} // Bind the state variable to the textarea value
                   onChange={(e) => modifyValue(e.target.value)} // Update the state on input change
-                />
+                /> :
+                <CodeEditor
+                  code={JSON.stringify(obj[promptStore.getState().selectedVariable].value, null, 2)}
+                  handleChange={(e) => {
+                    try {
+                      let generated_object = JSON.parse(e as string)
+                      modifyValue(generated_object)
+                    } catch (e) {
+                    }
+                  }}
+                  language={'json'}
+                  height={"20em"}
+                />}
               </div>
             </div>
             <div className="modal-footer">{renderButtons()}</div>

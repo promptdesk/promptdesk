@@ -48,7 +48,7 @@ function Navigation() {
       >
       <div className="app-navigation-header">
         <div className="app-navigation-logo">
-          <Link href="/WorkspaceHomeRedirector">
+          <Link href="/workspace">
             <Logo />
           </Link>
         </div>
