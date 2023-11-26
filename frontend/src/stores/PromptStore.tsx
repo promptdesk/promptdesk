@@ -66,19 +66,46 @@ const promptStore = create<PromptStore>((set, get) => ({
     },
 
     processVariables: (inputValue: string) => {
-        function recursiveDetectVariablesInAST(ast: any): string[] {
-            if (ast.type === "Program") {
-                return ast.body.reduce((acc: string[], node: any) => {
-                    return [...acc, ...recursiveDetectVariablesInAST(node)];
-                }, []);
-            } else if (ast.type === "MustacheStatement") {
-                return [ast.path.original];
-            } else if (ast.type === "BlockStatement") {
-                const params = ast.params.map((param: any) => param.original);
-                return [...params, ...recursiveDetectVariablesInAST(ast.program)];
-            } else {
-                return [];
+
+        function extractVariablesFromAST(ast:any, parentContext = null, variableTypes = {} as any) {
+            switch (ast.type) {
+                case "Program":
+                    ast.body.forEach((node: any) => {
+                        extractVariablesFromAST(node, parentContext, variableTypes);
+                    });
+                    break;
+                case "MustacheStatement":
+                    if (ast.path.type === 'PathExpression') {
+                        const varName = parentContext ? `${parentContext}.${ast.path.original}` : ast.path.original;
+                        variableTypes[varName] = {type:'text', value:""}; // Default to text
+                    }
+                    break;
+                case "BlockStatement":
+                    const blockVarName = ast.params[0].original;
+                    const fullBlockVarName = parentContext ? `${parentContext}.${blockVarName}` : blockVarName;
+        
+                    if (ast.path.original === 'with' || ast.path.original === 'each') {
+                        // Treat the variable as an object for 'with' and 'each' blocks
+                        variableTypes[fullBlockVarName] = {type:'object', value:{}};
+                        // Change context for inner variables
+                        const newContext = ast.path.original === 'with' ? fullBlockVarName : blockVarName;
+                        extractVariablesFromAST(ast.program, newContext, variableTypes);
+                    } else {
+                        // For other block statements, keep as text
+                        variableTypes[fullBlockVarName] = {type:'text', value:""};
+                        extractVariablesFromAST(ast.program, parentContext, variableTypes);
+                    }
+                    break;
             }
+
+            //remove all dict items that contain a period
+            Object.keys(variableTypes).forEach((key) => {
+                if (key.includes(".")) {
+                    delete variableTypes[key];
+                }
+            });
+        
+            return variableTypes;
         }
 
         if (!inputValue) {
@@ -86,31 +113,28 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
         try {
             set((state) => {
+
                 const ast = Handlebars.parse(inputValue);
-                let variables = [...new Set(recursiveDetectVariablesInAST(ast))];
-                variables = variables.filter((varName) => {
-                    return (varName !== "this") && (!varName.startsWith("this."));
-                });
+                let variableTypes = extractVariablesFromAST(ast);
+                let variables = Object.keys(variableTypes);
 
                 const promptObject = { ...state.promptObject };
 
                 const newPromptVariableData = variables.reduce((acc:any, variable:any) => {
-                    acc[variable] = promptObject.prompt_variables[variable] || { type: 'text', value: '' };
+                    acc[variable] = promptObject.prompt_variables[variable] || (variableTypes as any)[variable];
                     return acc;
                 }, {});
-                
-                //setPromptVariables with newPromptVariableData
+
                 promptObject.prompt_variables = newPromptVariableData;
                 return { parsingError: "", promptObject };
             })
-        } catch (error: Error) {
+        } catch (error: any) {
             // Record the error so it can be displayed to the user.
             set((state) => {
                 return {parsingError: error};
             });
         }
     },
-
 
     setPromptInformation: (key: any, value: any) => {
         set((state) => {
