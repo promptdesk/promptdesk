@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 import {useRouter} from 'next/router';
 import { generateResultForPrompt } from "@/services/GenerateService";
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 import {promptStore} from "@/stores/PromptStore";
+import _ from "lodash";
+import {sampleStore} from "@/stores/SampleStore";
 
 interface SampleRowProps {
     index: number;
@@ -18,10 +20,14 @@ const SampleRow: React.FC<SampleRowProps> = ({
                                                  expandedRows,
                                              }) => {
 
-    const [generatedResult, setGeneratedResult] = React.useState<any>(null);
-
+    const [localResult, setLocalResult] = React.useState<any>(sample.result || "");
+    const [localStatus, setLocalStatus] = React.useState<any>(sample.status || "fresh");
     const sample_id = sample.id;
     const prompt_id = sample.prompt_id;
+
+    const saveChangedResultValue = useMemo(() => _.debounce((newResultValue) => {
+        sampleStore.getState().patchSample(sample_id, {result: newResultValue});
+    }, 500), [sample_id]);
 
     const handleGenerateClicked = async () => {
         // TODO: NOT SURE THIS IS RIGHT, I THINK WE NEED TO USE SOME STORE FUNCTION
@@ -35,7 +41,18 @@ const SampleRow: React.FC<SampleRowProps> = ({
         });
 
         const data = await generateResultForPrompt(prompt_id);
-        setGeneratedResult(data.message);
+        setLocalResult(data.message);
+        saveChangedResultValue(data.message);
+    };
+
+    const handleTextAreaChange = (event) => {
+        setLocalResult(event.target.value);
+        saveChangedResultValue(event.target.value);
+    };
+
+    const handleStatusChange = (event) => {
+        setLocalStatus(event.target.value);
+        sampleStore.getState().patchSample(sample_id, {status: event.target.value});
     };
 
     return (
@@ -47,17 +64,54 @@ const SampleRow: React.FC<SampleRowProps> = ({
                 //add id if index is 0
                 id={index === 3 ? 'sample-log' : ''}
             >
-                <td>
+                <td className={"variables-column"}>
                     <CustomJSONView
                         name={"variables"}
                         src={sample.variables}
+                        collapsed={true}
                     />
                 </td>
-                <td>
-                    {generatedResult || sample.result}
+                <td className={"result-column"}>
+                    <div className="text-input-wrapper">
+                        <textarea
+                            className="text-input-md text-input sample-row-input"
+                            contentEditable={true}
+                            placeholder={"Enter ground truth here."}
+                            suppressContentEditableWarning={true}
+                            value={localResult}
+                            onChange={handleTextAreaChange}
+                        />
+                    </div>
                 </td>
-                <td onClick={handleGenerateClicked} className="px-3 py-4 text-sm font-medium text-right whitespace-nowrap">
-                    Generate
+                <td className={"status-column"}>
+                    <div className={"status-wrapper"}>
+                        <select
+                            className="select select-bordered select-sm w-full max-w-xs"
+                            value={localStatus}
+                            onChange={handleStatusChange}
+                        >
+                            <option value={'fresh'}>Fresh</option>
+                            <option value={'in_review'}>In Review</option>
+                            <option value={'verified'}>Verified</option>
+                            <option value={'rejected'}>Rejected</option>
+                        </select>
+                    </div>
+                </td>
+                <td className="px-3 py-4 text-sm font-medium action-column">
+                    <div className={"action-buttons"}>
+                        <button
+                            className={"btn btn-sm btn-filled btn-neutral"}
+                            type="button"
+                            data-testid="pg-save-btn"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            onClick={handleGenerateClicked}
+                        >
+                          <span className="btn-label-wrap">
+                            <span className="btn-label-inner">Generate</span>
+                          </span>
+                        </button>
+                    </div>
                 </td>
             </tr>
 

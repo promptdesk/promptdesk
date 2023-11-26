@@ -7,6 +7,7 @@ const schema = new mongoose.Schema(
         variables: mongoose.Schema.Types.Mixed,
         result: String,
         hash: String,
+        status: String,
         prompt_id: String,
         organization_id: String,
     },
@@ -16,6 +17,7 @@ const schema = new mongoose.Schema(
 )
 
 schema.index({organization_id: 1, prompt_id: 1, hash: 1}, {unique: true});
+schema.index({organization_id: 1, prompt_id: 1, status: 1, hash: 1});
 
 const sampleSchema = mongoose.model(
     'Sample',
@@ -34,6 +36,7 @@ class Sample {
             variables: variables,
             result: result,
             hash: hash,
+            status: "fresh",
             prompt_id: prompt_id,
             organization_id: organization_id,
         }
@@ -66,6 +69,10 @@ class Sample {
             data: samples
         }
 
+    }
+
+    async patchSample(sample_id: string, changes: any, organization_id: string) {
+        await sampleSchema.findOneAndUpdate({ _id: sample_id, organization_id }, {$set: changes});
     }
 
     transformSample(sample: any) {

@@ -7,6 +7,7 @@ interface SampleStore {
     fetchSamples: (page: number, prompt_id?: string, model_id?:string, status?: number) => Promise<any>;
     fetchSampleDeatils: () => Promise<any>;
     fetchSample: (id:string) => Promise<any>;
+    patchSample: (id:string, changes:any) => Promise<any>;
 }
 
 const sampleStore = create<SampleStore>((set) => ({
@@ -37,6 +38,9 @@ const sampleStore = create<SampleStore>((set) => ({
     fetchSample: async (id:string) => {
         const sample = await fetchFromPromptdesk('/api/samples/' + id);
         return sample;
+    },
+    patchSample: async (id: string, changes: any) => {
+        await fetchFromPromptdesk('/api/samples/' + id, "PATCH", changes);
     }
 }));
 
