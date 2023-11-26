@@ -109,7 +109,7 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
     
         //validate variables
         for (var key in prompt.prompt_variables) {
-            if (!variables[key]) {
+            if (variables[key] === undefined) {
                 return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.', status: 400});
             }
         }
