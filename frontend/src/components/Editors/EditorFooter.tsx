@@ -79,7 +79,7 @@ function EditorFooter() {
                 {
                     data.generatedText ?
                         <PlaygroundButton
-                            text="Clear Result"
+                            text="Clear"
                             id="clear-result"
                             onClick={handleClearResultClicked}
                             isFull={true}
