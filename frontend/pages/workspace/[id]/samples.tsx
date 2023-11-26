@@ -13,7 +13,7 @@ import Head from "next/head";
  */
 export default function SamplesListPage() {
     const {push, back, query} = useRouter();
-    const {samples, fetchSamples} = sampleStore();
+    const {samples, per_page, total, total_pages, fetchSamples} = sampleStore();
     const {prompts, setPrompt} = promptStore();
 
     const initial_page = parseInt(location.search.replace('?page=', ''));
@@ -78,13 +78,17 @@ export default function SamplesListPage() {
                                 handleRowClick={handleRowClick}
                                 expandedRows={{}}
                             />
-                            {samples?.data && Object.keys(samples.data).length === 0 ? <p>No samples yet. Try executing this prompt either through the UI or from your client code.</p> : null}
+                            {samples && Object.keys(samples).length === 0 ? <p>No samples yet. Try executing this prompt either through the UI or from your client code.</p> : null}
                         </div>
                     </div>
                 </div>
                 <Pagination
                     page={page}
-                    logs={samples as any}
+                    item_counts={{
+                        per_page,
+                        total,
+                        total_pages
+                    }}
                     handlePrevious={handlePrevious}
                     handleNext={handleNext}
                 />

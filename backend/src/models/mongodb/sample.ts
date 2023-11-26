@@ -75,6 +75,11 @@ class Sample {
         await sampleSchema.findOneAndUpdate({ _id: sample_id, organization_id }, {$set: changes});
     }
 
+    async deleteSample(id:any, organization_id:string) {
+        await sampleSchema.findOneAndDelete({ _id: id, organization_id });
+        return id;
+    }
+
     transformSample(sample: any) {
         const transformedSample = sample.toObject();
         transformedSample.id = transformedSample._id.toString();

@@ -29,5 +29,10 @@ router.patch('/samples/:id', async (req, res) => {
   res.status(200).json({});
 });
 
+router.delete('/samples/:id', async (req, res) => {
+  const organization = (req as any).organization;
+  await sample_db.deleteSample(req.params.id, organization.id);
+  res.status(200).json({ id: req.params.id });
+});
 
 export default router;

@@ -1,10 +1,33 @@
 import React, {useCallback, useMemo} from 'react';
 import {useRouter} from 'next/router';
-import { generateResultForPrompt } from "@/services/GenerateService";
+import {generateResultForPrompt} from "@/services/GenerateService";
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 import {promptStore} from "@/stores/PromptStore";
 import _ from "lodash";
 import {sampleStore} from "@/stores/SampleStore";
+import ConfirmModal from "@/components/Modals/ConfirmModal";
+
+interface SampleRowActionButtonProps {
+    onClick: () => void;
+    title: string;
+}
+
+const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, title}) => {
+    return (
+        <button
+            className={"btn btn-sm btn-filled btn-neutral"}
+            type="button"
+            data-testid="pg-save-btn"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onClick={onClick}
+        >
+            <span className="btn-label-wrap">
+                <span className="btn-label-inner">{title}</span>
+            </span>
+        </button>
+    );
+}
 
 interface SampleRowProps {
     index: number;
@@ -22,6 +45,8 @@ const SampleRow: React.FC<SampleRowProps> = ({
 
     const [localResult, setLocalResult] = React.useState<any>(sample.result || "");
     const [localStatus, setLocalStatus] = React.useState<any>(sample.status || "fresh");
+    const [isShowingDeleteModal, setIsShowingDeleteModal] = React.useState(false);
+    const [isShowingConfirmGenerateModal, setIsShowingConfirmGenerateModal] = React.useState(false);
     const sample_id = sample.id;
     const prompt_id = sample.prompt_id;
 
@@ -29,7 +54,7 @@ const SampleRow: React.FC<SampleRowProps> = ({
         sampleStore.getState().patchSample(sample_id, {result: newResultValue});
     }, 500), [sample_id]);
 
-    const handleGenerateClicked = async () => {
+    async function regenerateResultValue() {
         // TODO: NOT SURE THIS IS RIGHT, I THINK WE NEED TO USE SOME STORE FUNCTION
         // TODO: TO MODIFY THE PROMPT OBJECT. OR IDEALLY, WE SHOULD JUST REGEN THE SAMPLE
         // TODO: WITHOUT MODIFYING THE PROMPT OBJECT AT ALL.
@@ -42,18 +67,45 @@ const SampleRow: React.FC<SampleRowProps> = ({
 
         const data = await generateResultForPrompt(prompt_id);
         setLocalResult(data.message);
+        changeStatus('fresh');
         saveChangedResultValue(data.message);
+    }
+
+    const handleRegenerateClicked = async () => {
+        if (localStatus !== 'fresh') {
+            setIsShowingConfirmGenerateModal(true);
+        } else {
+            await regenerateResultValue();
+        }
     };
 
-    const handleTextAreaChange = (event) => {
+    const handleTextAreaChange = (event: any) => {
         setLocalResult(event.target.value);
         saveChangedResultValue(event.target.value);
     };
 
-    const handleStatusChange = (event) => {
-        setLocalStatus(event.target.value);
-        sampleStore.getState().patchSample(sample_id, {status: event.target.value});
+    function changeStatus(new_status: string) {
+        setLocalStatus(new_status);
+        sampleStore.getState().patchSample(sample_id, {status: new_status});
+    }
+
+    const handleStatusChange = (event: any) => {
+        changeStatus(event.target.value);
     };
+
+    const handleDeleteClicked = async () => {
+        setIsShowingDeleteModal(true);
+    };
+
+    const handleDeleteAccepted = async () => {
+        await sampleStore.getState().deleteSample(sample_id);
+        setIsShowingDeleteModal(false);
+    };
+
+    const handleGenerateConfirmed = async () => {
+        setIsShowingConfirmGenerateModal(false);
+        await regenerateResultValue();
+    }
 
     return (
         <>
@@ -99,26 +151,35 @@ const SampleRow: React.FC<SampleRowProps> = ({
                 </td>
                 <td className="px-3 py-4 text-sm font-medium action-column">
                     <div className={"action-buttons"}>
-                        <button
-                            className={"btn btn-sm btn-filled btn-neutral"}
-                            type="button"
-                            data-testid="pg-save-btn"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            onClick={handleGenerateClicked}
-                        >
-                          <span className="btn-label-wrap">
-                            <span className="btn-label-inner">Generate</span>
-                          </span>
-                        </button>
+                        <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate"/>
+                        <SampleRowActionButton onClick={handleDeleteClicked} title="Delete"/>
                     </div>
                 </td>
             </tr>
-
-            {/*{expandedRows[sample.id] ? (*/}
-            {/*    <tr>*/}
-            {/*    </tr>*/}
-            {/*) : null}*/}
+            {
+                isShowingDeleteModal ? (
+                    <ConfirmModal
+                        title="Delete Sample"
+                        bodyText="Are you sure you want to delete this sample?"
+                        cancelText="Cancel"
+                        acceptText="Delete"
+                        onCancel={() => setIsShowingDeleteModal(false)}
+                        onAccept={handleDeleteAccepted}
+                    />
+                ) : null
+            }
+            {
+                isShowingConfirmGenerateModal ? (
+                    <ConfirmModal
+                        title="Regeenerate Sample"
+                        bodyText="Are you sure you want to regenerate this sample? This will overwrite any changes you have made and reset sample status back to Fresh."
+                        cancelText="Cancel"
+                        acceptText="Generate"
+                        onCancel={() => setIsShowingConfirmGenerateModal(false)}
+                        onAccept={handleGenerateConfirmed}
+                    />
+                ) : null
+            }
         </>
     );
 }

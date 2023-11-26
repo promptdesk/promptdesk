@@ -124,7 +124,7 @@ export default function LogListPage() {
         </div>
         <Pagination
           page={page}
-          logs={logs as any}
+          item_counts={logs as any}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
         />

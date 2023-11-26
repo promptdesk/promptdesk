@@ -31,8 +31,8 @@ const SampleTable: React.FC<SamplesTableProps> = ({
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
-        {samples && samples.data ?
-          samples.data.map((sample: any, index:number) => (
+        {samples && samples ?
+          samples.map((sample: any, index:number) => (
             <SampleRow
               index={index}
               sample={sample}
