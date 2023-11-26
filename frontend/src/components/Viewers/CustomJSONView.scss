@@ -2,6 +2,14 @@
 
 .custom-json-view {
   padding-left: 17px;
+
+  .react-json-view {
+    background-color: transparent !important;
+  }
+
+  font-size: 0.85rem;
+  line-height: 1.05rem;
+
   .variable-row {
     display: flex;
     flex-direction: row;

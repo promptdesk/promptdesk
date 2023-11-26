@@ -169,7 +169,7 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
                 duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
-            await sample_db.recordSampleDataIfNeeded(variables, data, prompt.id, organization.id)
+            await sample_db.recordSampleDataIfNeeded(variables, prompt_data, data, prompt.id, organization.id)
             return res.status(200).json(obj);
 
         } catch (error:any) {

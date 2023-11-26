@@ -1,21 +1,23 @@
 import React, {useCallback, useMemo} from 'react';
-import {useRouter} from 'next/router';
 import {generateResultForPrompt} from "@/services/GenerateService";
 import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
 import {promptStore} from "@/stores/PromptStore";
 import _ from "lodash";
 import {sampleStore} from "@/stores/SampleStore";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
+import "./SampleRow.scss";
+
 
 interface SampleRowActionButtonProps {
     onClick: () => void;
     title: string;
+    showSpinner?: boolean;
 }
 
-const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, title}) => {
+const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, title, showSpinner}) => {
     return (
         <button
-            className={"btn btn-sm btn-filled btn-neutral"}
+            className={"btn btn-sm btn-filled btn-neutral btn-full"}
             type="button"
             data-testid="pg-save-btn"
             aria-haspopup="true"
@@ -25,6 +27,11 @@ const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, t
             <span className="btn-label-wrap">
                 <span className="btn-label-inner">{title}</span>
             </span>
+            {
+                showSpinner ? (
+                    <div className="action-button-loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                ) : null
+            }
         </button>
     );
 }
@@ -32,27 +39,34 @@ const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, t
 interface SampleRowProps {
     index: number;
     sample: any;
-    handleRowClick: (logId: string) => void;
-    expandedRows: Record<string, boolean>;
 }
 
 const SampleRow: React.FC<SampleRowProps> = ({
                                                  index,
                                                  sample,
-                                                 handleRowClick,
-                                                 expandedRows,
                                              }) => {
 
     const [localResult, setLocalResult] = React.useState<any>(sample.result || "");
     const [localStatus, setLocalStatus] = React.useState<any>(sample.status || "fresh");
+    const [localPromptInfo, setLocalPromptData] = React.useState<any>(sample.prompt);
     const [isShowingDeleteModal, setIsShowingDeleteModal] = React.useState(false);
     const [isShowingConfirmGenerateModal, setIsShowingConfirmGenerateModal] = React.useState(false);
+    const [isRegenerating, setIsRegenerating] = React.useState(false);
+
     const sample_id = sample.id;
     const prompt_id = sample.prompt_id;
 
     const saveChangedResultValue = useMemo(() => _.debounce((newResultValue) => {
-        sampleStore.getState().patchSample(sample_id, {result: newResultValue});
+        sampleStore.getState().patchSample(sample_id, {
+            result: newResultValue,
+        });
     }, 500), [sample_id]);
+
+    const saveChangedPromptData = useCallback((newPromptData: any) => {
+        sampleStore.getState().patchSample(sample_id, {
+            prompt: newPromptData,
+        });
+    }, [sample_id]);
 
     async function regenerateResultValue() {
         // TODO: NOT SURE THIS IS RIGHT, I THINK WE NEED TO USE SOME STORE FUNCTION
@@ -65,9 +79,19 @@ const SampleRow: React.FC<SampleRowProps> = ({
             }
         });
 
+        setIsRegenerating(true);
         const data = await generateResultForPrompt(prompt_id);
+        setIsRegenerating(false);
+
         setLocalResult(data.message);
         changeStatus('fresh');
+        let newPromptData = data.raw.request.messages;
+        if (data.raw.request.messages.length === 1) {
+            newPromptData = newPromptData[0];
+        }
+        setLocalPromptData(newPromptData);
+        saveChangedPromptData(newPromptData);
+
         saveChangedResultValue(data.message);
     }
 
@@ -110,18 +134,30 @@ const SampleRow: React.FC<SampleRowProps> = ({
     return (
         <>
             <tr
+                className={"sample-row"}
                 key={sample.id}
-                onClick={() => handleRowClick(sample.id)}
-                className="cursor-pointer"
                 //add id if index is 0
                 id={index === 3 ? 'sample-log' : ''}
             >
                 <td className={"variables-column"}>
                     <CustomJSONView
-                        name={"variables"}
+                        name={null}
                         src={sample.variables}
-                        collapsed={true}
+                        collapsed={1}
                     />
+                </td>
+                <td className={"prompt-column"}>
+                    {
+                        (localPromptInfo.prompt || localPromptInfo.content) ? (
+                            // Just use a regular text widget here.
+                            <span className={"prompt-content-area"}>{(localPromptInfo.prompt || localPromptInfo.content).toString().trim()}</span>
+                        ) :
+                            <CustomJSONView
+                                name={null}
+                                src={localPromptInfo}
+                                collapsed={true}
+                            />
+                    }
                 </td>
                 <td className={"result-column"}>
                     <div className="text-input-wrapper">
@@ -135,10 +171,10 @@ const SampleRow: React.FC<SampleRowProps> = ({
                         />
                     </div>
                 </td>
-                <td className={"status-column"}>
-                    <div className={"status-wrapper"}>
+                <td className="px-3 py-4 text-sm font-medium action-column">
+                    <div className={"action-buttons"}>
                         <select
-                            className="select select-bordered select-sm w-full max-w-xs"
+                            className="select select-bordered select-sm w-full max-w-xs status-selector"
                             value={localStatus}
                             onChange={handleStatusChange}
                         >
@@ -147,11 +183,7 @@ const SampleRow: React.FC<SampleRowProps> = ({
                             <option value={'verified'}>Verified</option>
                             <option value={'rejected'}>Rejected</option>
                         </select>
-                    </div>
-                </td>
-                <td className="px-3 py-4 text-sm font-medium action-column">
-                    <div className={"action-buttons"}>
-                        <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate"/>
+                        <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate" showSpinner={isRegenerating}/>
                         <SampleRowActionButton onClick={handleDeleteClicked} title="Delete"/>
                     </div>
                 </td>

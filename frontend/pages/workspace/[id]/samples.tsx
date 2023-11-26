@@ -19,7 +19,6 @@ export default function SamplesListPage() {
     const initial_page = parseInt(location.search.replace('?page=', ''));
 
     const [page, setPage] = useState(initial_page || 1);
-    const [expandedRows, setExpandedRows] = useState({});
 
     const prompt_id = String(query.id);
 
@@ -75,8 +74,6 @@ export default function SamplesListPage() {
                         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
                             <SampleTable
                                 samples={samples}
-                                handleRowClick={handleRowClick}
-                                expandedRows={{}}
                             />
                             {samples && Object.keys(samples).length === 0 ? <p>No samples yet. Try executing this prompt either through the UI or from your client code.</p> : null}
                         </div>

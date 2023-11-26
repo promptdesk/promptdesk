@@ -5,6 +5,7 @@ import {canonical_json_stringify} from "../../utils/canonicalJson";
 const schema = new mongoose.Schema(
     {
         variables: mongoose.Schema.Types.Mixed,
+        prompt: mongoose.Schema.Types.Mixed,
         result: String,
         hash: String,
         status: String,
@@ -25,7 +26,7 @@ const sampleSchema = mongoose.model(
 );
 
 class Sample {
-    async recordSampleDataIfNeeded(variables: any, result: string, prompt_id: string, organization_id: string) {
+    async recordSampleDataIfNeeded(variables: any, prompt: any, result: string, prompt_id: string, organization_id: string) {
         // Compute the hash for the sample using sha256.
         // Use canonical json to ensure that the hash is
         // consistent even if values in the json get reordered.
@@ -34,6 +35,7 @@ class Sample {
 
         const newSample = {
             variables: variables,
+            prompt: prompt,
             result: result,
             hash: hash,
             status: "fresh",

@@ -1,48 +1,33 @@
 
 
-.samples-table {
-  height: 1px;
-
-  thead, tr {
-    height: 100%;
+.sample-row {
+  &:hover {
+    background-color: #fafafa;
   }
 
-  .variables-column, .result-column {
-    width: 40%;
-  }
-
-  .status-column {
-    width: 10%;
-    height: 100%;
-
-    .status-wrapper {
-        height: 100%;
-
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-    }
-
-    select {
-      padding: 5px;
-      border: 1px solid #666;
-      background: white;
-    }
+  .variables-column, .prompt-column, .result-column {
+    width: 30%;
   }
 
   .action-column {
     width: 10%;
     height: 100%;
+  }
 
-    .action-buttons {
-      height: 100%;
+  .status-selector {
+    padding: 5px;
+    border: 1px solid #666;
+    background: white;
+  }
 
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: center;
-    }
+  .action-buttons {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 5px;
   }
 
   .text-input-wrapper {
@@ -53,10 +38,49 @@
     flex-direction: column;
     justify-content: stretch;
     align-items: stretch;
+
+    textarea {
+      &:not(:focus,:hover) {
+        background-color: transparent;
+        border-color: transparent;
+      }
+    }
   }
 
   .sample-row-input {
     width: inherit;
     height: 100%;
+  }
+
+  .prompt-content-area {
+    white-space: pre-wrap;
+    /* Use a monospace font */
+    font-family: "Roboto Mono", monospace;
+    cursor: text;
+  }
+
+  .action-button-loader {
+    position: relative;
+    top: 6px;
+
+    width: 30px;
+    height: 25px;
+
+    border-top-color: #3498db;
+    border-left-color: white;
+    border-right-color: white;
+    border-bottom-color: white;
+    -webkit-animation: action-button-spinner 1.5s linear infinite;
+    animation: action-button-spinner 1.5s linear infinite;
+  }
+
+  @-webkit-keyframes action-button-spinner {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+
+  @keyframes action-button-spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 }
