@@ -2,6 +2,8 @@ import express from 'express';
 import axios from 'axios';
 import { Model, Prompt, Log, Variable, Sample} from '../../models/allModels';
 import handlebars from 'handlebars';
+import crypto from 'crypto';
+import {canonical_json_stringify} from "../../utils/canonicalJson";
 
 let model_db = new Model();
 let prompt_db = new Prompt();
@@ -50,7 +52,7 @@ async function prompt_model_validation(organization:any, body:any) {
         prompt = await prompt_db.findPromptByName(body.prompt_name, organization.id);
 
         if (!prompt) {
-            return [undefined, undefined, undefined, { error:true, message: 'Prompt name is required', status: 404 }]
+            return [undefined, undefined, undefined, { error:true, message: 'Prompt name is required.', status: 404 }]
         }
         proxy = true;
     } else {
@@ -70,7 +72,7 @@ async function prompt_model_validation(organization:any, body:any) {
     }
     
     if(!model.api_call){
-        return [undefined, undefined, undefined, { error: 'Model API not found.', status: 404 }]
+        return [undefined, undefined, undefined, { error: 'Model API object not found.', status: 404 }]
     }
 
     return [prompt, model, proxy, error]
@@ -81,6 +83,8 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
     const organization = (req as any).organization;
     var start_time = Date.now()
 
+    var cache = req.body.cache || false;
+
     try {
 
         let [ prompt, model, proxy, error ] = await prompt_model_validation(organization, req.body);
@@ -90,11 +94,11 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
         }
 
         if(!model.input_format){
-            return res.status(404).json({ error:true, message: 'Model format function not found.', status: 404 });
+            return res.status(404).json({ error:true, message: 'Model input format function not found.', status: 404 });
         }
 
         if(!model.output_format){
-            return res.status(404).json({ error: true, message: 'Model format function not found.', status: 404 });
+            return res.status(404).json({ error: true, message: 'Model output format function not found.', status: 404 });
         }
 
         var api_call = await api_variables(model.api_call, organization)
@@ -140,6 +144,16 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
     
         api_call.data = body
 
+        const hashJsonString = canonical_json_stringify(body);
+        const hash = crypto.createHash('sha256').update(hashJsonString).digest('hex');
+
+        if (cache) {
+            const cachedLog = await log_db.findLogByHash(hash, organization.id);
+            if (cachedLog) {
+                return res.status(200).json(cachedLog);
+            }
+        }
+
         var time_taken = (Date.now() - start_time) / 1000
 
         try {
@@ -150,6 +164,7 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
             var obj = {
                 message: data,
                 error: false,
+                hash: hash,
                 raw: {
                     request: body,
                     response: response.data
@@ -169,7 +184,7 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
                 duration: (Date.now() - start_time) / 1000
             } as any;
             log_db.createLog(obj, organization.id)
-            await sample_db.recordSampleDataIfNeeded(variables, prompt_data, data, prompt.id, organization.id)
+            sample_db.recordSampleDataIfNeeded(variables, prompt_data, data, prompt.id, organization.id)
             return res.status(200).json(obj);
 
         } catch (error:any) {

@@ -14,7 +14,8 @@ const logSchema = mongoose.model(
       model_id: String,
       prompt_id: String,
       organization_id: String,
-      duration: Number
+      duration: Number,
+      hash: String
     },
     {
       timestamps: true
@@ -161,6 +162,10 @@ class Log {
       ]
     }
   
+  }
+
+  async findLogByHash(hash:string, organization_id: string) {
+    return logSchema.findOne({ hash, organization_id });
   }
 
   transformLog(log:any) {

@@ -9,7 +9,7 @@ import "./SampleRow.scss";
 
 
 interface SampleRowActionButtonProps {
-    onClick: () => void;
+    onClick: (evt: any) => void;
     title: string;
     showSpinner?: boolean;
 }
@@ -48,7 +48,7 @@ const SampleRow: React.FC<SampleRowProps> = ({
 
     const [localResult, setLocalResult] = React.useState<any>(sample.result || "");
     const [localStatus, setLocalStatus] = React.useState<any>(sample.status || "new");
-    const [localPromptInfo, setLocalPromptData] = React.useState<any>(sample.prompt);
+    const [localPromptInfo, setLocalPromptData] = React.useState<any>(sample.prompt || {});
     const [isShowingDeleteModal, setIsShowingDeleteModal] = React.useState(false);
     const [isShowingConfirmGenerateModal, setIsShowingConfirmGenerateModal] = React.useState(false);
     const [isRegenerating, setIsRegenerating] = React.useState(false);

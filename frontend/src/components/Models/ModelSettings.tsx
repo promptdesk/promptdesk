@@ -124,7 +124,7 @@ const ModelSettings = ({
                 setOutputFormat(value as string);
               }}/>
             <Error display={outputFormatResponse.status && outputFormatResponse.status !== 200} text="Please re-format the output format function. This should return a single string for type completion or a single object of {'content':'[GENERATED TEXT]', 'role':[ASSISTANT/USER]}" />
-            <Success display={outputFormatResponse.status === 200} text="This model was built successfully and can not be used in PromptDesk!" />
+            <Success display={outputFormatResponse.status === 200} text="This model was built successfully and can now be used in PromptDesk!" />
             {generate_pre_compontent(outputFormatResponse.status, JSON.stringify(outputFormatResponse.data, null, 4))}
 
               

@@ -37,7 +37,7 @@ class Sample {
         const newSample = {
             variables: variables,
             prompt: prompt,
-            result: result,
+            result: (result as any).content || result,
             hash: hash,
             status: "new",
             sort_order: 0,

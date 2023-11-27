@@ -42,6 +42,8 @@ The best way to build agents and prompt-based applications.
 
 PromptDesk is 100% free and open-source minimalist tool to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications, agents and Large Language Models (LLMs).
 
+If you like this project, please consider giving this repo a ⭐️ star.
+
 ![Alt Text](https://promptdesk.ai/branding/flowchart_banner.png)
 
 We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. You can also jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in python with [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.

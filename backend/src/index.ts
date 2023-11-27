@@ -57,7 +57,7 @@ app.use('/api', variablesRouter);
 app.use('/api', organizationRouter);
 
 app.all('/api/*', (req, res) => {
-  return res.status(404).send({error: 'Not found'});
+  return res.status(404).send({error: 'API URI Not Found.'});
 })
 
 app.use(express.static('./assets'))
