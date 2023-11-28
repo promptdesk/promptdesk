@@ -1,24 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { shouldShowCodeModal } from "@/stores/GeneralStore";
 import { promptStore } from "@/stores/PromptStore";
+import { variableStore } from "@/stores/VariableStore";
 
 const CodeModal = () => {
   const { promptObject } = promptStore();
-  
+  const { fetchVariables } = variableStore();
+  const [apiKey, setApiKey] = useState("");
+
+  useEffect(() => {
+    const loadVariables = async () => {
+      const variables = await fetchVariables();
+      const apiKeyVariable = variables.find((v) => v.name === "OPEN_AI_KEY");
+      if (apiKeyVariable) {
+        setApiKey(apiKeyVariable.value);
+      }
+    };
+
+    loadVariables();
+  }, []);
+
   // Generate variable_code and code
-  const variableEntries = Object.entries(promptObject.prompt_variables || {}).map(([key, value]) => {
-    let textValue = (value as any)['value'].length > 40 ? (value as any)['value'].substring(0, 40) + "..." : (value as any)['value'];
+  const variableEntries = Object.entries(
+    promptObject.prompt_variables || {}
+  ).map(([key, value]) => {
+    let textValue =
+      (value as any)["value"].length > 40
+        ? (value as any)["value"].substring(0, 40) + "..."
+        : (value as any)["value"];
     return `    "${key}":"${textValue}",`;
   });
 
-  if(variableEntries.length > 0) {
-    variableEntries[variableEntries.length - 1] = variableEntries[variableEntries.length - 1].slice(0, -1);
+  if (variableEntries.length > 0) {
+    variableEntries[variableEntries.length - 1] = variableEntries[
+      variableEntries.length - 1
+    ].slice(0, -1);
   }
 
-  const variableCode = variableEntries.length > 0 ? `, {\n${variableEntries.join("\n")}\n})` : ')';
-  const code = `import promptdesk as pd
+  const variableCode =
+    variableEntries.length > 0 ? `, {\n${variableEntries.join("\n")}\n})` : ")";
+  const code = `from promptdesk import PromptDesk
 
-pd.API_KEY = "YOUR_API_KEY"
+pd = PromptDesk(
+    api_key = "${apiKey}"
+)
 
 result = pd.generate("${promptObject.name}"${variableCode}`;
 
