@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { shouldShowCodeModal } from "@/stores/GeneralStore";
 import { promptStore } from "@/stores/PromptStore";
-import { variableStore } from "@/stores/VariableStore";
+import Cookies from 'js-cookie';
 
 const CodeModal = () => {
   const { promptObject } = promptStore();
-  const { fetchVariables } = variableStore();
   const [apiKey, setApiKey] = useState("");
 
-  useEffect(() => {
-    const loadVariables = async () => {
-      const variables = await fetchVariables();
-      const apiKeyVariable = variables.find((v) => v.name === "OPEN_AI_KEY");
-      if (apiKeyVariable) {
-        setApiKey(apiKeyVariable.value);
-      }
-    };
 
-    loadVariables();
+  useEffect(() => {
+    //read auth token from local storage if it exists
+    let token = undefined;
+    if (typeof window !== 'undefined') {
+
+        token = Cookies.get('token');
+        if(token) setApiKey(token);
+
+    }
+
+    if(!token && process.env.ORGANIZATION_API_KEY) {
+        token = process.env.ORGANIZATION_API_KEY;
+        setApiKey(token);
+    }
   }, []);
 
   // Generate variable_code and code
