@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'; // Import useEffect and useS
 import Head from 'next/head';
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
+import { variableStore } from '@/stores/VariableStore';
 import { promptWorkspaceTabs } from '@/stores/TabStore';
 import { organizationStore } from '@/stores/OrganizationStore';
 import Notification from '@/components/Notification';
@@ -17,13 +18,14 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
   const { fetchAllPrompts, prompts } = promptStore();
   const { fetchAllModels } = modelStore();
+  const { fetchVariables } = variableStore();
   const { fetchOrganization, organization } = organizationStore();
   const { retrieveTabsFromLocalStorage, tabs, clearLocalTabs } = promptWorkspaceTabs();
 
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    Promise.all([fetchAllPrompts(), fetchAllModels(), fetchOrganization()]) // Wait for both API calls
+    Promise.all([fetchAllPrompts(), fetchAllModels(), fetchOrganization(), fetchVariables()]) // Wait for both API calls
     .then(() => {
       setLoading(false);
     })
@@ -31,7 +33,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       console.error("Error fetching data:", error);
       alert("Error loading application...")
     });
-  }, [fetchAllPrompts, fetchAllModels, retrieveTabsFromLocalStorage, fetchOrganization]); // The empty dependency array ensures this effect runs only once on component mount
+  }, [fetchAllPrompts, fetchAllModels, retrieveTabsFromLocalStorage, fetchOrganization, fetchVariables]); // The empty dependency array ensures this effect runs only once on component mount
 
   useEffect(() => {
     if (!organization || prompts == undefined || prompts.length < 1) return;
@@ -58,14 +60,3 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 };
 
 export default App;
-
-/*
-
-        <div className="route-container">
-          <div className="page-wrapper app-wrapper">
-            <Navigation />
-            <Component {...pageProps} />
-          </div>
-        </div>
-
-        */
