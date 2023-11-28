@@ -14,6 +14,8 @@ export default function PromptsPage() {
   const { setActiveTabById } = promptWorkspaceTabs();
   const { models } = modelStore();
   const [promptList, setPromptList] = useState<Prompt[]>([]);
+  const [query, setQuery] = useState<string>('');
+  const [filteredList, setFilteredList] = useState<Prompt[]>([]);
 
   useEffect(() => {
     const fetchPrompts = async () => {
@@ -33,6 +35,18 @@ export default function PromptsPage() {
     fetchPrompts();
   }, [prompts, models]);
 
+  console.log(promptList);
+
+  const search = (query:string) => {
+    //combine name, description, model_type, and model into one string and filter based on query
+    const filteredList = promptList.filter((prompt) => {
+      const promptString = `${prompt.name} ${prompt.description} ${prompt.model_type} ${prompt.model}`;
+      return promptString.toLowerCase().includes(query.toLowerCase());
+    });
+
+    setFilteredList(filteredList);
+  }
+
   const newPrompt = async () => {
     const newId = await addNewPrompt();
     setActiveTabById(newId as string);
@@ -47,7 +61,10 @@ export default function PromptsPage() {
       <div className="pg-header">
         <div className="pg-header-section pg-header-title flex justify-between">
           <h1 className="pg-page-title">Prompts</h1>
-          <PlaygroundButton text="New prompt" onClick={newPrompt} />
+          <div>
+            <input type="text" className="pg-input" placeholder="Search prompts" onChange={(e) => {setQuery(e.target.value); search(e.target.value)}} />
+            <PlaygroundButton text="New prompt" onClick={newPrompt} />
+          </div>
         </div>
       </div>
         <div className="app-page">
@@ -57,7 +74,8 @@ export default function PromptsPage() {
           <div className="mt-8 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <PromptsTable promptList={promptList} />
+                <PromptsTable promptList={query.length > 0 ? filteredList : promptList} />
+                {(query.length > 0 && filteredList.length === 0) ? <p>No prompt was found for your search.</p> : null}
               </div>
             </div>
           </div>

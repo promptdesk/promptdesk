@@ -59,16 +59,16 @@ export default function SamplesListPage() {
         </Head>
         <div className="page-body full-width flush samples-list-page">
             <div className="pg-header">
-                <div className="pg-header-title">
+                <div className="pg-header-title flex justify-between">
                     <h1 className="pg-page-title" style={{display: 'block'}}>Samples for <span className={"prompt-name"}>{getPromptName(prompt_id)}</span></h1>
+                    <PlaygroundButton
+                        text="Back"
+                        onClick={goBackToPromptPage}
+                        isFull={false}
+                    />
                 </div>
             </div>
             <div className="app-page">
-                <PlaygroundButton
-                    text="Back"
-                    onClick={goBackToPromptPage}
-                    isFull={false}
-                />
                 <div className="mt-2 flow-root markdown-page markdown-content markdown-prompt-blockquote models">
                     <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

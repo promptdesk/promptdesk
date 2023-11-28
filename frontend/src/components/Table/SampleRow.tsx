@@ -53,6 +53,7 @@ const SampleRow: React.FC<SampleRowProps> = ({
     const [isShowingConfirmGenerateModal, setIsShowingConfirmGenerateModal] = React.useState(false);
     const [isRegenerating, setIsRegenerating] = React.useState(false);
     const resultTextAreaRef = useRef<HTMLDivElement | null>(null);
+    const [view, setView] = React.useState<any>("ground_truth");
 
     const sample_id = sample.id;
     const prompt_id = sample.prompt_id;
@@ -141,85 +142,113 @@ const SampleRow: React.FC<SampleRowProps> = ({
 
     const promptText = (localPromptInfo.prompt || localPromptInfo.content || "").toString().trim()
 
+    //return a div
+    const actions = function() {
+        return (
+            <div className="flex justify-between bg-gray-200 p-2">
+                <div className="flex">
+                    <select
+                        className="select select-bordered select-sm w-full max-w-xs status-selector"
+                        value={localStatus}
+                        onChange={handleStatusChange}
+                        onClick={(evt) => evt.stopPropagation()}
+                    >
+                        <option value={'new'}>New</option>
+                        <option value={'in_review'}>In Review</option>
+                        <option value={'approved'}>Approved</option>
+                        <option value={'rejected'}>Rejected</option>
+                    </select>
+                    <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate" showSpinner={isRegenerating}/>
+                    <SampleRowActionButton onClick={handleDeleteClicked} title="Delete"/>
+                </div>
+                <div>
+                    <span className="isolate inline-flex rounded-md shadow-sm">
+                        <button onClick={() => {setView('prompt')}} type="button" className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">Prompt</button>
+                        <button onClick={() => {setView('ground_truth')}} type="button" className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">Generated</button>
+                    </span>
+                </div>
+            </div>
+        );
+    }
+
+    const groundTruth = function() {
+        return (
+            <div className="text-input-wrapper h-full">
+                <div
+                    className=""
+                    style={{maxHeight:"500px", overflowY:"auto"}}
+                    onClick={(evt) => evt.stopPropagation()}
+                    contentEditable={true}
+                    placeholder={"Enter ground truth here."}
+                    suppressContentEditableWarning={true}
+                    onInput={handleTextAreaChange}
+                    ref={resultTextAreaRef}
+                >{localResult}</div>
+            </div>
+        );
+    }
+
+    const prompt = function() {
+        return (
+            <>
+            {
+                    (localPromptInfo.prompt || localPromptInfo.content) ? (
+                        // Use a text area, not because we want it to be editable, but rather so
+                        // it is consistent with the UI in the result column.
+                        <div
+                            className="text-input-wrapper"
+                        >
+                            <div
+                                className={"text-input-md text-input prompt-value-display"}
+                                onClick={(evt) => evt.stopPropagation()}
+                            >
+                                {promptText}
+                            </div>
+                        </div>
+                    ) :
+                        <>
+                            <div onClick={(evt) => evt.stopPropagation()}>
+                                <CustomJSONView
+                                    name={null}
+                                    src={localPromptInfo}
+                                    collapsed={false}
+                                />
+                            </div>
+                        </>
+            }
+            </>
+        );
+    }
+
+    const variables = function() {
+        return (
+            <div style={{maxWidth: "100%"}} onClick={(evt) => evt.stopPropagation()}>
+                <CustomJSONView
+                    name={null}
+                    src={sample.variables}
+                    collapsed={1}
+                />
+            </div>
+        );
+    }
+
     return (
         <>
-            <tr
-                className={`sample-row`}
-                key={sample.id}
-                //add id if index is 0
-                id={index === 3 ? 'sample-log' : ''}
-            >
-                <td className={"variables-column"}>
-                    <div onClick={(evt) => evt.stopPropagation()}>
-                        <CustomJSONView
-                            name={null}
-                            src={sample.variables}
-                            collapsed={1}
-                        />
+            <div key={sample.id} className="sample-row mb-4">
+                <div>
+                    <div>{actions()}</div>
+                    <div className="">
+                        <div className="inline-block w-1/2 align-top" style={{maxHeight:"500px", overflowY:"auto"}}>
+                            {variables()}
+                        </div>
+                        <div className="inline-block w-1/2 align-top">
+                            {
+                                view === "prompt" ? prompt() : groundTruth()
+                            }
+                        </div>
                     </div>
-                </td>
-                <td className={"prompt-column"}>
-                    {
-                        (localPromptInfo.prompt || localPromptInfo.content) ? (
-                            // Use a text area, not because we want it to be editable, but rather so
-                            // it is consistent with the UI in the result column.
-                            <div
-                                className="text-input-wrapper"
-                            >
-                                <div
-                                    className={"text-input-md text-input prompt-value-display"}
-                                    onClick={(evt) => evt.stopPropagation()}
-                                >
-                                    {promptText}
-                                </div>
-                            </div>
-                        ) :
-                            <>
-                                <div onClick={(evt) => evt.stopPropagation()}>
-                                    <CustomJSONView
-                                        name={null}
-                                        src={localPromptInfo}
-                                        collapsed={false}
-                                    />
-                                </div>
-                            </>
-                    }
-                </td>
-                <td className={"result-column"}>
-                    <div className="text-input-wrapper">
-                        <div
-                            className="text-input-md text-input sample-row-textarea"
-                            onClick={(evt) => evt.stopPropagation()}
-                            contentEditable={true}
-                            placeholder={"Enter ground truth here."}
-                            suppressContentEditableWarning={true}
-                            onInput={handleTextAreaChange}
-                            ref={resultTextAreaRef}
-                        >{localResult}</div>
-                    </div>
-                </td>
-                <td className="px-3 py-4 text-sm font-medium status-column">
-                    <div className={"status-selector-wrapper"}>
-                        <select
-                            className="select select-bordered select-sm w-full max-w-xs status-selector"
-                            value={localStatus}
-                            onChange={handleStatusChange}
-                            onClick={(evt) => evt.stopPropagation()}
-                        >
-                            <option value={'new'}>New</option>
-                            <option value={'in_review'}>In Review</option>
-                            <option value={'approved'}>Approved</option>
-                            <option value={'rejected'}>Rejected</option>
-                        </select>
-                    </div>
-                </td>
-                <td className="px-3 py-4 text-sm font-medium action-column">
-                    <div className={"action-buttons"}>
-                        <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate" showSpinner={isRegenerating}/>
-                        <SampleRowActionButton onClick={handleDeleteClicked} title="Delete"/>
-                    </div>
-                </td>
-            </tr>
+                </div>
+            </div>
             {
                 isShowingDeleteModal ? (
                     <ConfirmModal
