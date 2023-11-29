@@ -4,17 +4,24 @@ interface PlaygroundButtonProps {
   id?: string;
   text: string;
   isFull?: boolean;
+  color?: string;
   onClick: () => void;
 }
 
-function PlaygroundButton({ id, text, onClick, isFull }: PlaygroundButtonProps) {
+function PlaygroundButton({ id, text, onClick, isFull, color }: PlaygroundButtonProps) {
   const handleClick = () => {
     if (typeof onClick === 'function') {
       onClick();
     }
   };
 
-  const baseClass = "btn btn-sm btn-filled btn-neutral";
+  let baseClass = "btn btn-sm btn-filled btn-neutral";
+  if(color === "secondary") {
+    baseClass = "btn btn-sm btn-filled btn-secondary";
+  }
+  if(color === "primary") {
+    baseClass = "btn btn-sm btn-filled btn-primary";
+  }
   const className = isFull ? `${baseClass} w-full` : baseClass;
 
   return (
@@ -29,7 +36,7 @@ function PlaygroundButton({ id, text, onClick, isFull }: PlaygroundButtonProps) 
       onClick={handleClick}
     >
       <span className="btn-label-wrap">
-        <span className="btn-label-inner">{text} {isFull}</span>
+        <span className="btn-label-inner">{text}</span>
       </span>
     </button>
   );

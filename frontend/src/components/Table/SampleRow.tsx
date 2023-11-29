@@ -6,34 +6,14 @@ import _ from "lodash";
 import {sampleStore} from "@/stores/SampleStore";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
 import "./SampleRow.scss";
+import PlaygroundButton from "@/components/Form/PlaygroundButton";
+import DropDown from "@/components/Form/DropDown";
 
 
 interface SampleRowActionButtonProps {
     onClick: (evt: any) => void;
     title: string;
     showSpinner?: boolean;
-}
-
-const SampleRowActionButton: React.FC<SampleRowActionButtonProps> = ({onClick, title, showSpinner}) => {
-    return (
-        <button
-            className={"btn btn-sm btn-filled btn-neutral btn-full"}
-            type="button"
-            data-testid="pg-save-btn"
-            aria-haspopup="true"
-            aria-expanded="false"
-            onClick={onClick}
-        >
-            <span className="btn-label-wrap">
-                <span className="btn-label-inner">{title}</span>
-            </span>
-            {
-                showSpinner ? (
-                    <div className="action-button-loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
-                ) : null
-            }
-        </button>
-    );
 }
 
 interface SampleRowProps {
@@ -98,7 +78,6 @@ const SampleRow: React.FC<SampleRowProps> = ({
     }
 
     const handleRegenerateClicked = (evt: any) => {
-        evt.stopPropagation();
         if (localStatus !== 'new') {
             setIsShowingConfirmGenerateModal(true);
         } else {
@@ -121,12 +100,11 @@ const SampleRow: React.FC<SampleRowProps> = ({
         sampleStore.getState().patchSample(sample_id, {status: new_status});
     }
 
-    const handleStatusChange = (event: any) => {
-        changeStatus(event.target.value);
+    const handleStatusChange = (value: any) => {
+        changeStatus(value);
     };
 
     const handleDeleteClicked = (evt: any) => {
-        evt.stopPropagation();
         setIsShowingDeleteModal(true);
     };
 
@@ -147,19 +125,22 @@ const SampleRow: React.FC<SampleRowProps> = ({
         return (
             <div className="flex justify-between bg-gray-200 p-2">
                 <div className="flex">
-                    <select
-                        className="select select-bordered select-sm w-full max-w-xs status-selector"
-                        value={localStatus}
+                    <DropDown
+                        options={[{value: 'new', name: 'New'}, {value: 'in_review', name: 'In Review'}, {value: 'approved', name: 'Approved'}, {value: 'rejected', name: 'Rejected'}]}
+                        selected={localStatus}
                         onChange={handleStatusChange}
-                        onClick={(evt) => evt.stopPropagation()}
-                    >
-                        <option value={'new'}>New</option>
-                        <option value={'in_review'}>In Review</option>
-                        <option value={'approved'}>Approved</option>
-                        <option value={'rejected'}>Rejected</option>
-                    </select>
-                    <SampleRowActionButton onClick={handleRegenerateClicked} title="Regenerate" showSpinner={isRegenerating}/>
-                    <SampleRowActionButton onClick={handleDeleteClicked} title="Delete"/>
+                    />
+                    &nbsp;&nbsp;
+                    <PlaygroundButton
+                        onClick={handleRegenerateClicked as any}
+                        text={isRegenerating ? "Processing..." : "Regenerate"}
+                        color="primary"
+                    />
+                    <PlaygroundButton
+                        onClick={handleDeleteClicked as any}
+                        text={"Delete"}
+                        color="primary"
+                    />
                 </div>
                 <div>
                     <span className="isolate inline-flex rounded-md shadow-sm">
