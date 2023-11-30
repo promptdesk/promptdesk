@@ -156,8 +156,7 @@ const SampleRow: React.FC<SampleRowProps> = ({
         return (
             <div className="text-input-wrapper h-full">
                 <div
-                    className=""
-                    style={{maxHeight:"500px", overflowY:"auto"}}
+                    className="sample-row-textarea"
                     onClick={(evt) => evt.stopPropagation()}
                     contentEditable={true}
                     placeholder={"Enter ground truth here."}
