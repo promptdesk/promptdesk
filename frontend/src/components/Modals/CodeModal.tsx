@@ -28,12 +28,19 @@ const CodeModal = () => {
   const variableEntries = Object.entries(
     promptObject.prompt_variables || {}
   ).map(([key, value]) => {
-    let textValue =
-      (value as any)["value"].length > 40
-        ? (value as any)["value"].substring(0, 40) + "..."
-        : (value as any)["value"];
-    return `    "${key}":"${textValue}",`;
-  });
+
+      let textValue = "[OBJECT]";
+      
+      if((value as any)['type'] !== 'object') {
+        textValue =
+          (value as any)["value"].length > 40
+            ? (value as any)["value"].substring(0, 40) + "..."
+            : (value as any)["value"];
+        return `    "${key}":"${textValue}",`;
+      } else {
+        return `    "${key}":${textValue},`;
+      }
+    });
 
   if (variableEntries.length > 0) {
     variableEntries[variableEntries.length - 1] = variableEntries[

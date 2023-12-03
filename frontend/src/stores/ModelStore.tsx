@@ -54,6 +54,21 @@ const modelStore = create<ModelStore>(set => {
                 updateData.prompt_data = { messages: [], context: "" };
             }
 
+
+            //get current modelObject
+            const { modelObject } = modelStore.getState();
+            let currentType = modelObject.type;
+            //get existing promptData.prompt_data
+            let currentPromptData = promptStore.getState().promptObject.prompt_data;
+            console.log(currentPromptData, currentType, model.type);
+
+            if(currentType === model.type) {
+                updateData.prompt_data = currentPromptData;
+                updateData.prompt_parameters = {};
+            }
+
+            console.log(updateData)
+
             set({ modelObject: model, selectedModeId: model.id });
 
             promptStore.setState(state => ({

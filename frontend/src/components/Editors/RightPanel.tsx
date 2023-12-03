@@ -2,6 +2,7 @@ import React from 'react';
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import DropDown from "@/components/Form/DropDown";
 import SliderComponent from "@/components/Form/SliderComponent";
+import InputField from '../Form/InputField';
 
 interface RightPanelProps {
   toggle_modal: () => void;
@@ -28,6 +29,11 @@ const RightPanel: React.FC<RightPanelProps> = ({
       <div className="pg-right-content">
         <div className="parameter-panel">
           <div>
+            <InputField
+              label={"Prompt Name"}
+              value={promptObject.name}
+              disabled={true}
+            /><br />
             <DropDown
               label={"Model"}
               options={modelListSelector}

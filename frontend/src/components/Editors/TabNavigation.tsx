@@ -24,7 +24,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
 
   return (
     <>
-      <div className="hidden sm:block" style={{maxWidth:'100vw'}}>
+      <div className="hidden sm:block navigation-bar">
         <nav className="py-2 px-1 flex" aria-label="Tabs" style={{flexWrap: 'nowrap', overflow:'auto', 'whiteSpace': 'nowrap', 'background':'#f3f4f6'}}>
           {tabs.map((tab) => (
             <TabItem 

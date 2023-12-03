@@ -40,8 +40,11 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{prompt.model_type}</td>
               <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{prompt.model}</td>
               <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
-                <Link href={`/workspace/${prompt.id}`} className="text-indigo-600 hover:text-indigo-900">
+                <Link href={`/workspace/${prompt.id}`} className="text-indigo-600 hover:text-indigo-900 mr-2">
                   Edit Prompt
+                </Link>
+                <Link href={`/workspace/${prompt.id}/samples`} className="text-indigo-600 hover:text-indigo-900">
+                  Samples
                 </Link>
               </td>
             </tr>
