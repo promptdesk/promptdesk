@@ -1,62 +1,81 @@
 import React, { useEffect, useState } from "react";
 import { shouldShowCodeModal } from "@/stores/GeneralStore";
 import { promptStore } from "@/stores/PromptStore";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
+
+type VariableValue =
+  | string
+  | VariableValue[]
+  | { [key: string]: VariableValue };
+
+interface PromptVariables {
+  [key: string]: {
+    type: string;
+    value: VariableValue;
+  };
+}
+
+interface PromptObject {
+  prompt_variables: PromptVariables;
+  name: string;
+}
+
+const transformObject = (obj: {
+  [key: string]: VariableValue;
+}): { [key: string]: VariableValue } => {
+  return Object.keys(obj).reduce(
+    (acc: { [key: string]: VariableValue }, key) => {
+      const value = obj[key];
+      acc[key] = Array.isArray(value) ? [...value] : value;
+      return acc;
+    },
+    {}
+  );
+};
 
 const CodeModal = () => {
-  const { promptObject } = promptStore();
+  const { promptObject } = promptStore() as { promptObject: PromptObject };
   const [apiKey, setApiKey] = useState("");
 
 
   useEffect(() => {
-    //read auth token from local storage if it exists
+
     let token = undefined;
-    if (typeof window !== 'undefined') {
-
-        token = Cookies.get('token');
-        if(token) setApiKey(token);
-
+    if (typeof window !== "undefined") {
+      token = Cookies.get("token");
+      if (token) setApiKey(token);
     }
 
-    if(!token && process.env.ORGANIZATION_API_KEY) {
-        token = process.env.ORGANIZATION_API_KEY;
-        setApiKey(token);
+    if (!token && process.env.ORGANIZATION_API_KEY) {
+      token = process.env.ORGANIZATION_API_KEY;
+      setApiKey(token);
     }
   }, []);
 
-  // Generate variable_code and code
-  const variableEntries = Object.entries(
-    promptObject.prompt_variables || {}
-  ).map(([key, value]) => {
-
-      let textValue = "[OBJECT]";
-      
-      if((value as any)['type'] !== 'object') {
-        textValue =
-          (value as any)["value"].length > 40
-            ? (value as any)["value"].substring(0, 40) + "..."
-            : (value as any)["value"];
-        return `    "${key}":"${textValue}",`;
+  const finalObject = Object.keys(promptObject.prompt_variables).reduce(
+    (acc, key) => {
+      const value = promptObject.prompt_variables[key].value;
+      if (typeof value === "object" && !Array.isArray(value)) {
+        acc[key] = transformObject(value);
       } else {
-        return `    "${key}":${textValue},`;
+        acc[key] = value;
       }
-    });
+      return acc;
+    },
+    {} as { [key: string]: VariableValue }
+  );
 
-  if (variableEntries.length > 0) {
-    variableEntries[variableEntries.length - 1] = variableEntries[
-      variableEntries.length - 1
-    ].slice(0, -1);
-  }
-
-  const variableCode =
-    variableEntries.length > 0 ? `, {\n${variableEntries.join("\n")}\n})` : ")";
   const code = `from promptdesk import PromptDesk
 
 pd = PromptDesk(
     api_key = "${apiKey}"
 )
 
-result = pd.generate("${promptObject.name}"${variableCode}`;
+result = pd.generate("${promptObject.name}", ${JSON.stringify(
+    finalObject,
+    null,
+    2
+  )})`;
 
   const { show_code_modal, toggle_code_modal } = shouldShowCodeModal();
 
