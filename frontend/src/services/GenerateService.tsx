@@ -1,6 +1,7 @@
 import { promptWorkspaceTabs } from '@/stores/TabStore';
 import { modelStore } from '@/stores/ModelStore';
 import { promptStore } from '@/stores/PromptStore';
+import { variableStore } from '@/stores/VariableStore';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService';
 import { Tab } from '@/interfaces/tab';
 
@@ -14,7 +15,33 @@ const generateResultForPrompt = async (promptId: string) => {
     const model = modelStore.getState().modelObject;
     const prompt = promptStore.getState().promptObject;
     const prompts = promptStore.getState().prompts;
+    const variables = variableStore.getState().variables;
     const previousId = prompt.id;
+
+    let api_call = JSON.stringify(model.api_call);
+    console.log(variables);
+    const regex = /{{(.*?)}}/g;
+    const matches = api_call.match(regex);
+    const variableList = matches ? matches.map(m => m.slice(2, -2)) : [];
+    console.log(variableList);
+
+    var error = false;
+    var missing_variable = undefined;
+    variableList.forEach(variableName => {
+        const variable = variables.find(v => v.name === variableName);
+        // Check if the variable exists and has a non-empty value
+        if (variable && variable.value && variable.value !== '') {
+            //console.log(`${variableName} exists and is not empty.`);
+        } else {
+            error = true;
+            missing_variable = variableName;
+        }
+    });
+
+    if (error) {
+        alert(`${missing_variable} does not exist or is empty. Please add a value to this variable in the Settings tab.`);
+        return;
+    }
 
     promptStore.getState().updatePromptObjectInPrompts(prompt);
 

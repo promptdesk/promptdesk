@@ -37,7 +37,9 @@ const CodeModal = () => {
   const { promptObject } = promptStore() as { promptObject: PromptObject };
   const [apiKey, setApiKey] = useState("");
 
+
   useEffect(() => {
+
     let token = undefined;
     if (typeof window !== "undefined") {
       token = Cookies.get("token");

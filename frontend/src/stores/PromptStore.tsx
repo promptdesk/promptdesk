@@ -76,8 +76,15 @@ const promptStore = create<PromptStore>((set, get) => ({
                     break;
                 case "MustacheStatement":
                     if (ast.path.type === 'PathExpression') {
-                        const varName = parentContext ? `${parentContext}.${ast.path.original}` : ast.path.original;
-                        variableTypes[varName] = {type:'text', value:""}; // Default to text
+                        let varName = ast.path.original;
+                        if (varName.includes('.')) {
+                            let parts = varName.split('.');
+                            let parentVar = parts.slice(0, -1).join('.');
+                            variableTypes[parentVar] = {type: 'object', value: {}};
+                        } else {
+                            varName = parentContext ? `${parentContext}.${varName}` : varName;
+                            variableTypes[varName] = {type: 'text', value: ""}; // Default to text
+                        }
                     }
                     break;
                 case "BlockStatement":

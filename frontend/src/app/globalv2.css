@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.navigation-bar {
+    width: calc(100vw - var(--app-navigation-collapsed-width));
+}
+
 .alert-root {
     background: #fff;
     border-radius: 8px;

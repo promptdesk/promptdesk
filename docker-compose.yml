@@ -21,6 +21,7 @@ services:
       - "4000:4000"
     depends_on:
       - mongodb
+      - front
     networks:
       - mongodb-network
     command: ["sh", "-c", "cd backend && npm install && npm run dev"]
@@ -34,8 +35,6 @@ services:
       - "3000:3000"
     networks:
       - mongodb-network
-    depends_on:
-      - back
     command: ["sh", "-c", "cd frontend && npm install --legacy-peer-deps && npm run dev"]
 networks:
   mongodb-network:
