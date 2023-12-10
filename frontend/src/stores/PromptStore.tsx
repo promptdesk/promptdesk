@@ -1,8 +1,6 @@
 /* Refactored on September 4th 2023 */
 import { create } from 'zustand'
 import { modelStore } from '@/stores/ModelStore';
-import { Model } from '@/interfaces/model';
-import { Tab } from '@/interfaces/tab';
 import { promptWorkspaceTabs } from '@/stores/TabStore';
 import Handlebars from 'handlebars';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService'
@@ -215,6 +213,8 @@ const promptStore = create<PromptStore>((set, get) => ({
             modelStore.setState({ selectedModeId: selectedModeId.id });
         }
         modelStore.setState({ modelObject: selectedModeId });
+        //call checkVariables from modelStore
+        modelStore.getState().checkVariables();
         const promptInfo = selectedPrompt ? selectedPrompt : defaultPrompt;
         set({ promptObject: promptInfo });
         if (!selectedPrompt) {

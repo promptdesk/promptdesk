@@ -7,6 +7,7 @@ import Variables from '@/components/Editors/Variables';
 import { promptStore } from '@/stores/PromptStore';
 import { modelStore } from '@/stores/ModelStore';
 import {ParsingError} from "@/components/Editors/ParsingError";
+import EnvironmentVariableWarning from './EnvironmentVariableWarning';
 
 function Editor() {
   const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex, parsingError } = promptStore();
@@ -44,6 +45,7 @@ function Editor() {
 
   return (
     <div className="flex flex-col">
+      <EnvironmentVariableWarning />
       <Variables />
       <div className="chat-pg-body body-small flex-1 overflow-hidden">
         <div>

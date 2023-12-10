@@ -4,6 +4,7 @@ import EditorFooter from '@/components/Editors/EditorFooter';
 import GeneratedOutput from '@/components/Editors/Completion/GeneratedOutput';
 import Variables from '@/components/Editors/Variables';
 import {ParsingError} from "@/components/Editors/ParsingError";
+import EnvironmentVariableWarning from './EnvironmentVariableWarning';
 
 function Editor() {
     const { promptObject, setPromptInformation, setPromptVariables, processVariables, parsingError } = promptStore();
@@ -25,6 +26,7 @@ function Editor() {
 
     return (
         <div className="flex flex-col">
+            <EnvironmentVariableWarning />
             <Variables />
             <div className="completions flex-1">
                 <div className="editor-container" style={{ cursor: "text", fontSize: 16, height: "100%", boxSizing: "border-box" }}>

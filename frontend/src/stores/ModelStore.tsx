@@ -1,14 +1,19 @@
 import { create } from 'zustand';
 import { promptStore } from '@/stores/PromptStore';
+import { variableStore } from '@/stores/VariableStore';
 import { Model } from '@/interfaces/model';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService'
+import { useEffect } from 'react';
 
 interface ModelStore {
   modelListSelector: { value: any; name: any; }[];
   models: Model[];
   selectedModeId: string;
   modelObject: Model;
+  areVariablesSet: boolean;
+  missingVariables: string[];
   fetchAllModels: () => Promise<Model[]>;
+  checkVariables: () => void;
   setModelById: (id: string) => void;
   saveModel: (model: Model) => Promise<void>;
   duplicateModel: (model: Model) => Promise<string>;
@@ -35,13 +40,58 @@ const modelStore = create<ModelStore>(set => {
         return models;
     };
 
+    const checkVariables = () => {
+        //get current modelObject
+        const { variables } = variableStore.getState();
+        const { modelObject } = modelStore.getState();
+        if(!modelObject || !variables) {
+            return;
+        }
+        let api_call = JSON.stringify(modelObject.api_call);
+        console.log(variables);
+        const regex = /{{(.*?)}}/g;
+        const matches = api_call.match(regex);
+        const variableList = matches ? matches.map(m => m.slice(2, -2)) : [];
+        console.log(variableList);
+
+        var error = false;
+        var missing_variable = undefined;
+        var missingVariables: string[] = [];
+        variableList.forEach(variableName => {
+            const variable = variables.find(v => v.name === variableName);
+            // Check if the variable exists and has a non-empty value
+            if (variable && variable.value && variable.value !== '') {
+                //console.log(`${variableName} exists and is not empty.`);
+            } else {
+                //add to missingVariables list
+                error = true;
+                missing_variable = variableName;
+                missingVariables.push(variableName);
+            }
+        });
+    
+        if (error) {
+            set({ areVariablesSet: false });
+            set({ missingVariables: missingVariables })
+            return;
+        } else {
+            set({ areVariablesSet: true });
+            set({ missingVariables: [] })
+            return;
+        }
+
+    }
+
     return {
         modelListSelector: [],
         models: [],
         selectedModeId: "",
         modelObject: { type: "chat" } as Model,
+        areVariablesSet: false,
+        missingVariables: [],
 
         fetchAllModels,
+        checkVariables,
 
         setModelById: (id: string) => {
             const model = modelStore.getState().models.find(m => m.id === id);
@@ -80,6 +130,8 @@ const modelStore = create<ModelStore>(set => {
                     return prompt;
                 })
             }));
+
+            checkVariables();
         },
 
         saveModel: async (model: Model) => {
@@ -107,6 +159,7 @@ const modelStore = create<ModelStore>(set => {
             const model = modelStore.getState().models.find(m => m.name === name);
             set({ modelObject: model, selectedModeId: model?.id });
             promptStore.setState(state => ({ promptObject: { ...(state as any).promptObject, model: model?.id } }));
+            checkVariables();
         },
 
         importModel: async (model: Model) => {
@@ -118,7 +171,8 @@ const modelStore = create<ModelStore>(set => {
             let newModel = await fetchFromPromptdesk(`/api/model`, 'POST', model);
             await fetchAllModels();
             return newModel.id;
-        }
+        },
+
     };
 });
 
