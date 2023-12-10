@@ -14,6 +14,8 @@ type PaginationProps = {
 };
 
 const Pagination: React.FC<PaginationProps> = ({ page, item_counts, handlePrevious, handleNext }) => {
+  const nextButtonDisabled = item_counts.total_pages === 0 || item_counts.total_pages === page;
+  const previousButtonDisabled = page === 1;
   return (
     <nav className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination">
       <div className="hidden sm:block">
@@ -25,15 +27,15 @@ const Pagination: React.FC<PaginationProps> = ({ page, item_counts, handlePrevio
       <div className="flex flex-1 justify-between sm:justify-end">
         <button
           onClick={handlePrevious}
-          className={`relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${page === 1 && "opacity-50 cursor-not-allowed"}`}
-          disabled={page === 1}
+          className={`relative inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${previousButtonDisabled && "opacity-50 cursor-not-allowed"}`}
+          disabled={previousButtonDisabled}
         >
           Previous
         </button>
         <button
           onClick={handleNext}
-          className={`relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${item_counts.total_pages === page && "opacity-50 cursor-not-allowed"}`}
-          disabled={item_counts.total_pages === page}
+          className={`relative ml-3 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:outline-offset-0 ${nextButtonDisabled && "opacity-50 cursor-not-allowed"}`}
+          disabled={nextButtonDisabled}
         >
           Next
         </button>
