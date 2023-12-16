@@ -9,4 +9,5 @@ export interface Prompt {
     new: boolean | undefined;
     model_type: string | undefined;
     organization_id: string;
+    project: string | undefined;
 }

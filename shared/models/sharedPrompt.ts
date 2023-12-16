@@ -8,4 +8,5 @@ interface Prompt {
     prompt_data: any;
     new: boolean | undefined;
     model_type: string | undefined;
+    project: string | undefined;
 }

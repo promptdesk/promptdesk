@@ -13,7 +13,7 @@ function Editor() {
   const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex, parsingError } = promptStore();
   const { modelObject } = modelStore();
 
-  const handleSystemInput = (e:any) => {
+  const handleContextChange = (e:any) => {
     const systemInput = e.target.value;
     setPromptInformation('prompt_data.context', systemInput);
     processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
@@ -21,10 +21,14 @@ function Editor() {
 
   const [lastLength, setLastLength] = useState(0);
 
-  useEffect(() => {
+  const handleMessageChange = () => {
     const context = promptObject?.prompt_data.context || '';
     const messages = JSON.stringify(promptObject?.prompt_data.messages || []);
     processVariables(`${context} ${messages}`);
+  }
+
+  useEffect(() => {
+    handleMessageChange()
   }, [promptObject?.name, promptObject.id, processVariables, promptObject?.prompt_data?.context, promptObject?.prompt_data?.messages]);
 
   useEffect(() => {
@@ -57,7 +61,7 @@ function Editor() {
                 className="text-input text-input-lg text-input-full text-input-header-buffer"
                 placeholder="You are a helpful assistant."
                 value={promptObject.prompt_data.context}
-                onInput={handleSystemInput}
+                onInput={handleContextChange}
               />
             </div>
           </div>
@@ -75,6 +79,7 @@ function Editor() {
                     roles={modelObject?.model_parameters.roles}
                     onEditMessage={(index: any, content:string) => {
                       editMessageAtIndex(index, content);
+                      handleMessageChange();
                     }}
                     onToggleRole={(index:any, roles: any) => {
                       toggleRoleAtIndex(index, roles);

@@ -39,7 +39,6 @@ const generateResultForPrompt = async (promptId: string) => {
     });
 
     if (error) {
-        alert(`${missing_variable} does not exist or is empty. Please add a value to this variable in the Settings tab.`);
         return;
     }
 
@@ -76,15 +75,16 @@ const generateResultForPrompt = async (promptId: string) => {
         }
 
         if (model.type === 'completion') {
-            promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, generatedText: data.message })
+            promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, generatedText: data.message, error: undefined })
         }
 
         return data;
-    } catch (error) {
+    } catch (error:any) {
 
-        console.error('API Call Error:', error);
-        promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false })
-        throw error;
+        //console.error('API Call Error:', "error.message", error.message);
+        console.log(error.response.data.log_id)
+        promptWorkspaceTabs.getState().updateDataById(promptId, { loading: false, error: error.message, logId: error.response.data.log_id })
+        //throw error;
 
     }
 };

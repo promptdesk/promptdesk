@@ -27,24 +27,19 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
         const endpoint = `${url}${path}`;
 
-        const response = await fetch(endpoint, {
-            method,
+        var response = await axios({
+            url: endpoint,
+            method: method,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: body ? JSON.stringify(body) : undefined
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error with ${method} request to ${endpoint}`);
-        }
-
-        return await response.json();
+            data: body ? JSON.stringify(body) : undefined
+        })
+        return response.data;
 
     } catch (error) {
 
-        console.error('API Call Error:', error);
         throw error;
 
     }

@@ -33,6 +33,7 @@ const Modal = () => {
   const [ formValues, setFormValues ] = useState({
     name: promptObject.name,
     description: promptObject.description,
+    project: promptObject.project
   });
 
   function changeName(name: string) {
@@ -43,9 +44,14 @@ const Modal = () => {
     setFormValues({ ...formValues, description: description });
   }
 
+  function changeProject(project: string) {
+    setFormValues({ ...formValues, project: project });
+  }
+
   function setAllPromptInformation() {
     setPromptInformation("name", formValues.name);
     setPromptInformation("description", formValues.description);
+    setPromptInformation("project", formValues.project);
   }
 
   const changeIdInUrl = (newId: string) => {
@@ -177,6 +183,18 @@ const Modal = () => {
                   type="text"
                   defaultValue={formValues.description}
                   onInput={(e) => changeDescription(e.currentTarget.value)}
+                />
+              </div>
+              <br />
+              <div className="css-xeepoz">
+                <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                  <div className="bold mr-2">Project</div>
+                </div>
+                <input
+                  className="text-input text-input-sm text-input-full"
+                  type="text"
+                  defaultValue={formValues.project}
+                  onInput={(e) => changeProject(e.currentTarget.value)}
                 />
               </div>
             </div>

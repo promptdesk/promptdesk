@@ -20,7 +20,7 @@ const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, val
                 {label}
                 </label>
             )}
-            <div className="mt-2">
+            <div>
                 <input 
                     id="model-name"
                     disabled={disabled === true}

@@ -15,13 +15,15 @@ function Editor() {
     }, [promptObject.prompt_variables]);
 
     useEffect(() => {
+        console.log("CHANGE!!!")
+        console.log(promptObject.prompt_data.prompt)
         processVariables(promptObject.prompt_data.prompt);
     }, [processVariables, promptObject.prompt_data.prompt]);
 
     const handleInputChange = (e:any) => {
         const inputValue = e.currentTarget.value;
         setPromptInformation('prompt_data.prompt', inputValue);
-        processVariables(inputValue);
+        //processVariables(promptObject.prompt_data.prompt);
     };
 
     return (
@@ -39,7 +41,9 @@ function Editor() {
                                     role="textbox"
                                     spellCheck="false"
                                     placeholder='Write a tagline for an ice cream shop.'
-                                    onInput={handleInputChange}
+                                    onChange={handleInputChange}
+                                    onKeyDown={handleInputChange}
+                                    onKeyUp={handleInputChange}
                                     style={{
                                         outline: "none",
                                         userSelect: "text",

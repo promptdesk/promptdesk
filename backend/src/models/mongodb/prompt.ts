@@ -12,6 +12,7 @@ const promptSchema = mongoose.model(
     prompt_data: mongoose.Schema.Types.Mixed,
     model_type: String,
     organization_id: String,
+    project: String,
   }, {
     timestamps: true
   })

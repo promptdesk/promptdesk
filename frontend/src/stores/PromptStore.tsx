@@ -24,7 +24,7 @@ interface PromptStore {
     editMessageAtIndex: (index: number, message: string) => void;
     toggleRoleAtIndex: (index: number, roles: string[]) => void;
     removeAtIndex: (index: number) => void;
-    addNewPrompt: () => string | undefined;
+    addNewPrompt: (prompt?:any) => string | undefined;
     updatePromptObjectInPrompts: (promptObject: Prompt) => void;
     setPromptVariables: (variables: any) => void;
     setSelectedVariable: (variable: string) => void;
@@ -38,6 +38,7 @@ const defaultPrompt: Prompt = {
     name: "",
     description: "",
     model: "",
+    project: undefined,
     prompt_parameters: {},
     prompt_data: {
         prompt: "",
@@ -114,8 +115,9 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
 
         if (!inputValue) {
-            return;
+            inputValue = ""
         }
+
         try {
             set((state) => {
 
@@ -183,21 +185,41 @@ const promptStore = create<PromptStore>((set, get) => ({
         });
     },
 
-    addNewPrompt: () => {
+    addNewPrompt: (prompt:any = undefined) => {
+
         const defaultModel = modelStore.getState().models.find((model) => model.default);
+
         if (!defaultModel) {
             return;
         }
-        const newPrompt: Prompt = {
+
+        let newPrompt: Prompt = {
             ...JSON.parse(JSON.stringify(defaultPrompt)),
             name: new Date().toLocaleString(),
             id: Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10),
             model: defaultModel.id
         };
+
+        //check if prompt is passed as argument
+        if (prompt) {
+            newPrompt = prompt;
+            newPrompt.name = new Date().toLocaleString();
+            newPrompt.id = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10);
+            if(defaultModel.type === prompt.model_type) {
+                newPrompt.model = defaultModel.id
+            } else {
+                const model = modelStore.getState().models.find((model) => model.type === prompt.model_type);
+                if(model) {
+                    newPrompt.model = model.id;
+                }
+            }
+        }
+
         set((state) => {
             const prompts = [...state.prompts, newPrompt];
             return { prompts };
         });
+
         return newPrompt.id;
     },
 
@@ -301,6 +323,10 @@ const promptStore = create<PromptStore>((set, get) => ({
             alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
             return;
         }
+        if(prompt.project && !get().isValidName(prompt.project)) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+            return;
+        }
         prompt.new = undefined;
         const data = await fetchFromPromptdesk('/api/prompt', 'POST', prompt);
         await get().fetchAllPrompts();
@@ -311,6 +337,10 @@ const promptStore = create<PromptStore>((set, get) => ({
     updateExistingPrompt: async () => {
         const existingPrompt = get().promptObject;
         if(!get().isValidName(existingPrompt.name)) {
+            alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
+            return;
+        }
+        if(existingPrompt.project && !get().isValidName(existingPrompt.project)) {
             alert("The name of the prompt can only contain A-Z, a-z, 0-9, _ or -")
             return;
         }

@@ -123,7 +123,7 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
             var new_text = template(variable_object);
             return new_text
         }
-        
+
         var prompt_data = JSON.parse(JSON.stringify(prompt.prompt_data))
 
         //if prompt_data has a context key, replace it with the variable markdown
@@ -210,7 +210,8 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
                 prompt_id: prompt.id,
                 duration: (Date.now() - start_time) / 1000
             } as any;
-            log_db.createLog(obj, organization.id)
+            let log = await log_db.createLog(obj, organization.id)
+            obj['log_id'] = log
             return res.status(error?.response?.status ?? 500).json(obj);
         }
 
@@ -224,7 +225,8 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
             status: 500,
             duration: (Date.now() - start_time) / 1000
         } as any;
-        log_db.createLog(obj, organization.id)
+        let log = log_db.createLog(obj, organization.id)
+        obj['log_id'] = log
         return res.status(500).json(obj);
 
     }
