@@ -78,6 +78,12 @@ async function prompt_model_validation(organization:any, body:any) {
     return [prompt, model, proxy, error]
 }
 
+function replace_variables(text:string, variable_object:object) {
+    var template = handlebars.compile(text);
+    var new_text = template(variable_object);
+    return new_text
+}
+
 // Route for /api/generate/gpt-3.5-turbo
 router.all(['/generate', '/generate/generate'], async (req, res) => {
     const organization = (req as any).organization;
@@ -110,18 +116,12 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
         if(!proxy){
             variables = variable_object(prompt.prompt_variables)
         }
-    
+
         //validate variables
         for (var key in prompt.prompt_variables) {
             if (variables[key] === undefined) {
                 return res.status(400).json({ error: 'Variable "' + key + '" not found in prompt.', status: 400});
             }
-        }
-
-        function replace_variables(text:string, variable_object:object) {
-            var template = handlebars.compile(text);
-            var new_text = template(variable_object);
-            return new_text
         }
 
         var prompt_data = JSON.parse(JSON.stringify(prompt.prompt_data))
