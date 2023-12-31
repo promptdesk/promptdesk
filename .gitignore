@@ -137,3 +137,8 @@ data/
 #any app-specific repos
 tmp/
 ___*
+
+#certbot/ssl files
+*.key
+*.crt
+certbot/
