@@ -27,6 +27,15 @@ router.get('/prompt/:id', async (req, res) => {
   res.status(200).json(promptJson);
 });
 
+router.get('/prompt/name/:name', async (req, res) => {
+  const organization = (req as any).organization;
+  const promptJson = await prompt_db.findPromptByName(req.params.name, organization.id);
+  if (!promptJson) {
+    return res.status(404).json({ message: 'Prompt not found' });
+  }
+  res.status(200).json(promptJson);
+});
+
 router.put('/prompt/:id', async (req, res) => {
   const organization = (req as any).organization;
   const promptJson = req.body;
