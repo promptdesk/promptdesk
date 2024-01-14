@@ -95,7 +95,6 @@ from promptdesk import PromptDesk
 pd = PromptDesk(
     #defaults to os.environ.get("PROMPTDESK_API_KEY")
     api_key = "YOUR_PROMPTDESK_API_KEY"
-    #defaults to https://app.promptdesk.ai
     service_url = "http://localhost:8080"
 )
 
