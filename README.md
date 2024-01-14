@@ -60,7 +60,7 @@ We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstar
 
 ## 🚀 Getting Started
 
-PromptDesk is available as a hosted web application and as a Docker image. You can get started immediately by visiting the [PromptDesk Login](https://app.promptdesk.ai/) and creating an account. Hosting is provided for free by the MongoDB and DigitalOcean Startup Programs.
+PromptDesk is available as a Docker image.
 
 ### Hosted Web Application
 
