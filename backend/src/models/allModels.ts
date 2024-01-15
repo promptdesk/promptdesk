@@ -20,7 +20,7 @@ if (true) {
     await connectToDatabase();
     var environment = process.env.NODE_ENV;
     
-    if(environment == 'development') {
+    if(environment === 'development') {
       var org = new mongoOrganization();
       org = await org.getOrganization();
       if(org) {
