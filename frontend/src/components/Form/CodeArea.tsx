@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlaygroundButton from './PlaygroundButton';
 import test from 'node:test';
 
@@ -11,6 +11,16 @@ interface CodeAreaProps {
 const CodeArea: React.FC<CodeAreaProps> = ({ label, code, test }) => {
 
     const [isValidJSON, setIsValidJSON] = useState(true);
+    const [codeString, setCodeString] = useState(JSON.stringify(code, null, 2));
+
+    useEffect(() => {
+        try {
+            JSON.parse(codeString);
+            setIsValidJSON(true);
+        } catch (e) {
+            setIsValidJSON(false);
+        }
+    }, [codeString]);
 
     return (
         <>
@@ -29,9 +39,10 @@ const CodeArea: React.FC<CodeAreaProps> = ({ label, code, test }) => {
                 suppressContentEditableWarning={true}
                 className={`p-4 hljs syntax-highlighter dark code-sample-pre ${isValidJSON ? "bg-white" : "bg-red-100"}`}
                 onInput={(e) => {
+                    setCodeString(e.currentTarget.textContent || '');
                 }}
             >
-                {JSON.stringify(code, null, 2)}
+                {codeString}
             </pre>
         </>
     );

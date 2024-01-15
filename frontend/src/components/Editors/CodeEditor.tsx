@@ -13,14 +13,14 @@ const Editor: React.FC<CodeEditorProps> = ({
   handleChange,
   language,
   readOnly,
-  height,
-  style
+  height = "500px",
+  style = "w-full"
 }) => {
   return (
-    <div className={style || "w-full"}>
+    <div className={style}>
       <MonacoEditor
         onChange={handleChange}
-        height={height || "500px"}
+        height={height}
         theme="vs-dark"
         defaultLanguage={language}
         value={code}
