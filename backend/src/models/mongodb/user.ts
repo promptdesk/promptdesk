@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userScheama = mongoose.model(
+const userSchema = mongoose.model(
   'User',
   new mongoose.Schema({
     password: String,
@@ -14,13 +14,12 @@ const userScheama = mongoose.model(
 class User {
 
   async findUser(email:any) {
-    const user = await userScheama.findOne({ email:email });
-    return user;
+    return await userSchema.findOne({ email:email });
   }
 
   async createUser(email:string, password:string, organization_id:string) {
     
-    const user = new userScheama({
+    const user = new userSchema({
         password: password,
         email: email,
         organization_id: organization_id,
