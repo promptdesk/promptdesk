@@ -5,7 +5,7 @@ const router = express.Router();
 const variable_db = new Variable();
 
 // Update a Variable by ID
-router.put('/variables', async (req: Request, res: Response) => {
+router.put('/variables/:id', async (req: Request, res: Response) => {
 
   const organization = (req as any).organization;
   const variableId: string = req.params.id;
@@ -22,9 +22,10 @@ router.put('/variables', async (req: Request, res: Response) => {
 });
 
 // Get a Variable by ID
-router.get('/variables', async (req: Request, res: Response) => {
+router.get('/variables/:id', async (req: Request, res: Response) => {
 
   const organization = (req as any).organization;
+  const variableId: string = req.params.id;
 
   try {
     const variableData = await variable_db.getVariables(organization.id);
