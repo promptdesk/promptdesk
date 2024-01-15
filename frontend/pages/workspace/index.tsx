@@ -21,7 +21,7 @@ export default function WorkspaceHomeRedirector() {
     }
     if (activeTab) {
       changeIdInUrl(activeTab.prompt_id)
-    } else {
+    } else if (!activeTab && tabs.length === 0) {
       newPrompt()
     }
   }, [findActiveTab])
@@ -38,9 +38,6 @@ export default function WorkspaceHomeRedirector() {
     push(newUrl);
   };
 
-  return (
-    <>
-    </>
-  );
+  return null;
   
 }
