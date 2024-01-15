@@ -9,9 +9,9 @@ const ChatMessageRole: React.FC<ChatMessageRoleProps> = ({ defaultRole, onRoleTo
   return (
     <div className="chat-message-role">
       <div className="chat-message-subheading subheading">
-        <span className="chat-message-role-text" onClick={onRoleToggle}>
+        <button className="chat-message-role-text" onClick={onRoleToggle}>
           {defaultRole}
-        </span>
+        </button>
       </div>
     </div>
   );
