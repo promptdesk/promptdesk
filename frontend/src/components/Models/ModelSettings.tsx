@@ -27,6 +27,10 @@ type ModelSettingsProps = {
     outputFormatResponse: any;
     setOutputFormatResponse: any;
     testAPI: any;
+    responseMapping: any;
+    setResponseMapping: any;
+    requestMapping: any;
+    setRequestMapping: any;
 }
 
 const ModelSettings = ({
@@ -47,7 +51,11 @@ const ModelSettings = ({
     outputFormat,
     setOutputFormat,
     handleSave,
-    testAPI
+    testAPI,
+    responseMapping,
+    setResponseMapping,
+    requestMapping,
+    setRequestMapping
 }: ModelSettingsProps) => {
     const style = "rounded-xl overflow-hidden shadow-lg";
 
@@ -81,6 +89,8 @@ const ModelSettings = ({
           </div>
           <div className="m-2 mt-4">
 
+            <Warning display={inputFormat != undefined} text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models." />
+
 
             <div className="flex justify-between mb-2 mt-4">
               <h3 className="mb-0">API Call</h3> <PlaygroundButton text="Test" onClick={async () => {
@@ -97,7 +107,7 @@ const ModelSettings = ({
 ." />
             {generate_pre_compontent(apiResponse.status, JSON.stringify(apiResponse.data, null, 4))}
 
-
+            {inputFormat != undefined ? <>
             <div className="flex justify-between mb-2 mt-4">
               <h3 className="mb-0">Input format</h3> <PlaygroundButton text="Test" onClick={async () => {
                 var api_response = await testAPI({api_call:api, input_format:inputFormat, type:selectedModel.type})
@@ -126,7 +136,27 @@ const ModelSettings = ({
             <Error display={outputFormatResponse.status && outputFormatResponse.status !== 200} text="Please re-format the output format function. This should return a single string for type completion or a single object of {'content':'[GENERATED TEXT]', 'role':[ASSISTANT/USER]}" />
             <Success display={outputFormatResponse.status === 200} text="This model was built successfully and can now be used in PromptDesk!" />
             {generate_pre_compontent(outputFormatResponse.status, JSON.stringify(outputFormatResponse.data, null, 4))}
+            </> : <>
 
+            <div className="flex justify-between mb-2 mt-4">
+              <h3 className="mb-0">Request Mapping</h3>
+            </div>
+            <CodeEditor height="50vh" style={style} code={JSON.stringify(requestMapping, null, 4)} language="json"
+              handleChange={(value:any) => {
+                value = JSON.parse(value);
+                setRequestMapping(value);
+              }}/>
+
+            <div className="flex justify-between mb-2 mt-4">
+              <h3 className="mb-0">Response Mapping</h3>
+            </div>
+            <CodeEditor height="50vh" style={style} code={JSON.stringify(responseMapping, null, 4)} language="json"
+              handleChange={(value:any) => {
+                value = JSON.parse(value);
+                setRequestMapping(value);
+              }}/>
+
+            </>}
               
             <div className="mb-2 mt-4">
               <h3 className="mb-0">Model parameters</h3>

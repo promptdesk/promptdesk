@@ -6,6 +6,7 @@ import { ModelList } from "@/components/Models/ModelList";
 import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
+import { set } from "lodash";
 
 export default function ModelsPage() {
 
@@ -23,6 +24,8 @@ export default function ModelsPage() {
   const [parameters, setParameters] = useState({} as any);
   const [inputFormat, setInputFormat] = useState("" as string);
   const [outputFormat, setOutputFormat] = useState("" as string);
+  const [responseMapping, setResponseMapping] = useState({} as any);
+  const [requestMapping, setRequestMapping] = useState({} as any);
 
   useEffect(() => {
     if (id) {
@@ -39,6 +42,8 @@ export default function ModelsPage() {
     setInputFormat(selectedModel['input_format'])
     setOutputFormat(selectedModel['output_format'])
     setParameters(selectedModel['model_parameters'])
+    setResponseMapping(selectedModel['response_mapping'])
+    setRequestMapping(selectedModel['request_mapping'])
     setOutputFormatResponse({})
     setInputFormatResponse({})
     setApiResponse({})
@@ -172,6 +177,10 @@ export default function ModelsPage() {
           setInputFormat={setInputFormat}
           outputFormat={outputFormat}
           setOutputFormat={setOutputFormat}
+          responseMapping={responseMapping}
+          setResponseMapping={setResponseMapping}
+          requestMapping={requestMapping}
+          setRequestMapping={setRequestMapping}
           handleSave={handleSave}
           setFormattedParameters={setFormattedParameters}
           testAPI={testAPI} />

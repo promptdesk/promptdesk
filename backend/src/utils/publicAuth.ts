@@ -149,8 +149,9 @@ const authenticate = function(app:any) {
             if(match) {
                 let organization = await organization_db.getOrganizationById(user.organization_id);
                 let token = organization.keys[0].key;
-                res.cookie('token', token, { maxAge: 900000, httpOnly: false });
-                res.cookie('organization', organization.id, { maxAge: 900000, httpOnly: false });
+                let expiry = 60*1000*60*24*30;
+                res.cookie('token', token, { maxAge: expiry, httpOnly: false });
+                res.cookie('organization', organization.id, { maxAge: expiry, httpOnly: false });
                 return res.status(200).json({message:"Login successful."})
             }
             return res.status(400).json({error:"Wrong email or password."})

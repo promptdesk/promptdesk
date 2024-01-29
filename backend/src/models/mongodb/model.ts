@@ -17,7 +17,9 @@ const modelSchema = mongoose.model(
       model_parameters: mongoose.Schema.Types.Mixed,
       default: Boolean,
       organization_id: String,
-      deleted: Boolean
+      deleted: Boolean,
+      request_mapping: mongoose.Schema.Types.Mixed,
+      response_mapping: mongoose.Schema.Types.Mixed
     },
     {
       timestamps: true

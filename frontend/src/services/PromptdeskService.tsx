@@ -40,7 +40,8 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     } catch (error) {
 
-        throw error;
+        console.log(error);
+        alert("Something went wrong. Please try again later.");
 
     }
 

@@ -16,6 +16,7 @@ import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/PromptStore";
 import Link from "next/link";
 import Head from "next/head";
+import Warning from "@/components/Alerts/Warning";
 
 export default function SinglePromptEditPage() {
   const { push, query } = useRouter();
@@ -123,6 +124,7 @@ export default function SinglePromptEditPage() {
                 {show_modal && <Modal />}
                 {show_variable_modal && <VariableModal />}
                 <div className="pg-editor">
+                <Warning className="mb-2" display={modelObject.input_format != undefined} text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models." />
                   <div className="pg-content-body">
                     {modelObject.type === "chat" ? (
                       <ChatEditor />

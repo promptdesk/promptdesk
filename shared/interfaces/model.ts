@@ -2,7 +2,6 @@ export interface Model {
     id: string;
     name: string;
     type: string;
-    roles: string;
     api_call: any;
     input_format: string;
     output_format: string;
@@ -11,4 +10,6 @@ export interface Model {
     organization_id: string;
     provider: string;
     deleted: boolean;
+    request_mapping: any;
+    response_mapping: any;
 }

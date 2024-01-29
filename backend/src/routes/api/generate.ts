@@ -4,6 +4,10 @@ import { Model, Prompt, Log, Variable, Sample} from '../../models/allModels';
 import handlebars from 'handlebars';
 import crypto from 'crypto';
 import {canonical_json_stringify} from "../../utils/canonicalJson";
+const JSONMapper = require('../../utils/jsonMapper').JSONMapper;
+
+console.log(JSONMapper)
+let jmap = new JSONMapper();
 
 let model_db = new Model();
 let prompt_db = new Prompt();
@@ -91,6 +95,8 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
 
     var cache = req.body.cache || false;
 
+    console.log(JSON.stringify(req.body))
+
     try {
 
         let [ prompt, model, proxy, error ] = await prompt_model_validation(organization, req.body);
@@ -99,18 +105,24 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
             return res.status(error.status).json({ error: true, message: error.error, status: error.status });
         }
 
-        if(!model.input_format){
-            return res.status(404).json({ error:true, message: 'Model input format function not found.', status: 404 });
+        if(!model.request_mapping && !model.input_format) {
+            return res.status(404).json({ error:true, message: 'Model request mapping  not found.', status: 404 });
         }
 
-        if(!model.output_format){
-            return res.status(404).json({ error: true, message: 'Model output format function not found.', status: 404 });
+        if(!model.response_mapping && !model.output_format) {
+            return res.status(404).json({ error: true, message: 'Model response mapping not found.', status: 404 });
         }
 
         var api_call = await api_variables(model.api_call, organization)
     
-        var input_format = eval(model.input_format)
-        var output_format = eval(model.output_format)
+        var input_format = undefined as any;
+        var output_format = undefined as any;
+        let mapping = true;
+        if(model.input_format && model.input_format) {
+            eval(model.input_format)
+            eval(model.output_format)
+            mapping = false;
+        }
         
         var variables = req.body.variables || {}
         if(!proxy){
@@ -140,7 +152,16 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
             }
         }
     
-        var body = input_format(prompt_data, prompt.prompt_parameters)
+        var body = {} as any;
+        
+        if(mapping) {
+            let local_prompt_data = JSON.parse(JSON.stringify(prompt_data))
+            local_prompt_data['model_parameters'] = prompt.prompt_parameters
+            body = jmap.applyMapping(local_prompt_data, model.request_mapping)
+            console.log("body", body)
+        } else {
+            body = input_format(prompt_data, prompt.prompt_parameters)
+        }
     
         api_call.data = body
 
@@ -160,7 +181,14 @@ router.all(['/generate', '/generate/generate'], async (req, res) => {
 
             var response = await axios(api_call)
             var data = response.data
-            var data = output_format(response.data)
+            if(mapping) {
+                data = jmap.applyMapping(data, model.response_mapping)
+                if(data.text) {
+                    data = data.text
+                }
+            } else {
+                data = output_format(response.data)
+            }
             var obj = {
                 message: data,
                 error: false,

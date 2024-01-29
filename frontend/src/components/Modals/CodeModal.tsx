@@ -36,6 +36,7 @@ const transformObject = (obj: {
 const CodeModal = () => {
   const { promptObject } = promptStore() as { promptObject: PromptObject };
   const [apiKey, setApiKey] = useState("");
+  const [serviceURL, setServiceURL] = useState("");
 
 
   useEffect(() => {
@@ -49,6 +50,10 @@ const CodeModal = () => {
     if (!token && process.env.ORGANIZATION_API_KEY) {
       token = process.env.ORGANIZATION_API_KEY;
       setApiKey(token);
+    }
+
+    if(process.env.PROMPT_SERVER_URL) {
+      setServiceURL(process.env.PROMPT_SERVER_URL);
     }
   }, []);
 
@@ -68,7 +73,8 @@ const CodeModal = () => {
   const code = `from promptdesk import PromptDesk
 
 pd = PromptDesk(
-    api_key = "${apiKey}"
+    api_key = "${apiKey}",
+    service_url = "${serviceURL}"
 )
 
 result = pd.generate("${promptObject.name}", ${JSON.stringify(
