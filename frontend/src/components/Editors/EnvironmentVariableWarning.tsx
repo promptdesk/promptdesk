@@ -16,7 +16,7 @@ export default function EnvironmentVariableWarning() {
             <div className="ml-3 flex-1 md:flex md:justify-between">
             <p className="text-sm text-yellow-700">Model <strong>{modelObject.name}</strong> requires environemnt variables <strong>{missingVariables.join(", ")}</strong> to be set.</p>
             <p className="mt-3 text-sm md:ml-6 md:mt-0">
-                <Link href="/variables" className="whitespace-nowrap font-medium text-yellow-700 hover:text-yellow-600">
+                <Link href="/settings" className="whitespace-nowrap font-medium text-yellow-700 hover:text-yellow-600">
                     Set Variables
                     <span aria-hidden="true"> &rarr;</span>
                 </Link>

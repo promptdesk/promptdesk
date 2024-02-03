@@ -1,12 +1,11 @@
 
 import React from "react";
 import { modelStore } from "@/stores/ModelStore";
-import { promptStore } from "@/stores/PromptStore";
+import { addMessage } from "@/services/PromptEditor";
 import Plus from "@/components/Icons/Plus";
 
 const AddMessage = () => {
 
-  const { addMessage } = promptStore()
   const { modelObject } = modelStore()
 
   return (

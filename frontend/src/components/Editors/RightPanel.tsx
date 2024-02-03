@@ -7,21 +7,21 @@ import InputField from '../Form/InputField';
 interface RightPanelProps {
   toggle_modal: () => void;
   modelListSelector: any[];
-  selectedModeId: string;
+  selectedModel: string;
   setModelById: (id: string) => void;
   modelObject: any;
   promptObject: any;
-  setPromptInformation: (key: string, value: any) => void;
+  updateLocalPromptValues: (key: string, value: any) => void;
 }
 
 const RightPanel: React.FC<RightPanelProps> = ({
   toggle_modal,
   modelListSelector,
-  selectedModeId,
+  selectedModel,
   setModelById,
   modelObject,
   promptObject,
-  setPromptInformation,
+  updateLocalPromptValues,
 }) => {
   return (
     <div className="pg-right">
@@ -37,9 +37,8 @@ const RightPanel: React.FC<RightPanelProps> = ({
             <DropDown
               label={"Model"}
               options={modelListSelector}
-              selected={selectedModeId}
+              selected={selectedModel}
               onChange={(id: any) => {
-                console.log("selected model", id);
                 setModelById(id);
               }}
             />
@@ -60,7 +59,7 @@ const RightPanel: React.FC<RightPanelProps> = ({
                           : undefined
                       }
                       onChange={(value: any): void => {
-                        setPromptInformation(
+                        updateLocalPromptValues(
                           'prompt_parameters.' + key,
                           value
                         );

@@ -2,13 +2,11 @@ import '../src/app/globalv2.css';
 import '../src/app/global.css';
 import Navigation from '@/components/Navigation';
 import React, { useEffect, useState } from 'react'; // Import useEffect and useState
-import Head from 'next/head';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore, fetchAllPrompts } from '@/stores/prompts';
 import { modelStore } from '@/stores/ModelStore';
 import { variableStore } from '@/stores/VariableStore';
-import { promptWorkspaceTabs } from '@/stores/TabStore';
+import { tabStore } from '@/stores/TabStore';
 import { organizationStore } from '@/stores/OrganizationStore';
-import Notification from '@/components/Notification';
 interface AppProps {
   Component: React.ElementType;
   pageProps: any; // Adjust this type as needed
@@ -16,11 +14,11 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
 
-  const { fetchAllPrompts, prompts } = promptStore();
+  const { prompts } = promptStore();
   const { fetchAllModels } = modelStore();
   const { fetchVariables } = variableStore();
   const { fetchOrganization, organization } = organizationStore();
-  const { retrieveTabsFromLocalStorage, tabs, clearLocalTabs } = promptWorkspaceTabs();
+  const { retrieveTabsFromLocalStorage, tabs, clearLocalTabs } = tabStore();
 
   const [loading, setLoading] = useState(true); // Add loading state
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { shouldShowSaveModal } from "@/stores/GeneralStore";
-import { promptWorkspaceTabs } from "@/stores/TabStore";
-import { promptStore } from "@/stores/PromptStore";
+import { shouldShowSaveModal } from "@/stores/ModalStore";
+import { tabStore } from "@/stores/TabStore";
+import { promptStore, updateExistingPrompt, createNewPrompt, duplicateExistingPrompt, deletePrompt } from "@/stores/prompts";
 import { useRouter } from 'next/router';
 
 const Modal = () => {
@@ -11,12 +11,8 @@ const Modal = () => {
 
 
   const {
-    setPromptInformation,
+    updateLocalPromptValues,
     promptObject,
-    createNewPrompt,
-    updateExistingPrompt,
-    duplicateExistingPrompt,
-    deletePrompt,
     addToLocalPrompts
   } = promptStore();
 
@@ -28,7 +24,7 @@ const Modal = () => {
     setActiveTab,
     isActiveTab,
     setActiveTabById
-  } = promptWorkspaceTabs();
+  } = tabStore();
 
   const [ formValues, setFormValues ] = useState({
     name: promptObject.name,
@@ -49,9 +45,9 @@ const Modal = () => {
   }
 
   function setAllPromptInformation() {
-    setPromptInformation("name", formValues.name);
-    setPromptInformation("description", formValues.description);
-    setPromptInformation("project", formValues.project);
+    updateLocalPromptValues("name", formValues.name);
+    updateLocalPromptValues("description", formValues.description);
+    updateLocalPromptValues("project", formValues.project);
   }
 
   const changeIdInUrl = (newId: string) => {

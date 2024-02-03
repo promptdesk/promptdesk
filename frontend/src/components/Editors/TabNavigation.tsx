@@ -5,7 +5,7 @@ import TabItem from './TabItem';
 
 interface TabNavigationProps {
   tabs: Tab[];
-  updatePromptObjectInPrompts: (promptObject: any) => void;
+  updateLocalPrompt: (promptObject: any) => void;
   newPrompt: () => void;
   removePlaygroundTab: (e: any, id: string) => void;
   promptObject: any;
@@ -13,7 +13,7 @@ interface TabNavigationProps {
 
 const TabNavigation: React.FC<TabNavigationProps> = ({
   tabs, 
-  updatePromptObjectInPrompts, 
+  updateLocalPrompt, 
   newPrompt,
   removePlaygroundTab,
   promptObject
@@ -31,7 +31,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
               key={tab.name}
               tab={tab} 
               promptObject={promptObject}
-              updatePromptObjectInPrompts={updatePromptObjectInPrompts} 
+              updateLocalPrompt={updateLocalPrompt} 
               removePlaygroundTab={removePlaygroundTab}
             />
 
@@ -42,7 +42,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({
           }}
           title="Add prompt"
           onClick={() => {
-            updatePromptObjectInPrompts(promptObject); 
+            updateLocalPrompt(promptObject); 
             newPrompt();
           }}>+</div>
         </nav>

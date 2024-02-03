@@ -16,7 +16,7 @@ function Navigation() {
     { href: '/prompts', label: 'Prompts', icon: Folder },
     { href: '/models', label: 'Models', icon: Models },
     { href: '/logs', label: 'Logs', icon: Logs },
-    { href: '/variables', label: 'Settings', icon: Settings }
+    { href: '/settings', label: 'Settings', icon: Settings }
   ];
 
   const footerItems = [

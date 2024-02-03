@@ -33,11 +33,9 @@ const checkIfFirstRun = async function() {
 
 figlet("PromptDesk", function (err:any, data:any) {
     if (err) {
-        console.log("Something went wrong...");
         console.dir(err);
         return;
     }
-    console.log(data);
 });
 
 async function generateInitialOrganization(body:any) {
@@ -50,12 +48,12 @@ async function generateInitialOrganization(body:any) {
 
 async function setup() {
     if(process.env.SETUP == 'true') {
-        console.log("Setting up organization and models");
+        console.log("INFO :: Setting up organization and models");
         let isFirstRun = await checkIfFirstRun();
         if(!isFirstRun) {
             return;
         }
-        console.log("Setting up organization and models");
+        console.log("INFO :: Setting up organization and models");
         let body = {
             email: process.env.EMAIL,
             password: process.env.PASSWORD,
@@ -63,9 +61,9 @@ async function setup() {
             organization_api_key: process.env.ORGANIZATION_API_KEY
         }
         await generateInitialOrganization(body);
-        console.log("############### SUCCESS ###############")
-        console.log("Setup successful!")
-        console.log("############### SUCCESS ###############")
+        console.log("INFO :: ############### SUCCESS ###############")
+        console.log("INFO :: Setup successful!")
+        console.log("INFO :: ############### SUCCESS ###############")
     }
 }
 

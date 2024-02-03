@@ -95,7 +95,7 @@ from promptdesk import PromptDesk
 pd = PromptDesk(
     #defaults to os.environ.get("PROMPTDESK_API_KEY")
     api_key = "YOUR_PROMPTDESK_API_KEY"
-    service_url = "http://localhost:8080"
+    service_url = "http://localhost:4000"
 )
 
 story = pd.generate("short-story", {

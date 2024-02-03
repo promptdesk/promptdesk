@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { variableStore } from "@/stores/VariableStore";
-import { shouldShowEnvVariableModal } from "@/stores/GeneralStore";
+import { shouldShowEnvVariableModal } from "@/stores/ModalStore";
 
 const Modal = () => {
 

@@ -2,7 +2,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb2
+    container_name: promptdesk_mongodb
     restart: always
     ports:
       - 27018:27017

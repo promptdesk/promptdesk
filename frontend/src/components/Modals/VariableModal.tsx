@@ -1,9 +1,9 @@
 import React from "react";
 import {
   shouldShowSaveVariableModal
-} from "@/stores/GeneralStore";
+} from "@/stores/ModalStore";
 
-import { promptStore } from "@/stores/PromptStore";
+import { promptStore, setPromptVariables } from "@/stores/prompts";
 import CodeEditor from "@/components/Editors/CodeEditor";
 
 const Modal = () => {
@@ -18,7 +18,7 @@ const Modal = () => {
 
   function modifyValue(newValue:string) {
     obj[promptStore.getState().selectedVariable].value = newValue
-    promptStore.getState().setPromptVariables(obj)
+    setPromptVariables(obj)
   }
 
   const type = obj[promptStore.getState().selectedVariable].type

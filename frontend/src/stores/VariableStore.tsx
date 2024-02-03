@@ -13,13 +13,13 @@ const variableStore = create<VariableStore>((set) => ({
   variables: [],
   
   fetchVariables: async () => {
-    const variables: Variable[] = await fetchFromPromptdesk('/api/variables')
+    const variables: Variable[] = await fetchFromPromptdesk('/variables')
     set({ variables });
     return variables;
   },
 
   updateVariables: async (variables: Variable[]) => {
-    await fetchFromPromptdesk('/api/variables', 'PUT', variables);
+    await fetchFromPromptdesk('/variables', 'PUT', variables);
     set({ variables });
   }
 

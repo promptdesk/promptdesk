@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { promptWorkspaceTabs } from "@/stores/TabStore";
+import { tabStore } from "@/stores/TabStore";
 
 
 const GeneratedOutput = () => {
   const [ generatedText ] = useState("");
   const [ data, setData ] = useState({} as any);
   
-  const { getDataByIndex, activeTabIndex, tabs} = promptWorkspaceTabs();
+  const { getDataByIndex, activeTabIndex, tabs} = tabStore();
 
   useEffect(() => {
     if(activeTabIndex) {

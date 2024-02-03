@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# This is to create a local development environment for the prompt server and the front-end.
 # Prompt the user for the OpenAI API key
 read -p "Enter your OpenAI API key: " openai_api_key
 

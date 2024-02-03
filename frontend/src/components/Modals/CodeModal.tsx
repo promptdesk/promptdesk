@@ -1,30 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { shouldShowCodeModal } from "@/stores/GeneralStore";
-import { promptStore } from "@/stores/PromptStore";
+import { shouldShowCodeModal } from "@/stores/ModalStore";
+import { promptStore } from "@/stores/prompts";
 import Cookies from "js-cookie";
 
-type VariableValue =
-  | string
-  | VariableValue[]
-  | { [key: string]: VariableValue };
-
-interface PromptVariables {
-  [key: string]: {
-    type: string;
-    value: VariableValue;
-  };
-}
-
-interface PromptObject {
-  prompt_variables: PromptVariables;
-  name: string;
-}
-
 const transformObject = (obj: {
-  [key: string]: VariableValue;
-}): { [key: string]: VariableValue } => {
+  [key: string]: any;
+}): { [key: string]: any } => {
   return Object.keys(obj).reduce(
-    (acc: { [key: string]: VariableValue }, key) => {
+    (acc: { [key: string]: any }, key) => {
       const value = obj[key];
       acc[key] = Array.isArray(value) ? [...value] : value;
       return acc;
@@ -34,7 +17,7 @@ const transformObject = (obj: {
 };
 
 const CodeModal = () => {
-  const { promptObject } = promptStore() as { promptObject: PromptObject };
+  const { promptObject } = promptStore() as { promptObject: any };
   const [apiKey, setApiKey] = useState("");
   const [serviceURL, setServiceURL] = useState("");
 
@@ -57,31 +40,24 @@ const CodeModal = () => {
     }
   }, []);
 
-  const finalObject = Object.keys(promptObject.prompt_variables).reduce(
-    (acc, key) => {
-      const value = promptObject.prompt_variables[key].value;
-      if (typeof value === "object" && !Array.isArray(value)) {
-        acc[key] = transformObject(value);
-      } else {
-        acc[key] = value;
-      }
-      return acc;
-    },
-    {} as { [key: string]: VariableValue }
-  );
-
-  const code = `from promptdesk import PromptDesk
+  const finalObject = Object.keys(promptObject.prompt_variables).reduce((acc:any, key) => {
+    const variable = promptObject.prompt_variables[key];
+    const { value } = variable; // Destructuring for clarity
+  
+    // Direct assignment if value is not an object, or it's an array
+    acc[key] = typeof value === 'object' && !Array.isArray(value) ? transformObject(value) : value;
+  
+    return acc;
+  }, {});
+  
+  const codeTemplate = `from promptdesk import PromptDesk
 
 pd = PromptDesk(
-    api_key = "${apiKey}",
-    service_url = "${serviceURL}"
+    api_key="${apiKey.replace(/"/g, '\\"')}",
+    service_url="${serviceURL.replace(/"/g, '\\"')}"
 )
 
-result = pd.generate("${promptObject.name}", ${JSON.stringify(
-    finalObject,
-    null,
-    2
-  )})`;
+result = pd.generate("${promptObject.name.replace(/"/g, '\\"')}", ${JSON.stringify(finalObject, null, 2)})`;
 
   const { show_code_modal, toggle_code_modal } = shouldShowCodeModal();
 
@@ -111,7 +87,7 @@ result = pd.generate("${promptObject.name}", ${JSON.stringify(
                 suppressContentEditableWarning={true}
                 className="hljs syntax-highlighter dark code-sample-pre p-8 rounded-md"
               >
-                {code}
+                {codeTemplate}
               </pre>
             </div>
             <div className="modal-footer">{renderButtons()}</div>

@@ -1,11 +1,9 @@
 import React from "react";
-import { promptStore } from '@/stores/PromptStore';
+import { removeAtIndex } from "@/services/PromptEditor";
 import Delete from "@/components/Icons/Delete";
 
 
 const RemoveMessage = ({ index }: { index: number }) => {
-
-  const { removeAtIndex } = promptStore()
 
   return (
 

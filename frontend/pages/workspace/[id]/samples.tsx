@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useRouter} from 'next/router';
 import SampleTable from "@/components/Table/SampleTable";
 import {sampleStore} from "@/stores/SampleStore";
-import {promptStore} from "@/stores/PromptStore";
+import {promptStore} from "@/stores/prompts";
 import Pagination from '@/components/Table/Pagination';
 import "./sample.scss";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
@@ -14,7 +14,7 @@ import Head from "next/head";
 export default function SamplesListPage() {
     const {push, back, query} = useRouter();
     const {samples, per_page, total, total_pages, fetchSamples} = sampleStore();
-    const {prompts, setPrompt} = promptStore();
+    const {prompts, activateLocalPrompt} = promptStore();
 
     const initial_page = parseInt(location.search.replace('?page=', ''));
 
@@ -23,7 +23,7 @@ export default function SamplesListPage() {
     const prompt_id = String(query.id);
 
     useEffect(() => {
-        setPrompt(prompt_id);
+        activateLocalPrompt(prompt_id);
     }, [prompt_id]);
 
     useEffect(() => {

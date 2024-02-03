@@ -1,13 +1,10 @@
-import axios from 'axios';
-import { fetchFromPromptdesk, testFromPromptdesk } from './PromptdeskService';
-import Handlebars from "handlebars";
-import Cookies from 'js-cookie';
+import { testFromPromptdesk } from './PromptdeskService';
 
 const testAPI = async (data:object) => {
 
-    var endpoint = '/api/generate/test/endpoint';
+    var endpoint = '/generate/test/endpoint';
     if((data as any).input_format) {
-        endpoint = '/api/generate/test/inputformat';
+        endpoint = '/generate/test/inputformat';
     }
     
     try {

@@ -4,7 +4,7 @@ import { variableStore } from '@/stores/VariableStore';
 import { organizationStore } from '@/stores/OrganizationStore';
 import PlaygroundButton from '@/components/Form/PlaygroundButton';
 import EnvVariableModal from '@/components/Modals/EnvVariableModal';
-import { shouldShowEnvVariableModal } from '@/stores/GeneralStore';
+import { shouldShowEnvVariableModal } from '@/stores/ModalStore';
 import VariablesTable from '@/components/Table/VariablesTable';
 import OrganizationTable from '@/components/Table/OrganizationTable';
 import Head from "next/head";

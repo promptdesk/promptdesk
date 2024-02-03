@@ -68,7 +68,7 @@ authenticate(app);
 app.use(express.static('./public'))
 app.use(express.static('./dist'))
 
-app.get(['/',], (req, res) => {
+app.get(['/','/prompts/all', '/prompts/*'], (req, res) => {
   if(!fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
     return res.end("You must build the frontend first. Run 'npm run build' in the frontend directory.");
   }
@@ -77,6 +77,10 @@ app.get(['/',], (req, res) => {
 
 app.get(['/workspace/*'], (req, res) => {
   res.sendFile(path.join(__dirname, '../dist/workspace/[id].html'));
+});
+
+app.get(['/workspace/*/samples'], (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/workspace/[id]/samples.html'));
 });
 
 app.get(['/:filename'], (req, res) => {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore } from '@/stores/prompts';
 import { modelStore } from '@/stores/ModelStore';
-import { promptWorkspaceTabs } from '@/stores/TabStore';
+import { tabStore } from '@/stores/TabStore';
 import PlaygroundButton from '@/components/Form/PlaygroundButton';
 import { Prompt } from '@/interfaces/prompt';
 import PromptsTable from '@/components/Table/PromptsTable';
@@ -12,8 +12,8 @@ import Link from 'next/link';
 
 export default function PromptsPage() {
   const { push, query } = useRouter();
-  var { prompts, addNewPrompt } = promptStore();
-  const { setActiveTabById } = promptWorkspaceTabs();
+  var { prompts, createLocalPrompt } = promptStore();
+  const { setActiveTabById } = tabStore();
   const { models } = modelStore();
   const [promptList, setPromptList] = useState<Prompt[]>([]);
   const [searchQuery, setQuery] = useState<string>('');
@@ -37,7 +37,6 @@ export default function PromptsPage() {
     fetchPrompts();
   }, [prompts, models]);
 
-  console.log(promptList);
 
   const search = (searchQuery:string) => {
     //combine name, description, model_type, and model into one string and filter based on searchQuery
@@ -50,7 +49,7 @@ export default function PromptsPage() {
   }
 
   const newPrompt = async () => {
-    const newId = await addNewPrompt();
+    const newId = await createLocalPrompt();
     setActiveTabById(newId as string);
     push(`/workspace/${newId}`);
   };
@@ -67,7 +66,7 @@ export default function PromptsPage() {
           const text = e.target?.result;
           if (text) {
             const prompt = JSON.parse(text as string) as any;
-            const newId = await addNewPrompt(prompt);
+            const newId = await createLocalPrompt(prompt);
             setActiveTabById(newId as string);
             push(`/workspace/${newId}`);
           }

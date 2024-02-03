@@ -6,7 +6,6 @@ const log_db = new Log()
 
 async function hellop() {
   const response = await log_db.getLogDetails("65558a1a0393ceadb2c91624");
-  console.log(response);
 }
 
 router.get('/logs', async (req: Request, res: Response) => {

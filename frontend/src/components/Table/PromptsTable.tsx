@@ -18,7 +18,6 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
 
   useEffect(() => {
     const path = query.path as string;
-    console.log(path, project)
     if (path === "all") {
       setPrompts(promptList);
       setProject("undefined");
@@ -37,8 +36,6 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
       return r;
 
     }, keyless);
-
-    console.log(promptLista)
   
     setPrompts(promptLista as any);
   }, [promptList, query]);

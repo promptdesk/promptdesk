@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore, setPromptVariables, processVariables } from '@/stores/prompts';
 import EditorFooter from '@/components/Editors/EditorFooter';
 import GeneratedOutput from '@/components/Editors/Completion/GeneratedOutput';
 import Variables from '@/components/Editors/Variables';
@@ -7,7 +7,7 @@ import {ParsingError} from "@/components/Editors/ParsingError";
 import EnvironmentVariableWarning from './EnvironmentVariableWarning';
 
 function Editor() {
-    const { promptObject, setPromptInformation, setPromptVariables, processVariables, parsingError } = promptStore();
+    const { promptObject, updateLocalPromptValues, parsingError } = promptStore();
     const [promptVariableData, setPromptVariableData] = useState(promptObject.prompt_variables || {});
 
     useEffect(() => {
@@ -15,14 +15,12 @@ function Editor() {
     }, [promptObject.prompt_variables]);
 
     useEffect(() => {
-        console.log("CHANGE!!!")
-        console.log(promptObject.prompt_data.prompt)
         processVariables(promptObject.prompt_data.prompt);
     }, [processVariables, promptObject.prompt_data.prompt]);
 
     const handleInputChange = (e:any) => {
         const inputValue = e.currentTarget.value;
-        setPromptInformation('prompt_data.prompt', inputValue);
+        updateLocalPromptValues('prompt_data.prompt', inputValue);
         //processVariables(promptObject.prompt_data.prompt);
     };
 

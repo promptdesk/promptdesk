@@ -1,9 +1,9 @@
 import { create } from 'zustand'
-import { promptStore } from './PromptStore';
+import { promptStore } from '@/stores/prompts';
 import { Tab } from '@/interfaces/tab';
 import { organizationStore } from './OrganizationStore';
 
-export interface PromptWorkspaceTabs {
+export interface tabStore {
   tabs: Tab[];
   activeTabIndex: number | undefined;
   activeTabId: string | undefined;
@@ -12,9 +12,7 @@ export interface PromptWorkspaceTabs {
   setActiveTab: (name: string) => void;
   setActiveTabById: (id: string) => void;
   updateNameById: (id: string, newId: string, name: string) => void;
-  saveTabsToLocalStorage: () => void;
   retrieveTabsFromLocalStorage: () => void;
-  deactivateAllTabs: () => void;
   removeTabFromTabs: (id: string) => Tab[] | undefined;
   findBestNextTab: () => Tab | undefined;
   updateDataById: (id: string, data: any) => void;
@@ -22,9 +20,13 @@ export interface PromptWorkspaceTabs {
   getDataByIndex: (index: number) => any;
   clearLocalTabs: () => void;
   findActiveTab: () => Tab | undefined;
+  //local
+  saveTabsToLocalStorage: () => void;
+  deactivateAllTabs: () => void;
+
 }
 
-const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
+const tabStore = create<tabStore>((set, get) => ({
 
   tabs: [],
   activeTabIndex: undefined,
@@ -51,7 +53,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
   deactivateAllTabs() {
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: false })) }));
     //set active tab to undefined
-    promptWorkspaceTabs.setState(() => ({
+    tabStore.setState(() => ({
       activeTabIndex: undefined,
       activeTabId: undefined
     }))
@@ -65,7 +67,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
     set(({ tabs }) => ({ tabs: tabs.filter(tab => tab.prompt_id !== id) }));
     get().saveTabsToLocalStorage();
     //set tabs
-    promptWorkspaceTabs.setState((state: { tabs: Tab[]; }) => ({
+    tabStore.setState((state: { tabs: Tab[]; }) => ({
       tabs: state.tabs.filter(tab => tab.prompt_id !== id)
     }))
     return get().tabs;
@@ -91,7 +93,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
       get().deactivateAllTabs();
       set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.prompt_id === id })) }));
       //set activeTabIndex
-      promptWorkspaceTabs.setState(() => ({
+      tabStore.setState(() => ({
         activeTabIndex: get().tabs.findIndex(tab => tab.prompt_id === id),
         activeTabId: id
       }))
@@ -105,7 +107,7 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
     get().deactivateAllTabs();
     set(({ tabs }) => ({ tabs: tabs.map(tab => ({ ...tab, current: tab.name === name })) }));
     //set activeTabIndex
-    promptWorkspaceTabs.setState(() => ({
+    tabStore.setState(() => ({
       activeTabIndex: get().tabs.findIndex(tab => tab.name === name),
       activeTabId: get().tabs.find(tab => tab.name === name)?.prompt_id
     }))
@@ -139,4 +141,4 @@ const promptWorkspaceTabs = create<PromptWorkspaceTabs>((set, get) => ({
 
 
 //export both stores
-export { promptWorkspaceTabs }
+export { tabStore }

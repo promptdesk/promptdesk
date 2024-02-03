@@ -1,14 +1,13 @@
 import { create } from 'zustand';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore } from '@/stores/prompts';
 import { variableStore } from '@/stores/VariableStore';
 import { Model } from '@/interfaces/model';
 import { fetchFromPromptdesk } from '@/services/PromptdeskService'
-import { useEffect } from 'react';
 
 interface ModelStore {
   modelListSelector: { value: any; name: any; }[];
   models: Model[];
-  selectedModeId: string;
+  selectedModel: string;
   modelObject: Model;
   areVariablesSet: boolean;
   missingVariables: string[];
@@ -24,7 +23,7 @@ interface ModelStore {
 const modelStore = create<ModelStore>(set => {
 
     const fetchAllModels = async () => {
-        const models = await fetchFromPromptdesk('/api/models');
+        const models = await fetchFromPromptdesk('/models');
         const dropdownModelList = models.map(({ id, name, type, provider }: Model) => {
             return { value: id, name: `${name} (${type.slice(0, 4)}) ${provider ? `| ${provider}` : ''}` };
         });
@@ -34,7 +33,7 @@ const modelStore = create<ModelStore>(set => {
             models,
             modelListSelector: dropdownModelList,
             modelObject: defaultModel,
-            selectedModeId: defaultModel?.id
+            selectedModel: defaultModel?.id
         });
 
         return models;
@@ -48,11 +47,9 @@ const modelStore = create<ModelStore>(set => {
             return;
         }
         let api_call = JSON.stringify(modelObject.api_call);
-        console.log(variables);
         const regex = /{{(.*?)}}/g;
         const matches = api_call.match(regex);
         const variableList = matches ? matches.map(m => m.slice(2, -2)) : [];
-        console.log(variableList);
 
         var error = false;
         var missing_variable = undefined;
@@ -61,9 +58,7 @@ const modelStore = create<ModelStore>(set => {
             const variable = variables.find(v => v.name === variableName);
             // Check if the variable exists and has a non-empty value
             if (variable && variable.value && variable.value !== '') {
-                //console.log(`${variableName} exists and is not empty.`);
             } else {
-                //add to missingVariables list
                 error = true;
                 missing_variable = variableName;
                 missingVariables.push(variableName);
@@ -85,7 +80,7 @@ const modelStore = create<ModelStore>(set => {
     return {
         modelListSelector: [],
         models: [],
-        selectedModeId: "",
+        selectedModel: "",
         modelObject: { type: "chat" } as Model,
         areVariablesSet: false,
         missingVariables: [],
@@ -110,16 +105,13 @@ const modelStore = create<ModelStore>(set => {
             let currentType = modelObject.type;
             //get existing promptData.prompt_data
             let currentPromptData = promptStore.getState().promptObject.prompt_data;
-            console.log(currentPromptData, currentType, model.type);
 
             if(currentType === model.type) {
                 updateData.prompt_data = currentPromptData;
                 updateData.prompt_parameters = {};
             }
 
-            console.log(updateData)
-
-            set({ modelObject: model, selectedModeId: model.id });
+            set({ modelObject: model, selectedModel: model.id });
 
             promptStore.setState(state => ({
                 promptObject: { ...state.promptObject, ...updateData, model: model.id },
@@ -135,7 +127,7 @@ const modelStore = create<ModelStore>(set => {
         },
 
         saveModel: async (model: Model) => {
-            await fetchFromPromptdesk(`/api/model/${model.id}`, 'PUT', model);
+            await fetchFromPromptdesk(`/model/${model.id}`, 'PUT', model);
             await fetchAllModels();
         },
 
@@ -145,21 +137,14 @@ const modelStore = create<ModelStore>(set => {
                 model.name += " (copy)";
                 (model as any).id = undefined;
             }
-            let newModel = await fetchFromPromptdesk(`/api/model`, 'POST', model);
+            let newModel = await fetchFromPromptdesk(`/model`, 'POST', model);
             await fetchAllModels();
             return newModel.id;
         },
 
         deleteModel: async (model: Model) => {
-            await fetchFromPromptdesk(`/api/model/${model.id}`, 'DELETE');
+            await fetchFromPromptdesk(`/model/${model.id}`, 'DELETE');
             await fetchAllModels();
-        },
-
-        setModelByName: (name: string) => {
-            const model = modelStore.getState().models.find(m => m.name === name);
-            set({ modelObject: model, selectedModeId: model?.id });
-            promptStore.setState(state => ({ promptObject: { ...(state as any).promptObject, model: model?.id } }));
-            checkVariables();
         },
 
         importModel: async (model: Model) => {
@@ -168,7 +153,7 @@ const modelStore = create<ModelStore>(set => {
                 model.name += " (copy)";
                 (model as any).id = undefined;
             }
-            let newModel = await fetchFromPromptdesk(`/api/model`, 'POST', model);
+            let newModel = await fetchFromPromptdesk(`/model`, 'POST', model);
             await fetchAllModels();
             return newModel.id;
         },

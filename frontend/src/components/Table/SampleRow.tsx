@@ -1,27 +1,17 @@
 import React, {useCallback, useMemo, useRef} from 'react';
 import {generateResultForPrompt} from "@/services/GenerateService";
-import {CustomJSONView} from "@/components/Viewers/CustomJSONView";
-import {promptStore} from "@/stores/PromptStore";
+import {promptStore} from "@/stores/prompts";
 import _ from "lodash";
 import {sampleStore} from "@/stores/SampleStore";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
 import "./SampleRow.scss";
-import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import DropDown from "@/components/Form/DropDown";
+import SampleRowHeader from './SampleRowHeader';
+import SampleRowPrompt from './SampleRowPrompt';
+import SampleRowVariables from './SampleRowVariables';
+import SampleRowGroundTruth from './SampleRowGroundTruth';
 
-
-interface SampleRowActionButtonProps {
-    onClick: (evt: any) => void;
-    title: string;
-    showSpinner?: boolean;
-}
-
-interface SampleRowProps {
-    index: number;
-    sample: any;
-}
-
-const SampleRow: React.FC<SampleRowProps> = ({
+const SampleRow: React.FC<any> = ({
                                                  index,
                                                  sample,
                                              }) => {
@@ -120,110 +110,29 @@ const SampleRow: React.FC<SampleRowProps> = ({
 
     const promptText = (localPromptInfo.prompt || localPromptInfo.content || "").toString().trim()
 
-    //return a div
-    const actions = function() {
-        return (
-            <div className="flex justify-between bg-gray-200 p-2">
-                <div className="flex">
-                    <DropDown
-                        options={[{value: 'new', name: 'New'}, {value: 'in_review', name: 'In Review'}, {value: 'approved', name: 'Approved'}, {value: 'rejected', name: 'Rejected'}]}
-                        selected={localStatus}
-                        onChange={handleStatusChange}
-                    />
-                    &nbsp;&nbsp;
-                    <PlaygroundButton
-                        onClick={handleRegenerateClicked as any}
-                        text={isRegenerating ? "Processing..." : "Regenerate"}
-                        color="primary"
-                    />
-                    <PlaygroundButton
-                        onClick={handleDeleteClicked as any}
-                        text={"Delete"}
-                        color="primary"
-                    />
-                </div>
-                <div>
-                    <span className="isolate inline-flex rounded-md shadow-sm">
-                        <button onClick={() => {setView('prompt')}} type="button" className="relative inline-flex items-center rounded-l-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">Prompt</button>
-                        <button onClick={() => {setView('ground_truth')}} type="button" className="relative -ml-px inline-flex items-center rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10">Generated</button>
-                    </span>
-                </div>
-            </div>
-        );
-    }
-
-    const groundTruth = function() {
-        return (
-            <div className="text-input-wrapper h-full">
-                <div
-                    className="sample-row-textarea"
-                    onClick={(evt) => evt.stopPropagation()}
-                    contentEditable={true}
-                    placeholder={"Enter ground truth here."}
-                    suppressContentEditableWarning={true}
-                    onInput={handleTextAreaChange}
-                    ref={resultTextAreaRef}
-                >{localResult}</div>
-            </div>
-        );
-    }
-
-    const prompt = function() {
-        return (
-            <>
-            {
-                    (localPromptInfo.prompt || localPromptInfo.content) ? (
-                        // Use a text area, not because we want it to be editable, but rather so
-                        // it is consistent with the UI in the result column.
-                        <div
-                            className="text-input-wrapper"
-                        >
-                            <div
-                                className={"text-input-md text-input prompt-value-display"}
-                                onClick={(evt) => evt.stopPropagation()}
-                            >
-                                {promptText}
-                            </div>
-                        </div>
-                    ) :
-                        <>
-                            <div onClick={(evt) => evt.stopPropagation()}>
-                                <CustomJSONView
-                                    name={null}
-                                    src={localPromptInfo}
-                                    collapsed={false}
-                                />
-                            </div>
-                        </>
-            }
-            </>
-        );
-    }
-
-    const variables = function() {
-        return (
-            <div style={{maxWidth: "100%"}} onClick={(evt) => evt.stopPropagation()}>
-                <CustomJSONView
-                    name={null}
-                    src={sample.variables}
-                    collapsed={1}
-                />
-            </div>
-        );
-    }
-
     return (
         <>
             <div key={sample.id} className="sample-row mb-4">
                 <div>
-                    <div>{actions()}</div>
+                    <div>
+                            <SampleRowHeader
+                                localStatus={localStatus}
+                                handleStatusChange={handleStatusChange}
+                                handleRegenerateClicked={handleRegenerateClicked}
+                                handleDeleteClicked={handleDeleteClicked}
+                                setView={setView}
+                                isRegenerating={isRegenerating}
+                            />
+                    </div>
                     <div className="">
                         <div className="inline-block w-1/2 align-top" style={{maxHeight:"500px", overflowY:"auto"}}>
-                            {variables()}
+                            <SampleRowVariables variables={sample.variables}/>
                         </div>
                         <div className="inline-block w-1/2 align-top">
                             {
-                                view === "prompt" ? prompt() : groundTruth()
+                                view === "prompt" ?
+                                    <SampleRowPrompt localPromptInfo={localPromptInfo} promptText={promptText}/> :
+                                    <SampleRowGroundTruth localResult={localResult} handleTextAreaChange={handleTextAreaChange} resultTextAreaRef={resultTextAreaRef}/>
                             }
                         </div>
                     </div>

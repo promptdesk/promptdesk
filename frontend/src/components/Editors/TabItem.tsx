@@ -5,14 +5,14 @@ import { Tab } from '@/interfaces/tab';
 interface TabItemProps {
   tab: Tab;
   promptObject: any;
-  updatePromptObjectInPrompts: (promptObject: any) => void;
+  updateLocalPrompt: (promptObject: any) => void;
   removePlaygroundTab: (e: any, id: string) => void;
 }
 
 const TabItem: React.FC<TabItemProps> = ({ 
   tab, 
   promptObject, 
-  updatePromptObjectInPrompts, 
+  updateLocalPrompt, 
   removePlaygroundTab 
 }) => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const TabItem: React.FC<TabItemProps> = ({
       )}
       title={tab.name}
       onClick={() => {
-        updatePromptObjectInPrompts(promptObject);
+        updateLocalPrompt(promptObject);
         router.push(`/workspace/${tab.prompt_id}`);
       }}
       style={{ width: '188px' }}

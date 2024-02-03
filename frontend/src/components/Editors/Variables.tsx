@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore } from '@/stores/prompts';
 import VariableModal from '@/components/Modals/VariableModal';
-import { shouldShowSaveVariableModal } from "@/stores/GeneralStore";
+import { shouldShowSaveVariableModal } from "@/stores/ModalStore";
 
 const Variables = () => {
 

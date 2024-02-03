@@ -22,7 +22,7 @@ const sampleStore = create<SampleStore>((set) => ({
     total_pages: 0,
     samples: [],
     fetchSamples: async (page, prompt_id, model_id, status) => {
-        let url = '/api/samples?page=' + page + '&limit=10';
+        let url = '/samples?page=' + page + '&limit=10';
 
         if(prompt_id !== undefined) {
             url += '&prompt_id=' + prompt_id;
@@ -43,19 +43,19 @@ const sampleStore = create<SampleStore>((set) => ({
         return samples;
     },
     fetchSampleDeatils: async () => {
-        const stats = await fetchFromPromptdesk('/api/samples/details');
+        const stats = await fetchFromPromptdesk('/samples/details');
         return stats;
     },
     fetchSample: async (id:string) => {
-        const sample = await fetchFromPromptdesk('/api/samples/' + id);
+        const sample = await fetchFromPromptdesk('/samples/' + id);
         return sample;
     },
     patchSample: async (id: string, changes: any) => {
-        await fetchFromPromptdesk('/api/samples/' + id, "PATCH", changes);
+        await fetchFromPromptdesk('/samples/' + id, "PATCH", changes);
     },
     deleteSample: async (id: string) => {
         // Make an API call to delete the sample
-        await fetchFromPromptdesk('/api/samples/' + id, "DELETE");
+        await fetchFromPromptdesk('/samples/' + id, "DELETE");
 
         // Also delete the sample locally
         const samples = sampleStore.getState().samples;

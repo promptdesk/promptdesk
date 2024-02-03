@@ -4,18 +4,20 @@ import AddMessage from '@/components/Editors/Chat/AddMessage';
 import MessageContainer from '@/components/Editors/Chat/MessageContainer';
 import EditorFooter from '@/components/Editors/EditorFooter';
 import Variables from '@/components/Editors/Variables';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore, processVariables } from '@/stores/prompts';
 import { modelStore } from '@/stores/ModelStore';
 import {ParsingError} from "@/components/Editors/ParsingError";
+import {toggleRoleAtIndex, editMessageAtIndex} from "@/services/PromptEditor";
 import EnvironmentVariableWarning from './EnvironmentVariableWarning';
 
 function Editor() {
-  const { promptObject, setPromptInformation, editMessageAtIndex, processVariables, toggleRoleAtIndex, parsingError } = promptStore();
+  const { promptObject, updateLocalPromptValues, parsingError } = promptStore();
+
   const { modelObject } = modelStore();
 
   const handleContextChange = (e:any) => {
     const systemInput = e.target.value;
-    setPromptInformation('prompt_data.context', systemInput);
+    updateLocalPromptValues('prompt_data.context', systemInput);
     processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
   };
 
@@ -44,7 +46,7 @@ function Editor() {
 
   //if promptObject.prompt_data is null, set it to an empty object
   if(!promptObject.prompt_data) {
-    setPromptInformation('prompt_data', {});
+    updateLocalPromptValues('prompt_data', {});
   }
 
   return (

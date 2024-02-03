@@ -5,11 +5,9 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     //read auth token from local storage if it exists
     let token = undefined;
-    let organization = undefined;
     if (typeof window !== 'undefined') {
 
         token = Cookies.get('token');
-        organization = Cookies.get('organization');
 
     }
 
@@ -25,7 +23,7 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
             url = process.env.PROMPT_SERVER_URL;
         }
 
-        const endpoint = `${url}${path}`;
+        const endpoint = `${url}/api${path}`;
 
         var response = await axios({
             url: endpoint,
@@ -40,7 +38,6 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     } catch (error) {
 
-        console.log(error);
         alert("Something went wrong. Please try again later.");
 
     }
@@ -51,11 +48,9 @@ const testFromPromptdesk = async (path: string, method: string = 'GET', body?: a
 
         //read auth token from local storage if it exists
         let token = undefined;
-        let organization = undefined;
         if (typeof window !== 'undefined') {
     
             token = Cookies.get('token');
-            organization = Cookies.get('organization');
     
         }
     

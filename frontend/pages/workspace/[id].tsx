@@ -10,10 +10,10 @@ import ErrorPage from 'next/error';
 import {
   shouldShowSaveModal,
   shouldShowSaveVariableModal,
-} from "@/stores/GeneralStore";
-import {promptWorkspaceTabs} from "@/stores/TabStore";
+} from "@/stores/ModalStore";
+import {tabStore} from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
-import { promptStore } from "@/stores/PromptStore";
+import { promptStore } from "@/stores/prompts";
 import Link from "next/link";
 import Head from "next/head";
 import Warning from "@/components/Alerts/Warning";
@@ -39,22 +39,21 @@ export default function SinglePromptEditPage() {
     setActiveTab,
     isActiveTab,
     setActiveTabById
-  } = promptWorkspaceTabs();
+  } = tabStore();
 
   const {
-    fetchAllPrompts,
-    setPrompt,
-    setPromptInformation,
+    activateLocalPrompt,
+    updateLocalPromptValues,
     promptObject,
     prompts,
-    addNewPrompt,
-    updatePromptObjectInPrompts
+    createLocalPrompt,
+    updateLocalPrompt
   } = promptStore() ?? {};
 
   const {
     modelListSelector,
     fetchAllModels,
-    selectedModeId,
+    selectedModel,
     setModelById,
     modelObject,
     models,
@@ -62,10 +61,10 @@ export default function SinglePromptEditPage() {
 
   useEffect(() => {
     const id = query.id as string;
-    setPrompt(id);
+    activateLocalPrompt(id);
     setModelById(promptObject.id as string);
     setActiveTabById(id);
-  }, [query.id, promptObject.id, setActiveTabById, setModelById, setPrompt]);
+  }, [query.id, promptObject.id, setActiveTabById, setModelById, activateLocalPrompt]);
 
   const changeIdInUrl = (newId: string) => {
     const newUrl = `/workspace/${newId}`;
@@ -89,9 +88,9 @@ export default function SinglePromptEditPage() {
   };
 
   const newPrompt = async () => {
-    const newId = await addNewPrompt();
+    const newId = await createLocalPrompt();
     setActiveTabById(newId as string);
-    setPrompt(newId as string);
+    activateLocalPrompt(newId as string);
     setModelById(newId as string);
     push(`/workspace/${newId}`);
   };
@@ -108,7 +107,7 @@ export default function SinglePromptEditPage() {
             <div className="hidden sm:block">
               <TabNavigation 
                 tabs={tabs}
-                updatePromptObjectInPrompts={updatePromptObjectInPrompts}
+                updateLocalPrompt={updateLocalPrompt}
                 newPrompt={newPrompt}
                 removePlaygroundTab={removePlaygroundTab}
                 promptObject={promptObject}
@@ -136,11 +135,11 @@ export default function SinglePromptEditPage() {
                 <RightPanel
                   toggle_modal={toggle_modal}
                   modelListSelector={modelListSelector}
-                  selectedModeId={selectedModeId}
+                  selectedModel={selectedModel}
                   setModelById={setModelById}
                   modelObject={modelObject}
                   promptObject={promptObject}
-                  setPromptInformation={setPromptInformation}
+                  updateLocalPromptValues={updateLocalPromptValues}
                 />
           </div>
           )}

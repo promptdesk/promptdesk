@@ -8,13 +8,13 @@
     "debug": "NODE_ENV=debug next dev",
     "start": "next start",
     "lint": "next lint",
-    "test": "NODE_ENV=development vitest"
+    "test": "NODE_ENV=development jest",
+    "playwright": "npx playwright test"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@monaco-editor/react": "^4.6.0",
-    "@testing-library/react": "^14.0.0",
     "@types/js-cookie": "^3.0.5",
     "@types/node": "20.3.3",
     "@types/react": "18.2.14",
@@ -34,17 +34,23 @@
     "postcss": "^8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-json-view": "^1.21.3",
     "react-router-dom": "^6.15.0",
     "react-tag-input-component": "^2.0.2",
+    "react18-json-view": "^0.2.7",
     "sass": "^1.69.5",
     "tailwindcss": "^3.3.3",
     "typescript": "5.1.6",
     "zustand": "^4.3.9"
   },
   "devDependencies": {
+    "@playwright/test": "^1.41.1",
+    "@testing-library/jest-dom": "^6.4.0",
+    "@testing-library/react": "^14.2.0",
     "@types/lodash": "^4.14.202",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsdom": "^22.1.0",
+    "ts-node": "^10.9.2",
     "vitest": "^0.34.4"
   }
 }

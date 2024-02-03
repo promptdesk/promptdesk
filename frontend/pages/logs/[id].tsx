@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { logStore } from '@/stores/LogStore';
 import { modelStore } from '@/stores/ModelStore';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore } from '@/stores/prompts';
 import { useRouter } from 'next/router';
 import moments from 'moment';
 import InputField from '@/components/Form/InputField';
@@ -24,7 +24,7 @@ function LogAttribute({ label, value }: {label: string; value: string }) {
 
 export default function SingleLogPage() {
   var { logs, fetchLog } = logStore();
-  var { prompts } = promptStore();
+  var { prompts, activateLocalPrompt } = promptStore();
   var { models } = modelStore();
 
   const [log, setLog] = useState({} as Log);
@@ -61,7 +61,7 @@ export default function SingleLogPage() {
     }
 
     if((log as any).raw && (log as any).data) {
-      setPrompt((log as any).data)
+      activateLocalPrompt((log as any).data)
     }
 
     if((log as any).raw && (log as any).generated) {

@@ -11,7 +11,6 @@ export default function DropDown({
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
-      console.log(e.target.value)
       var value = e.target.value as any
       if(e.target.value === 'none') {
         value = undefined;

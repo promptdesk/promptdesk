@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { logStore } from '@/stores/LogStore';
-import { promptStore } from '@/stores/PromptStore';
+import { promptStore } from '@/stores/prompts';
 import { modelStore } from '@/stores/ModelStore';
 import LogTable from '@/components/Table/LogTable';
 import Pagination from '@/components/Table/Pagination';
@@ -13,7 +13,7 @@ import Head from "next/head";
 export default function LogListPage() {
   const { push } = useRouter();
 
-  var { logs, fetchLogs, fetchLogDeatils } = logStore();
+  var { logs, fetchLogs, fetchLogDetails } = logStore();
   var { models } = modelStore();
   var { prompts } = promptStore();
 
@@ -33,7 +33,7 @@ export default function LogListPage() {
   });
 
   async function getSetLogDetails() {
-    let logInfo = await fetchLogDeatils();
+    let logInfo = await fetchLogDetails();
     setlogDetails({
       'prompts': [{name:'All prompts', value:undefined}, {name:'Undefined prompts', value:'undefined'}].concat(logInfo.prompts),
       'models': [{name:'All models', value:undefined}].concat(logInfo.models),
