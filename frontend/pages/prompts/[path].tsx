@@ -86,7 +86,7 @@ export default function PromptsPage() {
       <div className="pg-header">
         <div className="pg-header-section pg-header-title flex justify-between">
           <h1 className="pg-page-title">Prompts</h1>
-          <div className="flex">
+          <div className="flex space-x-2">
             <InputField
               placeholder="Search prompts"
               onInputChange={(value) => {setQuery(value); search(value)}}
