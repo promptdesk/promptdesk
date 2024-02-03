@@ -16,11 +16,8 @@ function PlaygroundButton({ id, text, onClick, isFull, color }: PlaygroundButton
   };
 
   let baseClass = "btn btn-sm btn-filled btn-neutral";
-  if(color === "secondary") {
-    baseClass = "btn btn-sm btn-filled btn-secondary";
-  }
-  if(color === "primary") {
-    baseClass = "btn btn-sm btn-filled btn-primary";
+  if(color) {
+    baseClass = `btn btn-sm btn-filled btn-${color}`;
   }
   const className = isFull ? `${baseClass} w-full` : baseClass;
 
