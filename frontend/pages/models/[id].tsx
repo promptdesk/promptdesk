@@ -7,6 +7,7 @@ import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
 import { set } from "lodash";
+import ConfirmModal from "@/components/Modals/ConfirmModal";
 
 export default function ModelsPage() {
 
@@ -26,6 +27,9 @@ export default function ModelsPage() {
   const [outputFormat, setOutputFormat] = useState("" as string);
   const [responseMapping, setResponseMapping] = useState({} as any);
   const [requestMapping, setRequestMapping] = useState({} as any);
+
+  // model components
+  const [isShowingConfirmDeleteModal, setIsShowingConfirmDeleteModal] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -155,7 +159,7 @@ export default function ModelsPage() {
             <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
             <PlaygroundButton text="Export" onClick={handleExport} />
             <PlaygroundButton text="Import" onClick={handleImport} />
-            <PlaygroundButton text="Delete" onClick={handleDelete} />
+            <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative"/>
           </div>
         </div>
       </div>
@@ -185,6 +189,20 @@ export default function ModelsPage() {
           setFormattedParameters={setFormattedParameters}
           testAPI={testAPI} />
       </div>
+      {isShowingConfirmDeleteModal ? 
+        <ConfirmModal 
+          acceptText="Yes"
+          bodyText="This action will delete model, you sure?"
+          cancelText="Cancel"
+          onAccept={() => {
+            handleDelete()
+            setIsShowingConfirmDeleteModal(false)
+            }}
+          onCancel={()=>{
+            setIsShowingConfirmDeleteModal(false)
+          }}
+          title="Delete Model" /> 
+      : null}
     </div>
     </>
   );
