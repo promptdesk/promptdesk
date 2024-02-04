@@ -44,7 +44,7 @@ const generateResultForPrompt = async (promptId: string) => {
 
         //updateWorkspaceTabs(promptId, { loading: true });
         tabStore.getState().updateDataById(promptId, { loading: true })
-        const data = await fetchFromPromptdesk('/generate/', 'POST', prompt);
+        const data = await fetchFromPromptdesk('/generate', 'POST', prompt);
         tabStore.getState().updateDataById(promptId, { loading: false })
         const currentPrompt = promptStore.getState().promptObject;
     

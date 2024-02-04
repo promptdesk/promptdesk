@@ -5,8 +5,6 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { Organization, Log, Model, Prompt, Variable } from '../../../src/models/allModels';
 
-
-
 describe('allModels', function() {
 
   it('should initiate each object in allModels', function() {

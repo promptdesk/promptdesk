@@ -19,7 +19,10 @@ describe('Logs API', function() {
   it('should respond with 200 and have a logs array on GET /logs', async function() {
     const res = await request(app).get('/api/logs').query({ page: 1, limit: 10 }).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(200);
-    expect(res.body).to.be.an('array');
+    expect(res.body).to.have.property('page');
+    expect(res.body).to.have.property('total');
+    expect(res.body).to.have.property('data');
+    expect(res.body).to.have.property('stats');
   });
 
   it('should create a log and respond with 201 and log id on POST /logs', async function() {
@@ -41,12 +44,6 @@ describe('Logs API', function() {
     const nonExistentLogId = '6507d3ddb7bf7679fb132df5';
     const res = await request(app).get(`/api/logs/${nonExistentLogId}`).set('Authorization', 'Bearer ' + token);
     expect(res.status).to.equal(404);
-  });
-
-  it('should respond with 200 and the organization stats on GET /stats', async function() {
-      const res = await request(app).get('/api/stats').set('Authorization', 'Bearer ' + token);
-      expect(res.status).to.equal(200);
-      expect(res.body).to.be.an('object');
   });
 
 });
