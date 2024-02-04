@@ -6,7 +6,7 @@ interface InputFieldProps {
     value?: string;
     label?: string;
     disabled?: boolean;
-    id: string;
+    id?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label, disabled,id }) => {

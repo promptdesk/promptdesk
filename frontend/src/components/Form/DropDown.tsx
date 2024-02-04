@@ -9,7 +9,7 @@ export default function DropDown({
   options: any[];
   selected: any;
   onChange: any;
-  id: string;
+  id?: string;
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
