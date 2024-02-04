@@ -6,9 +6,10 @@ interface InputFieldProps {
     value?: string;
     label?: string;
     disabled?: boolean;
+    id: string;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label, disabled }) => {
+const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, value, label, disabled,id }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (onInputChange) onInputChange(event.target.value);
     };
@@ -16,13 +17,13 @@ const InputField: React.FC<InputFieldProps> = ({ onInputChange, placeholder, val
     return (
         <>
             {label && (
-                <label htmlFor="model-name" className="block text-sm font-medium leading-6 text-gray-900">
+                <label htmlFor={id} className="block text-sm font-medium leading-6 text-gray-900">
                 {label}
                 </label>
             )}
             <div>
                 <input 
-                    id="model-name"
+                    id={id}
                     disabled={disabled === true}
                     value={value}
                     placeholder={placeholder}

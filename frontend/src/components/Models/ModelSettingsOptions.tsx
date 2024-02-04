@@ -11,6 +11,7 @@ const ModelSettingsOptions: React.FC<any> = ({
             <div className="col-span-2">
                 <InputField
                     label="Model Name"
+                    id="model-name"
                     value={selectedModel.name || ""}
                     onInputChange={(value) => updateModel("name", value)}
                 />
@@ -18,6 +19,7 @@ const ModelSettingsOptions: React.FC<any> = ({
             <div className="col-span-2">
                 <InputField
                     label="Provider"
+                    id="provider"
                     value={selectedModel.provider || ""}
                     onInputChange={(value) => updateModel("provider", value)}
                 />
@@ -25,6 +27,7 @@ const ModelSettingsOptions: React.FC<any> = ({
             <div className="col-span-2">
                 <DropDown
                     label="Model Type"
+                    id="model-type"
                     options={[
                         { name: "Completion", value: "completion" },
                         { name: "Chat", value: "chat" },
@@ -36,6 +39,7 @@ const ModelSettingsOptions: React.FC<any> = ({
             <div className="col-span-2">
                 <DropDown
                     label="Default model"
+                    id="default-model"
                     options={[
                         { value: true, name: "True" },
                         { value: false, name: "False" },
