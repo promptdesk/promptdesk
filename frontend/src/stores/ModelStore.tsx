@@ -43,7 +43,7 @@ const modelStore = create<ModelStore>(set => {
         //get current modelObject
         const { variables } = variableStore.getState();
         const { modelObject } = modelStore.getState();
-        if(!modelObject || !variables) {
+        if(!modelObject || !variables || !modelObject.api_call) {
             return;
         }
         let api_call = JSON.stringify(modelObject.api_call);
@@ -89,8 +89,16 @@ const modelStore = create<ModelStore>(set => {
         checkVariables,
 
         setModelById: (id: string) => {
-            const model = modelStore.getState().models.find(m => m.id === id);
-            if (!model) return;
+            let model = modelStore.getState().models.find(m => m.id === id);
+            /*if (!model) {
+                model = modelStore.getState().models.find(m => m.default === true);
+            }
+            if (!model) {
+                model = modelStore.getState().models[0];
+            }*/
+            if (!model) {
+                return;
+            }
 
             const updateData: any = {};
             if (model.type === "completion") {
@@ -99,9 +107,11 @@ const modelStore = create<ModelStore>(set => {
                 updateData.prompt_data = { messages: [], context: "" };
             }
 
-
             //get current modelObject
-            const { modelObject } = modelStore.getState();
+            let { modelObject } = modelStore.getState();
+            /*if(!modelObject) {
+                modelObject = model
+            }*/
             let currentType = modelObject.type;
             //get existing promptData.prompt_data
             let currentPromptData = promptStore.getState().promptObject.prompt_data;
@@ -114,10 +124,10 @@ const modelStore = create<ModelStore>(set => {
             set({ modelObject: model, selectedModel: model.id });
 
             promptStore.setState(state => ({
-                promptObject: { ...state.promptObject, ...updateData, model: model.id },
+                promptObject: { ...state.promptObject, ...updateData, model: (model as Model).id },
                 prompts: state.prompts.map(prompt => {
                     if (prompt.id === state.promptObject.id) {
-                        return { ...prompt, model: model.id };
+                        return { ...prompt, model: (model as Model).id };
                     }
                     return prompt;
                 })

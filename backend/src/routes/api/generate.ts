@@ -2,11 +2,12 @@ import express from 'express';
 import axios from 'axios';
 import { Log, Sample} from '../../models/allModels';
 import { prompt_model_validation, process_prompt_variables, replace_api_variables, generate_cached_response } from '../../utils/generate';
-
+import { JSONMapper } from 'promptdesk';
 let log_db = new Log();
 let sample_db = new Sample();
 
 const router = express.Router();
+let jmap = new JSONMapper();
 
 // Route for /api/generate/gpt-3.5-turbo
 router.all(['/generate'], async (req, res) => {
@@ -24,23 +25,27 @@ router.all(['/generate'], async (req, res) => {
 
         //SET API ENV VARIABLES
         var api_call = await replace_api_variables(model.api_call, organization)
-        
-        //SET INPUT/OUTPUT MAPPING FUNCTIONS
-        var input_format = eval(model.input_format)
-        var output_format = eval(model.output_format)
 
         //SET PROMPT VARIABLES
         let [prompt_data, prompt_variables] = process_prompt_variables(prompt, req.body, proxy)
         
         //SET API CALL BODY
-        var body = input_format(prompt_data, prompt.prompt_parameters)
-    
+        let body = {} as any;
+        if(model.input_format) {
+            var input_format = eval(model.input_format)
+            body = input_format(prompt_data, prompt.prompt_parameters)
+        } else if (model.request_mapping) {
+            body = jmap.applyMapping({
+                ...prompt_data,
+                model_parameters:prompt.prompt_parameters,
+            }, model.request_mapping)
+        }
+
         //SET API CALL REQUEST JSON BODY
         api_call.data = body
 
         //GENERATE HASH AND CACHED RESPONSE IF AVAILABLE
         let [hash, cachedResponse] = await generate_cached_response(body, cache, organization)
-
         if(cachedResponse) {
             return res.status(200).json(cachedResponse);
         }
@@ -49,7 +54,17 @@ router.all(['/generate'], async (req, res) => {
         
         try {
             const response = await axios(api_call);
-            const data = output_format(response.data);
+            let data = {} as any;
+            if(model.output_format) {
+                var output_format = eval(model.output_format)
+                data = output_format(response.data);
+            } else if (model.response_mapping) {
+                data = jmap.applyMapping(response.data, model.response_mapping)
+            }
+
+            if(data.text && model.response_mapping) {
+                data = data.text
+            }
             
             // Construct success response
             obj = {
@@ -103,7 +118,6 @@ router.all(['/generate'], async (req, res) => {
         }
         
     } catch (error:any) {
-        console.log("error", error)
         return res.status(500).json({ error: error, message:error.message, status: 500 });
     }
 

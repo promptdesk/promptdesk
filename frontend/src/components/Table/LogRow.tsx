@@ -82,8 +82,8 @@ const LogRow: React.FC<LogRowProps> = ({ index, log, handleRowClick, getPromptNa
                                                 </fieldset>
                                             ) : (
                                                 <fieldset className="border p-2">
-                                                    <legend className="w-auto">{log.message.role}</legend>
-                                                    <p>{log.message.content}</p>
+                                                    <legend className="w-auto">{log?.message?.role}</legend>
+                                                    <p>{log?.message?.content}</p>
                                                 </fieldset>
                                             )
                                         }

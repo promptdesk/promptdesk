@@ -1,7 +1,10 @@
 import { XCircleIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
-export default function ModelError({ errorMessage, logId }: any) {
+export default function ModelError({ errorMessage, logId }: {
+  errorMessage: string | undefined,
+  logId?: string | undefined
+}) {
   return (
     <>
     {!errorMessage ? null :
@@ -12,12 +15,14 @@ export default function ModelError({ errorMessage, logId }: any) {
             </div>
             <div className="ml-3 flex-1 md:flex md:justify-between">
             <p className="text-sm text-red-700">{errorMessage}</p>
-            <p className="mt-3 text-sm md:ml-6 md:mt-0">
-                <Link href="/logs/[id]" as={`/logs/${logId}`} className="whitespace-nowrap font-medium text-red-700 hover:text-red-600">
-                Logs
-                <span aria-hidden="true"> &rarr;</span>
-                </Link>
-            </p>
+            {logId === undefined ? null :
+              <p className="mt-3 text-sm md:ml-6 md:mt-0">
+                  <Link href="/logs/[id]" as={`/logs/${logId}`} className="whitespace-nowrap font-medium text-red-700 hover:text-red-600">
+                  Logs
+                  <span aria-hidden="true"> &rarr;</span>
+                  </Link>
+              </p>
+            }
             </div>
         </div>
         </div>

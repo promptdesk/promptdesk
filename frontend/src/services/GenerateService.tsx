@@ -77,9 +77,7 @@ const generateResultForPrompt = async (promptId: string) => {
         return data;
     } catch (error:any) {
 
-        //console.error('API Call Error:', "error.message", error.message);
-        tabStore.getState().updateDataById(promptId, { loading: false, error: error.message, logId: error.response.data.log_id })
-        //throw error;
+        tabStore.getState().updateDataById(promptId, { loading: false, error: error.message, logId: error.response?.data?.log_id })
 
     }
 };

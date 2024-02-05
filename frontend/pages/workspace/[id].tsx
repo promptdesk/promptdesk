@@ -100,7 +100,7 @@ export default function SinglePromptEditPage() {
     <Head>
       <title>Edit {promptObject.name} - PromptDesk</title>
     </Head>
-    {(modelObject && promptObject) && (
+    {(promptObject) && (
         <div className="pg-main">
           <div className="pg-tab-header">
             {/* TABS */}

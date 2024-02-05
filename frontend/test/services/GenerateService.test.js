@@ -10,12 +10,12 @@ describe('generateResultForPrompt integration tests', () => {
         await variableStore.getState().fetchVariables();
         await fetchAllPrompts();
         await modelStore.getState().fetchAllModels();
-        modelStore.getState().setModelById("65558a1a0393ceadb2c9162e");
-        promptStore.getState().activateLocalPrompt("656577645b9fbfdddf32b1ae")
+        modelStore.getState().setModelById("65c033962dbbaf11d088e6b7");
+        promptStore.getState().activateLocalPrompt("65558a1a0393ceadb2c9162c")
         tabStore.setState({ 
             tabs: [{
                 name: 'Test Tab',
-                prompt_id: '656577645b9fbfdddf32b1ae',
+                prompt_id: '65558a1a0393ceadb2c9162c',
                 current: true,
                 data: {},
                 loading: true
@@ -23,20 +23,19 @@ describe('generateResultForPrompt integration tests', () => {
             activeTabIndex: undefined,
             activeTabId: undefined
         });
-        tabStore.getState().setActiveTabById("656577645b9fbfdddf32b1ae");
+        tabStore.getState().setActiveTabById("65558a1a0393ceadb2c9162c");
     });
 
     it('should handle generating results for a prompt correctly', async () => {
         // Setup necessary state in stores
-        const promptId = '656577645b9fbfdddf32b1ae';
+        const promptId = '65558a1a0393ceadb2c9162c';
 
         let data;
         await act(async () => {
             data = await generateResultForPrompt(promptId);
         });
 
-
-        expect(typeof data.message).toBe('string');
+        expect(typeof data.message.content).toBe('string');
         expect(data.error).toBe(false);
     });
 

@@ -142,3 +142,4 @@ ___*
 *.key
 *.crt
 certbot/
+.swc

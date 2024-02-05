@@ -88,9 +88,7 @@ export async function prompt_model_validation(body:any, organization:any) {
         //get prompt if using SDK (saved in DB)
         if (body.prompt_name) {
             prompt = await prompt_db.findPromptByName(body.prompt_name, organization.id);
-    
-            console.log("findPromptByName", prompt)
-    
+        
             if (!prompt) {
                 return [undefined, undefined, undefined, { error:true, message: 'Prompt name is required.', status: 404 }, organization, cache]
             }
@@ -116,12 +114,12 @@ export async function prompt_model_validation(body:any, organization:any) {
             return [undefined, undefined, undefined, { error:true, message: 'Model API object not found.', status: 404 }, organization, cache]
         }
 
-        if(!model.input_format){
-            return [undefined, undefined, undefined, { error:true, message: 'Model input format function not found.', status: 404 }, organization, cache];
+        if(!model.input_format && !model.request_mapping){
+            return [undefined, undefined, undefined, { error:true, message: 'Request JSON mapping not found.', status: 404 }, organization, cache];
         }
 
-        if(!model.output_format){
-            return [undefined, undefined, undefined, { error: true, message: 'Model output format function not found.', status: 404 }, organization, cache];
+        if(!model.output_format && !model.response_mapping){
+            return [undefined, undefined, undefined, { error: true, message: 'Response JSON mapping not found.', status: 404 }, organization, cache];
         }
     
         return [prompt, model, proxy, error, cache]

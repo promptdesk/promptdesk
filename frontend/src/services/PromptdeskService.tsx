@@ -36,9 +36,13 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
         })
         return response.data;
 
-    } catch (error) {
-
-        alert("Something went wrong. Please try again later.");
+    } catch (error:any) {
+        
+        if(error?.response?.data?.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            alert("Something went wrong. Please try again later.");
+        }
 
     }
 
