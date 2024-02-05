@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { shouldShowCodeModal } from "@/stores/ModalStore";
 import { promptStore } from "@/stores/prompts";
 import Cookies from "js-cookie";
+import CopyWrapper from "../CopyWrapper";
 
 const transformObject = (obj: {
   [key: string]: any;
@@ -35,21 +36,21 @@ const CodeModal = () => {
       setApiKey(token);
     }
 
-    if(process.env.PROMPT_SERVER_URL) {
+    if (process.env.PROMPT_SERVER_URL) {
       setServiceURL(process.env.PROMPT_SERVER_URL);
     }
   }, []);
 
-  const finalObject = Object.keys(promptObject.prompt_variables).reduce((acc:any, key) => {
+  const finalObject = Object.keys(promptObject.prompt_variables).reduce((acc: any, key) => {
     const variable = promptObject.prompt_variables[key];
     const { value } = variable; // Destructuring for clarity
-  
+
     // Direct assignment if value is not an object, or it's an array
     acc[key] = typeof value === 'object' && !Array.isArray(value) ? transformObject(value) : value;
-  
+
     return acc;
   }, {});
-  
+
   const codeTemplate = `from promptdesk import PromptDesk
 
 pd = PromptDesk(
@@ -82,13 +83,15 @@ result = pd.generate("${promptObject.name.replace(/"/g, '\\"')}", ${JSON.stringi
           <div>
             <div className="modal-header heading-medium">Source Code</div>
             <div className="modal-body body-small">
-              <pre
-                style={{ whiteSpace: "pre-wrap" }}
-                suppressContentEditableWarning={true}
-                className="hljs syntax-highlighter dark code-sample-pre p-8 rounded-md"
-              >
-                {codeTemplate}
-              </pre>
+              <CopyWrapper textToCopy={codeTemplate}>
+                <pre
+                  style={{ whiteSpace: "pre-wrap" }}
+                  suppressContentEditableWarning={true}
+                  className="hljs syntax-highlighter dark code-sample-pre p-8 rounded-md"
+                >
+                  {codeTemplate}
+                </pre>
+              </CopyWrapper>
             </div>
             <div className="modal-footer">{renderButtons()}</div>
           </div>
