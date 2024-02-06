@@ -11,7 +11,7 @@ import {
   shouldShowSaveModal,
   shouldShowSaveVariableModal,
 } from "@/stores/ModalStore";
-import {tabStore} from "@/stores/TabStore";
+import { tabStore } from "@/stores/TabStore";
 import { modelStore } from "@/stores/ModelStore";
 import { promptStore } from "@/stores/prompts";
 import Link from "next/link";
@@ -74,13 +74,13 @@ export default function SinglePromptEditPage() {
   const removePlaygroundTab = (e: any, id: string) => {
     e.stopPropagation();
 
-    if(isActiveTab(id) && tabs.length > 1) {
+    if (isActiveTab(id) && tabs.length > 1) {
       const bestNextTab = findBestNextTab();
       bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
     }
 
     var x = removeTabFromTabs(id)?.length
-    
+
     if (x === 0) {
       push("/prompts");
     }
@@ -97,15 +97,15 @@ export default function SinglePromptEditPage() {
 
   return (
     <>
-    <Head>
-      <title>Edit {promptObject.name} - PromptDesk</title>
-    </Head>
-    {(promptObject) && (
+      <Head>
+        <title>Edit {promptObject.name} - PromptDesk</title>
+      </Head>
+      {(promptObject) && (
         <div className="pg-main">
           <div className="pg-tab-header">
             {/* TABS */}
             <div className="hidden sm:block">
-              <TabNavigation 
+              <TabNavigation
                 tabs={tabs}
                 updateLocalPrompt={updateLocalPrompt}
                 newPrompt={newPrompt}
@@ -118,20 +118,21 @@ export default function SinglePromptEditPage() {
             <ErrorPage statusCode={404} />
           )}
           {promptObject.id && promptObject.id !== "" && (
-          <div className="pg-body">
-                {/*show && <History />*/}
-                {show_modal && <Modal />}
-                {show_variable_modal && <VariableModal />}
-                <div className="pg-editor">
-                <Warning className="mb-2" display={modelObject.input_format != undefined} text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models." />
-                  <div className="pg-content-body">
-                    {modelObject.type === "chat" ? (
-                      <ChatEditor />
-                    ) : (
-                      <Editor />
-                    )}
-                  </div>
+            <div className="pg-body">
+              {/*show && <History />*/}
+              {show_modal && <Modal />}
+              {show_variable_modal && <VariableModal />}
+              <div className="pg-editor">
+                <Warning className="mb-2" display={modelObject?.input_format != undefined} text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models." />
+                <div className="pg-content-body">
+                  {modelObject?.type === "chat" ? (
+                    <ChatEditor />
+                  ) : (
+                    <Editor />
+                  )}
                 </div>
+              </div>
+              {modelObject &&
                 <RightPanel
                   toggle_modal={toggle_modal}
                   modelListSelector={modelListSelector}
@@ -141,11 +142,12 @@ export default function SinglePromptEditPage() {
                   promptObject={promptObject}
                   updateLocalPromptValues={updateLocalPromptValues}
                 />
-          </div>
+              }
+            </div>
           )}
         </div>
-    )}
+      )}
     </>
   );
-  
+
 }

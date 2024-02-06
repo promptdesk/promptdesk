@@ -4,22 +4,22 @@ import { Prompt as PromptInterface } from '@/interfaces/prompt';
 const promptSchema = mongoose.model(
   'PromptX',
   new mongoose.Schema({
-    name: String,
-    description: String,
-    model: String,
-    prompt_variables: mongoose.Schema.Types.Mixed,
-    prompt_parameters: mongoose.Schema.Types.Mixed,
-    prompt_data: mongoose.Schema.Types.Mixed,
-    model_type: String,
-    organization_id: String,
-    project: String,
-  }, {
-    timestamps: true
+      name: String,
+      description: String,
+      model: String,
+      prompt_variables: mongoose.Schema.Types.Mixed,
+      prompt_parameters: mongoose.Schema.Types.Mixed,
+      prompt_data: mongoose.Schema.Types.Mixed,
+      model_type: String,
+      organization_id: String,
+      project: String,
+    }, {
+      timestamps: true
   })
 );
 
 class Prompt {
-
+  
   async createPrompt(promptData:PromptInterface, organization_id:string) {
     //add organization_id to promptData
     promptData.organization_id = organization_id;
@@ -38,7 +38,12 @@ class Prompt {
     return prompt ? this.transformPrompt(prompt) : null;
   }
 
-  async updatePrompt(updatedPrompt:any, organization_id:string) {
+  async findPromptByModelId(modelId: string) {
+    const prompt = await promptSchema.findOne({ model: modelId });
+    return prompt;
+  }
+
+  async updatePrompt(updatedPrompt: any, organization_id: string) {
     const { id, ...promptData } = updatedPrompt;
     await promptSchema.findOneAndUpdate({ _id: id, organization_id }, promptData);
   }

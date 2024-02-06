@@ -6,8 +6,8 @@ import { ModelList } from "@/components/Models/ModelList";
 import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
-import { set } from "lodash";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ModelsPage() {
 
@@ -53,7 +53,7 @@ export default function ModelsPage() {
     setApiResponse({})
   }, [selectedModel]);
 
-  const setFormattedApi = (json_string:any) => {
+  const setFormattedApi = (json_string: any) => {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
       setApi(parsedJson);
@@ -61,7 +61,7 @@ export default function ModelsPage() {
     }
   }
 
-  const setFormattedParameters = (json_string:any) => {
+  const setFormattedParameters = (json_string: any) => {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
       setParameters(parsedJson);
@@ -89,10 +89,14 @@ export default function ModelsPage() {
     push(newUrl);
   };
 
-  const handleDelete = async () => {
-    await deleteModel(selectedModel);
-    const nextModel = models.find((_, index) => index !== models.indexOf(selectedModel)) || {};
-    setSelectedModel(nextModel);
+  const handleDelete = () => {
+    deleteModel(selectedModel).then(() => {
+      const nextModel = models.find((_, index) => index !== models.indexOf(selectedModel)) || {};
+      setSelectedModel(nextModel);
+    }).catch((err: Error) => {
+      const msg = err?.message;
+      toast.error(msg, { position: 'bottom-right' });
+    })
   };
 
   const handleExport = () => {
@@ -147,63 +151,64 @@ export default function ModelsPage() {
 
   return (
     <>
-    <Head>
-      <title>Models - PromptDesk</title>
-    </Head>
-    <div className="page-body full-width flush">
-      <div className="pg-header">
-        <div className="pg-header-section pg-header-title flex justify-between">
-          <h1 className="pg-page-title">Models</h1>
-          <div className="space-x-2">
-            <PlaygroundButton text="Save" onClick={handleSave} />
-            <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
-            <PlaygroundButton text="Export" onClick={handleExport} />
-            <PlaygroundButton text="Import" onClick={handleImport} />
-            <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative"/>
+      <Head>
+        <title>Models - PromptDesk</title>
+      </Head>
+      <div className="page-body full-width flush">
+        <div className="pg-header">
+          <div className="pg-header-section pg-header-title flex justify-between">
+            <h1 className="pg-page-title">Models</h1>
+            <div className="space-x-2">
+              <PlaygroundButton text="Save" onClick={handleSave} />
+              <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
+              <PlaygroundButton text="Export" onClick={handleExport} />
+              <PlaygroundButton text="Import" onClick={handleImport} />
+              <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative"/>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-row">
-        <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setModel} />
-        <ModelSettings
-          selectedModel={selectedModel}
-          updateModel={updateModel}
-          setFormattedApi={setFormattedApi}
-          api={api}
-          apiResponse={apiResponse}
-          setApiResponse={setApiResponse}
-          inputFormatResponse={inputFormatResponse}
-          setInputFormatResponse={setInputFormatResponse}
-          outputFormatResponse={outputFormatResponse}
-          setOutputFormatResponse={setOutputFormatResponse}
-          parameters={parameters}
-          inputFormat={inputFormat}
-          setInputFormat={setInputFormat}
-          outputFormat={outputFormat}
-          setOutputFormat={setOutputFormat}
-          responseMapping={responseMapping}
-          setResponseMapping={setResponseMapping}
-          requestMapping={requestMapping}
-          setRequestMapping={setRequestMapping}
-          handleSave={handleSave}
-          setFormattedParameters={setFormattedParameters}
-          testAPI={testAPI} />
-      </div>
-      {isShowingConfirmDeleteModal ? 
-        <ConfirmModal 
-          acceptText="Yes"
-          bodyText="This action will delete model, you sure?"
-          cancelText="Cancel"
-          onAccept={() => {
-            handleDelete()
-            setIsShowingConfirmDeleteModal(false)
+        <div className="flex flex-row">
+          <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setModel} />
+          <ModelSettings
+            selectedModel={selectedModel}
+            updateModel={updateModel}
+            setFormattedApi={setFormattedApi}
+            api={api}
+            apiResponse={apiResponse}
+            setApiResponse={setApiResponse}
+            inputFormatResponse={inputFormatResponse}
+            setInputFormatResponse={setInputFormatResponse}
+            outputFormatResponse={outputFormatResponse}
+            setOutputFormatResponse={setOutputFormatResponse}
+            parameters={parameters}
+            inputFormat={inputFormat}
+            setInputFormat={setInputFormat}
+            outputFormat={outputFormat}
+            setOutputFormat={setOutputFormat}
+            responseMapping={responseMapping}
+            setResponseMapping={setResponseMapping}
+            requestMapping={requestMapping}
+            setRequestMapping={setRequestMapping}
+            handleSave={handleSave}
+            setFormattedParameters={setFormattedParameters}
+            testAPI={testAPI} />
+        </div>
+        {isShowingConfirmDeleteModal ?
+          <ConfirmModal
+            acceptText="Yes"
+            bodyText="This action will delete model, you sure?"
+            cancelText="Cancel"
+            onAccept={() => {
+              handleDelete()
+              setIsShowingConfirmDeleteModal(false)
             }}
-          onCancel={()=>{
-            setIsShowingConfirmDeleteModal(false)
-          }}
-          title="Delete Model" /> 
-      : null}
-    </div>
+            onCancel={()=>{
+              setIsShowingConfirmDeleteModal(false)
+            }}
+            title="Delete Model" />
+          : null}
+        <Toaster />
+      </div>
     </>
   );
 }
