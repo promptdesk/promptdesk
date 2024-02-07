@@ -8,6 +8,7 @@ import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
 import toast, { Toaster } from "react-hot-toast";
+import _ from "lodash";
 
 export default function ModelsPage() {
 
@@ -108,7 +109,7 @@ export default function ModelsPage() {
     delete json_file.__v;
     delete json_file.id;
     json_file['default'] = false;
-    const file = new Blob([JSON.stringify(json_file, null, 4)], {type: 'application/json'});
+    const file = new Blob([JSON.stringify(json_file, null, 4)], { type: 'application/json' });
     element.href = URL.createObjectURL(file);
     element.download = "model.json";
     document.body.appendChild(element);
@@ -121,11 +122,11 @@ export default function ModelsPage() {
     const element = document.createElement("input");
     element.type = "file";
     element.accept = ".json";
-    element.onchange = async (event:any) => {
+    element.onchange = async (event: any) => {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsText(file, "UTF-8");
-      reader.onload = async (readerEvent:any) => {
+      reader.onload = async (readerEvent: any) => {
         const content = readerEvent.target.result;
         const json_file = JSON.parse(content);
         const newModelId = await importModel(json_file);
@@ -138,12 +139,18 @@ export default function ModelsPage() {
     document.body.removeChild(element);
   }
 
-  const updateModel = (key:string, value:any) => {
+  const updateModel = (key: string, value: any) => {
+    if (key === 'default' && value) {
+      if (_.filter(models, (model) => model.id !== selectedModel.id).find(model => model.default)) {
+        toast.error("Default model exist, can't set this model as default", { position: 'bottom-right' });
+        return;
+      }
+    }
     const updatedModel = { ...selectedModel, [key]: value };
     setSelectedModel(updatedModel);
   };
 
-  const setModel = (model:any) => {
+  const setModel = (model: any) => {
     setSelectedModel(model);
     const newUrl = `/models/${model.id}`;
     push(newUrl);
@@ -163,7 +170,7 @@ export default function ModelsPage() {
               <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
               <PlaygroundButton text="Export" onClick={handleExport} />
               <PlaygroundButton text="Import" onClick={handleImport} />
-              <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative"/>
+              <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative" />
             </div>
           </div>
         </div>
@@ -202,7 +209,7 @@ export default function ModelsPage() {
               handleDelete()
               setIsShowingConfirmDeleteModal(false)
             }}
-            onCancel={()=>{
+            onCancel={() => {
               setIsShowingConfirmDeleteModal(false)
             }}
             title="Delete Model" />
