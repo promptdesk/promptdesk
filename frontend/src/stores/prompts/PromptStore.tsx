@@ -79,10 +79,17 @@ const promptStore = create<PromptStore>((set, get) => ({
 
     createLocalPrompt: (prompt:any = undefined) => {
 
-        const defaultModel = modelStore.getState().models.find((model) => model.default);
+        let defaultModel = modelStore.getState().models.find((model) => model.default);
 
         if (!defaultModel) {
-            return;
+            //if models is empty then return
+            if (modelStore.getState().models.length === 0) {
+                alert("You must create a model first before creating a prompt.")
+                return;
+            }
+
+            defaultModel = modelStore.getState().models[0];
+
         }
 
         let newPrompt: Prompt = {

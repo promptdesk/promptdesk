@@ -6,8 +6,8 @@ type ModelListProps = {
     setSelectedModel: any;
 }
 
-// ModelList Component
 export function ModelList({ models, selectedModel, setSelectedModel }: ModelListProps) {
+
     return (
         <div className="w-1/4 p-4 border-r border-gray-200">
             <ul className="space-y-2">
