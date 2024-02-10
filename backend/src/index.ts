@@ -14,6 +14,10 @@ if(environment == 'development') {
   console.log("INFO :: DEVELOPMENT ENVIRONMENT")
   dotenv.config({path:'../.env'})
 }
+if(environment == 'test') {
+  console.log("INFO :: TEST ENVIRONMENT")
+  dotenv.config({path:'../.env'})
+}
 if(environment == 'production') {
   console.log("INFO :: PRODUCTION ENVIRONMENT")
   dotenv.config({path:'../.env.production.local'})

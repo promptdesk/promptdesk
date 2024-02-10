@@ -144,10 +144,12 @@ class Log {
     }
 
     let averageValue = 0;
-    if(average.length > 0) {
+    if(average.length > 0 && average[0].average !== null) {
       averageValue = average[0].average
     }
-
+    if(isNaN(averageValue)) {
+      averageValue = 0;
+    }
 
     return {
       page: page,
@@ -157,7 +159,7 @@ class Log {
       data: logs,
       stats: [
         { name: 'Total Responses', stat: count },
-        { name: 'Avg. Response Time', stat: averageValue.toFixed(2) },
+        { name: 'Avg. Response Time', stat: averageValue ? averageValue.toFixed(2) : '0.00' },
         { name: 'Success Rate', stat: (all200 ? ((all200 / count) * 100).toFixed(0) : 0) + '%' }
       ]
     }

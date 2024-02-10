@@ -2,7 +2,7 @@
     "provider": "OpenAI",
     "type": "completion",
     "name": "gpt-3.5-turbo",
-    "default": false,
+    "default": true,
     "api_call": {
         "url": "https://api.openai.com/v1/chat/completions",
         "method": "POST",

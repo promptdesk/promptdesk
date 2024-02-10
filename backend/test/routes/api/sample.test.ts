@@ -5,8 +5,7 @@ import { describe, it, before } from 'mocha';
 import { Organization } from '../../../src/models/mongodb/organization'; // Adjust the path as needed
 import fs from 'fs';
 import path from 'path';
-
-var seed_data = fs.readFileSync(path.join(__dirname, '../../../src/init/database.json'));
+import { Prompt } from '../../../src/models/mongodb/prompt';
 
 describe('Samples API', function() {
   this.timeout(10000); // Set timeout to 10 seconds for all tests in this describe block
@@ -17,13 +16,14 @@ describe('Samples API', function() {
   let prompt:any;
 
 before(async () => {
-    // Setup to get a valid token and organizationId, if necessary
-    prompt = JSON.parse(seed_data.toString()).prompts[0];
-    promptId = prompt.id;
     const organization_db = new Organization();
     const organization = await organization_db.getOrganization();
+    console.log(organization);
     token = organization.keys[0].key;
     organizationId = organization.id; // Assuming organization object has an id
+    const prompt_db = new Prompt();
+    prompt = await prompt_db.findPromptByName('yoda-test', organization.id);
+    promptId = prompt.id;
 });
 
   it('should get samples with pagination', async function() {

@@ -20,7 +20,7 @@ if (true) {
     await connectToDatabase();
     var environment = process.env.NODE_ENV;
     
-    if(environment === 'development') {
+    if(environment === 'development' || environment === 'test') {
       var org = new mongoOrganization();
       org = await org.getOrganization();
       if(org) {
@@ -33,7 +33,7 @@ if (true) {
       }
     }
   
-  } , 1000);
+  } , 100);
   Prompt = mongoPrompt;
   Model = mongoModel;
   Log = mongoLog;

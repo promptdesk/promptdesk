@@ -4,12 +4,10 @@ import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import { Model } from '../../../src/models/mongodb/model';
 import { Organization } from '../../../src/models/mongodb/organization';
-
+import { Prompt } from '../../../src/models/mongodb/prompt';
 
 var fs = require('fs');
 var path = require('path');
-
-var seed_data = fs.readFileSync(path.join(__dirname, '../../../src/init/database.json'));
 
 describe('Magic API', async () => {
 
@@ -20,17 +18,15 @@ describe('Magic API', async () => {
   let organization:any;
   let token:any;
   const organization_db = new Organization();
+  const prompt_db = new Prompt();
 
   before(async () => {
     organization = await organization_db.getOrganization();
     token = organization.keys[0].key;
-    prompt = JSON.parse(seed_data).prompts[0];
-    model = JSON.parse(seed_data).models[0];
 
-    //create a model
-    model_id = await model_db.createModel(model, organization.id);
-    prompt.model = model_id;
-
+    prompt = await prompt_db.findPromptByName('yoda-test', organization.id);
+    let modelId = prompt.model;
+    model = await model_db.findModel(modelId, organization.id);
   })
 
   after(async () => {

@@ -1,21 +1,21 @@
 import mongoose from 'mongoose';
 
-export default async function connectToDatabase() {
+export default async function connectToDatabase(test=false) {
   console.log('INFO :: MONGODB CONNECTING', process.env.MONGO_URL)
   try {
     mongoose.set('strictQuery', false);
-    await mongoose.connect(process.env.MONGO_URL+"_test" as string, {
+    
+    let mongo_uri = process.env.MONGO_URL as string;
+
+    await mongoose.connect(mongo_uri as string, {
       connectTimeoutMS: 5000,
       retryWrites: false
     });
-    //get database name
+
     const dbName = mongoose.connection.db.databaseName;
     console.log('INFO :: MONGODB CONNECTED TO DATABASE', dbName);
-    //if _test in database name, drop and recreate database
-    if (dbName.includes('_test')) {
-      console.log('INFO :: MONGODB RESET DATABASE');
-      await mongoose.connection.db.dropDatabase();
-    }
+
+    return "CONNECTED"
   } catch (error) {
     console.log('INFO :: MONGODB ERROR', error);
     return "ERROR"
