@@ -6,8 +6,8 @@ import EditorFooter from '@/components/Editors/EditorFooter';
 import Variables from '@/components/Editors/Variables';
 import { promptStore, processVariables } from '@/stores/prompts';
 import { modelStore } from '@/stores/ModelStore';
-import {ParsingError} from "@/components/Editors/ParsingError";
-import {toggleRoleAtIndex, editMessageAtIndex} from "@/services/PromptEditor";
+import { ParsingError } from "@/components/Editors/ParsingError";
+import { toggleRoleAtIndex, editMessageAtIndex } from "@/services/PromptEditor";
 import EnvironmentVariableWarning from './EnvironmentVariableWarning';
 
 function Editor() {
@@ -15,7 +15,7 @@ function Editor() {
 
   const { modelObject } = modelStore();
 
-  const handleContextChange = (e:any) => {
+  const handleContextChange = (e: any) => {
     const systemInput = e.target.value;
     updateLocalPromptValues('prompt_data.context', systemInput);
     processVariables(`${systemInput} ${JSON.stringify(promptObject?.prompt_data.messages)}`);
@@ -37,15 +37,15 @@ function Editor() {
     var element = document.getElementById("myRef");
     let newLength = promptObject?.prompt_data?.messages?.length;
 
-    if(newLength > lastLength && element) {
-      element.scrollIntoView({behavior:"smooth", block: "end", inline:"nearest"});    
+    if (newLength > lastLength && element) {
+      element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
     }
 
     setLastLength(promptObject?.prompt_data?.messages?.length);
   }, [promptObject?.prompt_data?.messages?.length])
 
   //if promptObject.prompt_data is null, set it to an empty object
-  if(!promptObject.prompt_data) {
+  if (!promptObject.prompt_data) {
     updateLocalPromptValues('prompt_data', {});
   }
 
@@ -78,12 +78,12 @@ function Editor() {
                     key={index}
                     index={index}
                     message={message}
-                    roles={modelObject?.model_parameters.roles}
-                    onEditMessage={(index: any, content:string) => {
+                    roles={modelObject?.model_parameters.roles || ['user']}
+                    onEditMessage={(index: any, content: string) => {
                       editMessageAtIndex(index, content);
                       handleMessageChange();
                     }}
-                    onToggleRole={(index:any, roles: any) => {
+                    onToggleRole={(index: any, roles: any) => {
                       toggleRoleAtIndex(index, roles);
                     }}
                   />
