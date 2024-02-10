@@ -62,6 +62,7 @@ export default function SingleLogPage() {
 
     if((log as any).raw && (log as any).data) {
       activateLocalPrompt((log as any).data)
+      setPrompt((log as any).data)
     }
 
     if((log as any).raw && (log as any).generated) {
@@ -97,25 +98,35 @@ export default function SingleLogPage() {
           <LogAttribute label="Status" value={log.status?.toString() || ""}/>
         </div>
 
-        <h1>Generated</h1>
+        {(log as any).status !== 200 && (
+          <>
+          <h3>Error</h3>
+          <CustomJSONView
+            name="response"
+            src={response}
+          />
+          </>
+        )}
+
+        <h3>Generated</h3>
         <CustomJSONView
             name="generated"
             src={{"data": log.message}}
         />
 
-        <h1>Prompt</h1>
+        <h3>Prompt</h3>
         <CustomJSONView
             name="prompt"
             src={prompt}
         />
 
-        <h1>Request</h1>
+        <h3>Request</h3>
         <CustomJSONView
             name="request"
             src={request}
         />
 
-        <h1>Response</h1>
+        <h3>Response</h3>
         <CustomJSONView
             name="response"
             src={response}
