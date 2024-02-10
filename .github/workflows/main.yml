@@ -2,28 +2,34 @@ name: Node.js CI
 
 on: [push]
 
-deployment:
-  runs-on: ubuntu-latest
-  environment: Test
-  jobs:
-    build:
-      steps:
-        - uses: actions/checkout@v4
-        - run: echo ${{ secrets.MONGO_URL }}
-        - run: echo ${{ secrets.OPENAI_API_KEY }}
-        - run: echo ${{ vars.NODE_ENV }}
-        - run: echo ${{ env.GITHUB_SHA_SHORT }}
-        - name: Use Node.js
-          uses: actions/setup-node@v3
-          with:
-            node-version: '20.x'
-        - name: Install dependencies
-          run: npm ci
-          working-directory: ./backend
-        - name: Run tests
-          env:
-            MONGO_URL: ${{ secrets.MONGO_URL }}
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: Test
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo ${{ secrets.MONGO_URL }}
+      - run: echo ${{ secrets.OPENAI_API_KEY }}
+      # To set and use environment variables directly in GitHub Actions, you can use the 'env' key at the job or step level.
+      - run: echo $NODE_ENV
+        env:
+          NODE_ENV: 'development' # Example setting. Replace 'development' with the appropriate value or use a secret/environment variable.
+      # GitHub does not provide a built-in short SHA environment variable, but you can create one using set-output and the GITHUB_SHA environment variable.
+      - name: Get short SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(echo $GITHUB_SHA | cut -c1-8)"
+      - run: echo ${{ steps.vars.outputs.sha_short }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./backend
+      - name: Run tests
+        env:
+          MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          NODE_ENV: ${{ vars.NODE_ENV }}
-        run: npm run test
+          NODE_ENV: ${{ env.NODE_ENV }} # Assuming you've set NODE_ENV earlier or it's globally set
+        run: npm test
         working-directory: ./backend
