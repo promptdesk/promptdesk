@@ -7301,3 +7301,14 @@ li code,p code{
 .pg-token-tooltip p a{
     white-space:nowrap
 }
+.copy-wrapper {
+    position: relative;
+}
+
+.copy-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    color: #999;
+}
