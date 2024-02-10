@@ -15,3 +15,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
         working-directory: ./backend
+      - name: Test
+        run: npm test
+
