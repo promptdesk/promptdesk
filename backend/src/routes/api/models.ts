@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 
-import { Model } from '../../models/allModels';
+import { Model, Prompt } from '../../models/allModels';
 
 const router = express.Router();
 const model_db = new Model()
+const prompts_db = new Prompt()
 
 router.get('/models', async (req: Request, res: Response) => {
   try {
@@ -53,8 +54,13 @@ router.put('/model/:id', async (req: Request, res: Response) => {
 router.delete('/model/:id', async (req: Request, res: Response) => {
   try {
     const organization = (req as any).organization;
-    await model_db.deleteModel(req.params.id, organization.id);
-    res.status(200).json({ id: req.params.id });
+    const modelId = req.params.id;
+    const prompts = await prompts_db.findPromptByModelId(modelId);
+    if(prompts) {
+      return res.status(500).json({message: "Can't delete this model. Used for prompt"})
+    }
+    await model_db.deleteModel(modelId, organization.id);
+    res.status(200).json({ id: modelId });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

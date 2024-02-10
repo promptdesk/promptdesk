@@ -6,8 +6,9 @@ import { ModelList } from "@/components/Models/ModelList";
 import { testAPI } from "@/services/LLMTests";
 import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
-import { set } from "lodash";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
+import toast, { Toaster } from "react-hot-toast";
+import _ from "lodash";
 
 export default function ModelsPage() {
 
@@ -53,7 +54,7 @@ export default function ModelsPage() {
     setApiResponse({})
   }, [selectedModel]);
 
-  const setFormattedApi = (json_string:any) => {
+  const setFormattedApi = (json_string: any) => {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
       setApi(parsedJson);
@@ -61,7 +62,7 @@ export default function ModelsPage() {
     }
   }
 
-  const setFormattedParameters = (json_string:any) => {
+  const setFormattedParameters = (json_string: any) => {
     try {
       const parsedJson = JSON.parse(json_string || "{}");
       setParameters(parsedJson);
@@ -89,10 +90,14 @@ export default function ModelsPage() {
     push(newUrl);
   };
 
-  const handleDelete = async () => {
-    await deleteModel(selectedModel);
-    const nextModel = models.find((_, index) => index !== models.indexOf(selectedModel)) || {};
-    setSelectedModel(nextModel);
+  const handleDelete = () => {
+    deleteModel(selectedModel).then(() => {
+      const nextModel = models.find((_, index) => index !== models.indexOf(selectedModel)) || {};
+      setSelectedModel(nextModel);
+    }).catch((err: Error) => {
+      const msg = err?.message;
+      toast.error(msg, { position: 'bottom-right' });
+    })
   };
 
   const handleExport = () => {
@@ -104,7 +109,7 @@ export default function ModelsPage() {
     delete json_file.__v;
     delete json_file.id;
     json_file['default'] = false;
-    const file = new Blob([JSON.stringify(json_file, null, 4)], {type: 'application/json'});
+    const file = new Blob([JSON.stringify(json_file, null, 4)], { type: 'application/json' });
     element.href = URL.createObjectURL(file);
     element.download = "model.json";
     document.body.appendChild(element);
@@ -117,11 +122,11 @@ export default function ModelsPage() {
     const element = document.createElement("input");
     element.type = "file";
     element.accept = ".json";
-    element.onchange = async (event:any) => {
+    element.onchange = async (event: any) => {
       const file = event.target.files[0];
       const reader = new FileReader();
       reader.readAsText(file, "UTF-8");
-      reader.onload = async (readerEvent:any) => {
+      reader.onload = async (readerEvent: any) => {
         const content = readerEvent.target.result;
         const json_file = JSON.parse(content);
         const newModelId = await importModel(json_file);
@@ -134,12 +139,18 @@ export default function ModelsPage() {
     document.body.removeChild(element);
   }
 
-  const updateModel = (key:string, value:any) => {
+  const updateModel = (key: string, value: any) => {
+    if (key === 'default' && value) {
+      if (_.filter(models, (model) => model.id !== selectedModel.id).find(model => model.default)) {
+        toast.error("Default model exist, can't set this model as default", { position: 'bottom-right' });
+        return;
+      }
+    }
     const updatedModel = { ...selectedModel, [key]: value };
     setSelectedModel(updatedModel);
   };
 
-  const setModel = (model:any) => {
+  const setModel = (model: any) => {
     setSelectedModel(model);
     const newUrl = `/models/${model.id}`;
     push(newUrl);
@@ -147,63 +158,64 @@ export default function ModelsPage() {
 
   return (
     <>
-    <Head>
-      <title>Models - PromptDesk</title>
-    </Head>
-    <div className="page-body full-width flush">
-      <div className="pg-header">
-        <div className="pg-header-section pg-header-title flex justify-between">
-          <h1 className="pg-page-title">Models</h1>
-          <div className="space-x-2">
-            <PlaygroundButton text="Save" onClick={handleSave} />
-            <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
-            <PlaygroundButton text="Export" onClick={handleExport} />
-            <PlaygroundButton text="Import" onClick={handleImport} />
-            <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative"/>
+      <Head>
+        <title>Models - PromptDesk</title>
+      </Head>
+      <div className="page-body full-width flush">
+        <div className="pg-header">
+          <div className="pg-header-section pg-header-title flex justify-between">
+            <h1 className="pg-page-title">Models</h1>
+            <div className="space-x-2">
+              <PlaygroundButton text="Save" onClick={handleSave} />
+              <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
+              <PlaygroundButton text="Export" onClick={handleExport} />
+              <PlaygroundButton text="Import" onClick={handleImport} />
+              <PlaygroundButton text="Delete" onClick={() => setIsShowingConfirmDeleteModal(true)} color="negative" />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex flex-row">
-        <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setModel} />
-        <ModelSettings
-          selectedModel={selectedModel}
-          updateModel={updateModel}
-          setFormattedApi={setFormattedApi}
-          api={api}
-          apiResponse={apiResponse}
-          setApiResponse={setApiResponse}
-          inputFormatResponse={inputFormatResponse}
-          setInputFormatResponse={setInputFormatResponse}
-          outputFormatResponse={outputFormatResponse}
-          setOutputFormatResponse={setOutputFormatResponse}
-          parameters={parameters}
-          inputFormat={inputFormat}
-          setInputFormat={setInputFormat}
-          outputFormat={outputFormat}
-          setOutputFormat={setOutputFormat}
-          responseMapping={responseMapping}
-          setResponseMapping={setResponseMapping}
-          requestMapping={requestMapping}
-          setRequestMapping={setRequestMapping}
-          handleSave={handleSave}
-          setFormattedParameters={setFormattedParameters}
-          testAPI={testAPI} />
-      </div>
-      {isShowingConfirmDeleteModal ? 
-        <ConfirmModal 
-          acceptText="Yes"
-          bodyText="This action will delete model, you sure?"
-          cancelText="Cancel"
-          onAccept={() => {
-            handleDelete()
-            setIsShowingConfirmDeleteModal(false)
+        <div className="flex flex-row">
+          <ModelList models={models} selectedModel={selectedModel} setSelectedModel={setModel} />
+          <ModelSettings
+            selectedModel={selectedModel}
+            updateModel={updateModel}
+            setFormattedApi={setFormattedApi}
+            api={api}
+            apiResponse={apiResponse}
+            setApiResponse={setApiResponse}
+            inputFormatResponse={inputFormatResponse}
+            setInputFormatResponse={setInputFormatResponse}
+            outputFormatResponse={outputFormatResponse}
+            setOutputFormatResponse={setOutputFormatResponse}
+            parameters={parameters}
+            inputFormat={inputFormat}
+            setInputFormat={setInputFormat}
+            outputFormat={outputFormat}
+            setOutputFormat={setOutputFormat}
+            responseMapping={responseMapping}
+            setResponseMapping={setResponseMapping}
+            requestMapping={requestMapping}
+            setRequestMapping={setRequestMapping}
+            handleSave={handleSave}
+            setFormattedParameters={setFormattedParameters}
+            testAPI={testAPI} />
+        </div>
+        {isShowingConfirmDeleteModal ?
+          <ConfirmModal
+            acceptText="Yes"
+            bodyText="This action will delete model, you sure?"
+            cancelText="Cancel"
+            onAccept={() => {
+              handleDelete()
+              setIsShowingConfirmDeleteModal(false)
             }}
-          onCancel={()=>{
-            setIsShowingConfirmDeleteModal(false)
-          }}
-          title="Delete Model" /> 
-      : null}
-    </div>
+            onCancel={() => {
+              setIsShowingConfirmDeleteModal(false)
+            }}
+            title="Delete Model" />
+          : null}
+        <Toaster />
+      </div>
     </>
   );
 }

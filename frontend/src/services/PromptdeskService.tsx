@@ -11,7 +11,7 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
     }
 
-    if(!token && process.env.ORGANIZATION_API_KEY) {
+    if (!token && process.env.ORGANIZATION_API_KEY) {
         token = process.env.ORGANIZATION_API_KEY;
     }
 
@@ -19,7 +19,7 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
         let url = ""
         //check if process.env.PROMPT_SERVER_URL is set
-        if(process.env.PROMPT_SERVER_URL) {
+        if (process.env.PROMPT_SERVER_URL) {
             url = process.env.PROMPT_SERVER_URL;
         }
 
@@ -36,9 +36,9 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
         })
         return response.data;
 
-    } catch (error:any) {
-        
-        if(error?.response?.data?.message) {
+    } catch (error: any) {
+
+        if (error?.response?.data?.message) {
             throw new Error(error.response.data.message);
         } else {
             alert("Something went wrong. Please try again later.");
@@ -50,50 +50,50 @@ const fetchFromPromptdesk = async (path: string, method: string = 'GET', body?: 
 
 const testFromPromptdesk = async (path: string, method: string = 'GET', body?: any) => {
 
-        //read auth token from local storage if it exists
-        let token = undefined;
-        if (typeof window !== 'undefined') {
-    
-            token = Cookies.get('token');
-    
+    //read auth token from local storage if it exists
+    let token = undefined;
+    if (typeof window !== 'undefined') {
+
+        token = Cookies.get('token');
+
+    }
+
+    if (!token && process.env.ORGANIZATION_API_KEY) {
+        token = process.env.ORGANIZATION_API_KEY;
+    }
+
+    try {
+
+        let url = ""
+        //check if process.env.PROMPT_SERVER_URL is set
+        if (process.env.PROMPT_SERVER_URL) {
+            url = process.env.PROMPT_SERVER_URL;
         }
-    
-        if(!token && process.env.ORGANIZATION_API_KEY) {
-            token = process.env.ORGANIZATION_API_KEY;
+
+        const endpoint = `${url}${path}`;
+
+        var response = await axios({
+            url: endpoint,
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            data: body ? JSON.stringify(body) : undefined
+        })
+
+        if (!response) {
+            throw new Error(`Error with ${method} request to ${endpoint}`);
         }
-    
-        try {
-    
-            let url = ""
-            //check if process.env.PROMPT_SERVER_URL is set
-            if(process.env.PROMPT_SERVER_URL) {
-                url = process.env.PROMPT_SERVER_URL;
-            }
-    
-            const endpoint = `${url}${path}`;
 
-            var response = await axios({
-                url: endpoint,
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                data: body ? JSON.stringify(body) : undefined
-            })
-
-            if (!response) {
-                throw new Error(`Error with ${method} request to ${endpoint}`);
-            }
-
-            return response;
+        return response;
 
 
-        } catch (error) {
+    } catch (error) {
 
-            throw error;
-    
-        }
+        throw error;
+
+    }
 
 }
 
