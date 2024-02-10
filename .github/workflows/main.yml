@@ -32,7 +32,6 @@ jobs:
           ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          NODE_ENV: ${{ env.NODE_ENV }} # Assuming you've set NODE_ENV earlier or it's globally set
           PASSWORD: ${{ env.PASSWORD }} # Example of using a secret
           EMAIL: ${{ env.EMAIL }} # Example of using a secret
           PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }} # Example of using a secret
