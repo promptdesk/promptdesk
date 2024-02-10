@@ -10,4 +10,5 @@ export interface Prompt {
     model_type: string | undefined;
     organization_id: string;
     project: string | undefined;
+    provider: string | undefined;
 }

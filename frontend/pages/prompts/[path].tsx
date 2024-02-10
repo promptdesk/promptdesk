@@ -9,6 +9,7 @@ import PromptsTable from '@/components/Table/PromptsTable';
 import Head from "next/head";
 import InputField from '@/components/Form/InputField';
 import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function PromptsPage() {
   const { push, query } = useRouter();
@@ -27,6 +28,7 @@ export default function PromptsPage() {
           if (model) {
             prompt.model = model.name;
             prompt.model_type = model.type;
+            prompt.provider = model.provider;
           }
           return prompt;
         })
@@ -96,15 +98,7 @@ export default function PromptsPage() {
         </div>
       </div>
         <div className="app-page">
-          <p className="text-lg">
-            <Link href="/prompts/all"><span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">All Prompts</span></Link>
-            {query.path !== "all" && query.path !== "undefined" && query.path !== undefined &&
-              <>
-              &nbsp;&nbsp;&gt; &nbsp;&nbsp;
-              <span className="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">{query.path}</span>
-              </>
-            }
-          </p>
+          <Breadcrumbs path={query.path as string} />
           <div className="mt-2 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

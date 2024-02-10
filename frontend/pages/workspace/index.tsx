@@ -39,6 +39,7 @@ export default function WorkspaceHomeRedirector() {
   const changeIdInUrl = (newId: string) => {
     console.log("changeIdInUrl")
     const newUrl = `/workspace/${newId}`;
+    push(newUrl);
   };
 
   return null;

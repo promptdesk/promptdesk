@@ -31,7 +31,8 @@ const defaultPrompt: Prompt = {
     prompt_variables: {},
     new: true,
     model_type: undefined,
-    organization_id: ""
+    organization_id: "",
+    provider: undefined
 }
 
 const promptStore = create<PromptStore>((set, get) => ({
