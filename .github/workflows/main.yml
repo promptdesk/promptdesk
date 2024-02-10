@@ -8,6 +8,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - run: echo ${{ secrets.MONGO_URL }}
+      - run: echo ${{ secrets.OPENAI_API_KEY }}
+      - run: echo ${{ vars.NODE_ENV }}
+      - run: echo ${{ env.GITHUB_SHA_SHORT }}
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
@@ -20,5 +24,5 @@ jobs:
           MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           NODE_ENV: ${{ vars.NODE_ENV }}
-        run: NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts
+        run: npm run test
         working-directory: ./backend
