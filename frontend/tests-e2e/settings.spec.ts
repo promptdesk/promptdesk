@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('View settings', async ({ page }) => {
   await page.goto('http://localhost:3000/settings');
   await expect(page.getByRole('heading', { name: 'Organization Information' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Environment Variables' })).toBeVisible();

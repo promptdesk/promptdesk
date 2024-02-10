@@ -12,4 +12,3 @@ export function canonical_json_stringify(data: any) {
 
     return JSON.stringify(data, replacer);
 }
-

@@ -4,3 +4,4 @@ WORKDIR /app
 
 COPY backend ./backend
 COPY shared ./shared
+COPY models ./models

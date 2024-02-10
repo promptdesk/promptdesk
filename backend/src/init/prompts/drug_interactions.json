@@ -1,0 +1,25 @@
+{
+    "name": "drug_interactions",
+    "description": "Identifies the drug interaction between two drugs.",
+    "prompt_variables": {
+        "drug_1": {
+            "type": "text",
+            "value": "digoxin"
+        },
+        "drug_2": {
+            "type": "text",
+            "value": "furosemide"
+        }
+    },
+    "prompt_data": {
+        "prompt": "",
+        "context": "Act as a pharmacist.",
+        "messages": [
+            {
+                "role": "user",
+                "content": "What is the drug interaction between {{drug_1}} and {{drug_2}}"
+            }
+        ]
+    },
+    "model_type": "chat"
+}

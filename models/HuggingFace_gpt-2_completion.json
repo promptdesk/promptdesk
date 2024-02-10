@@ -1,0 +1,37 @@
+{
+    "provider": "HuggingFace",
+    "type": "completion",
+    "name": "gpt-2",
+    "default": false,
+    "api_call": {
+        "url": "https://api-inference.huggingface.co/models/gpt2",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{HUGGINGFACE_API_KEY}}"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "prompt",
+            "targetField": "inputs"
+        },
+        {
+            "sourceField": "max_new_tokens",
+            "targetField": "parameters.max_new_tokens",
+            "default": 50
+        },
+        {
+            "sourceField": null,
+            "targetField": "parameters.return_full_text",
+            "default": true
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "0.generated_text",
+            "targetField": "text"
+        }
+    ],
+    "model_parameters": {}
+}

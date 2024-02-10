@@ -1,0 +1,37 @@
+{
+    "provider": "HuggingFace",
+    "type": "completion",
+    "name": "llama-2-7b",
+    "default": false,
+    "api_call": {
+        "url": "https://api-inference.huggingface.co/models/meta-llama/Llama-2-7b-chat-hf",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{HUGGINGFACE_API_KEY}}"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "prompt",
+            "targetField": "inputs"
+        },
+        {
+            "sourceField": "max_new_tokens",
+            "targetField": "parameters.max_new_tokens",
+            "default": 50
+        },
+        {
+            "sourceField": null,
+            "targetField": "parameters.return_full_text",
+            "default": true
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "0.generated_text",
+            "targetField": "text"
+        }
+    ],
+    "model_parameters": {}
+}

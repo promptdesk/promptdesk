@@ -1,0 +1,21 @@
+{
+    "name": "supply_chain_advisory",
+    "description": "Act as a supply chain advisor and answer a question.",
+    "prompt_variables": {
+        "question": {
+            "type": "question",
+            "value": "What steps can we take to ensure our supply chain aligns with our sustainability goals?"
+        }
+    },
+    "prompt_data": {
+        "prompt": "",
+        "context": "Act as a supply chain advisor.",
+        "messages": [
+            {
+                "role": "user",
+                "content": "{{question}}"
+            }
+        ]
+    },
+    "model_type": "chat"
+}

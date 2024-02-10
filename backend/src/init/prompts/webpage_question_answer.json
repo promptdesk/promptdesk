@@ -1,0 +1,26 @@
+{
+    "name": "webpage_question_answer",
+    "description": "Answers specific questions from markdown text.",
+    "prompt_variables": {
+        "webpage_markdown": {
+            "type": "text",
+            "value": "Who is dorothy?"
+        },
+        "question": {
+            "type": "text",
+            "value": "Dorothy L. Sayers (1893–1957) was an English crime novelist, playwright, translator and critic. After achieving first class honours from Somerville College, Oxford, at a time when women were not awarded degrees, she worked as an advertising copywriter. In 1923 she published her first novel, Whose Body?, which introduced the upper-class amateur sleuth Lord Peter Wimsey; she went on to write ten more crime fiction novels about Wimsey. From the mid-1930s she wrote plays, mostly on religious themes; the play cycle The Man Born to Be King, broadcast in 1941 and 1942, was a radio dramatisation of the life of Jesus, which was initially controversial, but was soon recognised as an important work. From the early 1940s onward she focused on translating the three books of Dante's Divine Comedy into colloquial English; her first two translations were published in 1949 and 1955. She died unexpectedly during the translation of the third book, aged 64."
+        }
+    },
+    "prompt_data": {
+        "prompt": "",
+        "context": "{{webpage_markdown}}",
+        "messages": [
+            {
+                "role": "user",
+                "content": "{{question}}"
+            }
+        ]
+    },
+    "model_type": "chat",
+    "project": "market-research"
+}

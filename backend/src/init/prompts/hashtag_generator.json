@@ -1,0 +1,14 @@
+{
+    "name": "hashtag_generator",
+    "description": "Generates 3 hashtags given a specific topic.",
+    "prompt_variables": {
+        "topic": {
+            "type": "text",
+            "value": "technology"
+        }
+    },
+    "prompt_data": {
+        "prompt": "Generate 3 hashtags about {{topic}}."
+    },
+    "model_type": "completion"
+}

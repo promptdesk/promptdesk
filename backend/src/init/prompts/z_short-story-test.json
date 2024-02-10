@@ -1,0 +1,23 @@
+{
+    "name": "short-story-test",
+    "description": "A short story generation prompt using variables.",
+    "prompt_variables": {
+        "setting": {
+            "type": "text",
+            "value": "an old stone home"
+        },
+        "plot": {
+            "type": "text",
+            "value": "knock on door"
+        },
+        "character": {
+            "type": "text",
+            "value": "an old farmer and his wife"
+        }
+    },
+    "prompt_data": {
+        "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: {{setting}}\nPlot: {{plot}}\nCharacter: {{character}}"
+    },
+    "model_type": "completion",
+    "project": "test"
+}

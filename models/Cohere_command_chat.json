@@ -1,0 +1,77 @@
+{
+    "provider": "Cohere",
+    "type": "chat",
+    "name": "command",
+    "default": false,
+    "api_call": {
+        "url": "https://api.cohere.ai/v1/chat",
+        "method": "POST",
+        "headers": {
+            "Authorization": "Bearer {{COHERE_API_KEY}}",
+            "Content-Type": "application/json"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "messages",
+            "targetField": "chat_history",
+            "action": "mapArray",
+            "subRules": [
+                {
+                    "sourceField": "content",
+                    "targetField": "message"
+                },
+                {
+                    "sourceField": "role",
+                    "targetField": "role"
+                }
+            ]
+        },
+        {
+            "sourceField": "messages.-1.content",
+            "targetField": "message"
+        },
+        {
+            "sourceField": null,
+            "targetField": "model",
+            "default": "command"
+        },
+        {
+            "sourceField": "model_parameters.temperature",
+            "targetField": "temperature",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.temperature",
+                    "check": "exists"
+                }
+            ]
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "text",
+            "targetField": "content"
+        },
+        {
+            "sourceField": null,
+            "targetField": "role",
+            "default": "CHATBOT"
+        }
+    ],
+    "model_parameters": {
+        "context": false,
+        "roles": [
+            "USER",
+            "CHATBOT"
+        ],
+        "temperature": {
+            "key": "temperature",
+            "type": "slider",
+            "name": "Temperature",
+            "default": 0.7,
+            "step": 0.01,
+            "min": 0,
+            "max": 1
+        }
+    }
+}
