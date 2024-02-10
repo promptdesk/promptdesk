@@ -10,9 +10,9 @@ const AddMessage = () => {
 
   return (
 
-    <div className="chat-pg-message add-message" onClick={(e) => addMessage(modelObject?.model_parameters.roles)}>
-        <Plus />
-        <span className="text">Add message</span>
+    <div className="chat-pg-message add-message" onClick={(e) => addMessage(modelObject?.model_parameters.roles || ['user'])}>
+      <Plus />
+      <span className="text">Add message</span>
     </div>
   );
 };
