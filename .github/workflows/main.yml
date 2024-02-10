@@ -20,5 +20,5 @@ jobs:
           MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           NODE_ENV: ${{ vars.NODE_ENV }}
-        run: npm run test
+        run: NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts
         working-directory: ./backend
