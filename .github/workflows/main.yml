@@ -13,7 +13,16 @@ jobs:
       # To set and use environment variables directly in GitHub Actions, you can use the 'env' key at the job or step level.
       - run: echo $NODE_ENV
         env:
-          NODE_ENV: 'test' # Example setting. Replace 'development' with the appropriate value or use a secret/environment variable.
+          NODE_ENV: 'test'
+          ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PASSWORD: ${{ env.PASSWORD }}
+          EMAIL: ${{ env.EMAIL }}
+          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
+          PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
+          SETUP: ${{ env.SETUP }}
+          HOSTING: ${{ env.LOCAL }}
       # GitHub does not provide a built-in short SHA environment variable, but you can create one using set-output and the GITHUB_SHA environment variable.
       - name: Get short SHA
         id: vars
@@ -27,16 +36,5 @@ jobs:
         run: npm ci
         working-directory: ./backend
       - name: Run tests
-        env:
-          NODE_ENV: 'test'
-          ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
-          MONGO_URL: ${{ secrets.MONGO_URL }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PASSWORD: ${{ env.PASSWORD }}
-          EMAIL: ${{ env.EMAIL }}
-          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
-          PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
-          SETUP: ${{ env.SETUP }}
-          HOSTING: ${{ env.LOCAL }}
         run: npm test
         working-directory: ./backend
