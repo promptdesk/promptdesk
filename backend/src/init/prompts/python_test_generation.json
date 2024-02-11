@@ -1,15 +1,15 @@
 {
-    "name": "python_test_generation",
-    "description": "Generate a pytest test given a specific function.",
-    "prompt_variables": {
-        "python_function": {
-            "type": "text",
-            "value": "def get_url_content(url): try: response = requests.get(url) # Check if the request was successful (status code 200) if response.status_code == 200: return response.text  # Return the content of the response else: return f'Failed to retrieve content, status code: {response.status_code}' except Exception as e: return f'An error occurred: {e}'"
-        }
-    },
-    "prompt_data": {
-        "prompt": "Generate a pytest test function for the following python function:\n\n{{python_function}}"
-    },
-    "model_type": "completion",
-    "project": "code-automation"
+  "name": "python_test_generation",
+  "description": "Generate a pytest test given a specific function.",
+  "prompt_variables": {
+    "python_function": {
+      "type": "text",
+      "value": "def get_url_content(url): try: response = requests.get(url) # Check if the request was successful (status code 200) if response.status_code == 200: return response.text  # Return the content of the response else: return f'Failed to retrieve content, status code: {response.status_code}' except Exception as e: return f'An error occurred: {e}'"
+    }
+  },
+  "prompt_data": {
+    "prompt": "Generate a pytest test function for the following python function:\n\n{{python_function}}"
+  },
+  "model_type": "completion",
+  "project": "code-automation"
 }

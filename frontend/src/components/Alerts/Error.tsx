@@ -1,6 +1,6 @@
-import { XCircleIcon } from '@heroicons/react/20/solid'
+import { XCircleIcon } from "@heroicons/react/20/solid";
 
-export default function Warning({ display, text }:any) {
+export default function Warning({ display, text }: any) {
   if (!display) return null; // Early return if `display` is false
 
   return (
@@ -10,11 +10,9 @@ export default function Warning({ display, text }:any) {
           <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
         </div>
         <div className="ml-3">
-          <p className="text-sm text-red-700">
-            {text}
-          </p>
+          <p className="text-sm text-red-700">{text}</p>
         </div>
       </div>
     </div>
-  )
+  );
 }

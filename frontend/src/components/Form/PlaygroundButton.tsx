@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface PlaygroundButtonProps {
   id?: string;
@@ -8,15 +8,21 @@ interface PlaygroundButtonProps {
   onClick: () => void;
 }
 
-function PlaygroundButton({ id, text, onClick, isFull, color }: PlaygroundButtonProps) {
+function PlaygroundButton({
+  id,
+  text,
+  onClick,
+  isFull,
+  color,
+}: PlaygroundButtonProps) {
   const handleClick = () => {
-    if (typeof onClick === 'function') {
+    if (typeof onClick === "function") {
       onClick();
     }
   };
 
   let baseClass = "btn btn-sm btn-filled btn-neutral";
-  if(color) {
+  if (color) {
     baseClass = `btn btn-sm btn-filled btn-${color}`;
   }
   const className = isFull ? `${baseClass} w-full` : baseClass;

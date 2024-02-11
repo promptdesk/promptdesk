@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import Editor from "@/components/Editors/CompletionEditor";
 import ChatEditor from "@/components/Editors/ChatEditor";
 import Modal from "@/components/Modals/Modal";
 import VariableModal from "@/components/Modals/VariableModal";
 import TabNavigation from "@/components/Editors/TabNavigation";
 import RightPanel from "@/components/Editors/RightPanel";
-import ErrorPage from 'next/error';
+import ErrorPage from "next/error";
 import {
   shouldShowSaveModal,
   shouldShowSaveVariableModal,
@@ -21,15 +21,10 @@ import Warning from "@/components/Alerts/Warning";
 export default function SinglePromptEditPage() {
   const { push, query } = useRouter();
 
-  const {
-    show_modal,
-    toggle_modal
-  } = shouldShowSaveModal();
+  const { show_modal, toggle_modal } = shouldShowSaveModal();
 
-  const {
-    show_variable_modal,
-    toggle_variable_modal
-  } = shouldShowSaveVariableModal();
+  const { show_variable_modal, toggle_variable_modal } =
+    shouldShowSaveVariableModal();
 
   const {
     tabs,
@@ -38,7 +33,7 @@ export default function SinglePromptEditPage() {
     findBestNextTab,
     setActiveTab,
     isActiveTab,
-    setActiveTabById
+    setActiveTabById,
   } = tabStore();
 
   const {
@@ -47,7 +42,7 @@ export default function SinglePromptEditPage() {
     promptObject,
     prompts,
     createLocalPrompt,
-    updateLocalPrompt
+    updateLocalPrompt,
   } = promptStore() ?? {};
 
   const {
@@ -64,7 +59,13 @@ export default function SinglePromptEditPage() {
     activateLocalPrompt(id);
     setModelById(promptObject.id as string);
     setActiveTabById(id);
-  }, [query.id, promptObject.id, setActiveTabById, setModelById, activateLocalPrompt]);
+  }, [
+    query.id,
+    promptObject.id,
+    setActiveTabById,
+    setModelById,
+    activateLocalPrompt,
+  ]);
 
   const changeIdInUrl = (newId: string) => {
     const newUrl = `/workspace/${newId}`;
@@ -79,12 +80,11 @@ export default function SinglePromptEditPage() {
       bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
     }
 
-    var x = removeTabFromTabs(id)?.length
+    var x = removeTabFromTabs(id)?.length;
 
     if (x === 0) {
       push("/prompts");
     }
-
   };
 
   const newPrompt = async () => {
@@ -100,7 +100,7 @@ export default function SinglePromptEditPage() {
       <Head>
         <title>Edit {promptObject.name} - PromptDesk</title>
       </Head>
-      {(promptObject) && (
+      {promptObject && (
         <div className="pg-main">
           <div className="pg-tab-header">
             {/* TABS */}
@@ -114,25 +114,23 @@ export default function SinglePromptEditPage() {
               />
             </div>
           </div>
-          {(promptObject.id === "") && (
-            <ErrorPage statusCode={404} />
-          )}
+          {promptObject.id === "" && <ErrorPage statusCode={404} />}
           {promptObject.id && promptObject.id !== "" && (
             <div className="pg-body">
               {/*show && <History />*/}
               {show_modal && <Modal />}
               {show_variable_modal && <VariableModal />}
               <div className="pg-editor">
-                <Warning className="mb-2" display={modelObject?.input_format != undefined} text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models." />
+                <Warning
+                  className="mb-2"
+                  display={modelObject?.input_format != undefined}
+                  text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models."
+                />
                 <div className="pg-content-body">
-                  {modelObject?.type === "chat" ? (
-                    <ChatEditor />
-                  ) : (
-                    <Editor />
-                  )}
+                  {modelObject?.type === "chat" ? <ChatEditor /> : <Editor />}
                 </div>
               </div>
-              {modelObject &&
+              {modelObject && (
                 <RightPanel
                   toggle_modal={toggle_modal}
                   modelListSelector={modelListSelector}
@@ -142,12 +140,11 @@ export default function SinglePromptEditPage() {
                   promptObject={promptObject}
                   updateLocalPromptValues={updateLocalPromptValues}
                 />
-              }
+              )}
             </div>
           )}
         </div>
       )}
     </>
   );
-
 }

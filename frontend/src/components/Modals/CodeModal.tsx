@@ -7,14 +7,11 @@ import CopyWrapper from "../CopyWrapper";
 const transformObject = (obj: {
   [key: string]: any;
 }): { [key: string]: any } => {
-  return Object.keys(obj).reduce(
-    (acc: { [key: string]: any }, key) => {
-      const value = obj[key];
-      acc[key] = Array.isArray(value) ? [...value] : value;
-      return acc;
-    },
-    {}
-  );
+  return Object.keys(obj).reduce((acc: { [key: string]: any }, key) => {
+    const value = obj[key];
+    acc[key] = Array.isArray(value) ? [...value] : value;
+    return acc;
+  }, {});
 };
 
 const CodeModal = () => {
@@ -22,9 +19,7 @@ const CodeModal = () => {
   const [apiKey, setApiKey] = useState("");
   const [serviceURL, setServiceURL] = useState("");
 
-
   useEffect(() => {
-
     let token = undefined;
     if (typeof window !== "undefined") {
       token = Cookies.get("token");
@@ -41,15 +36,21 @@ const CodeModal = () => {
     }
   }, []);
 
-  const finalObject = Object.keys(promptObject.prompt_variables).reduce((acc: any, key) => {
-    const variable = promptObject.prompt_variables[key];
-    const { value } = variable; // Destructuring for clarity
+  const finalObject = Object.keys(promptObject.prompt_variables).reduce(
+    (acc: any, key) => {
+      const variable = promptObject.prompt_variables[key];
+      const { value } = variable; // Destructuring for clarity
 
-    // Direct assignment if value is not an object, or it's an array
-    acc[key] = typeof value === 'object' && !Array.isArray(value) ? transformObject(value) : value;
+      // Direct assignment if value is not an object, or it's an array
+      acc[key] =
+        typeof value === "object" && !Array.isArray(value)
+          ? transformObject(value)
+          : value;
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {},
+  );
 
   const codeTemplate = `from promptdesk import PromptDesk
 

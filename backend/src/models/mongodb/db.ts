@@ -1,23 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-export default async function connectToDatabase(test=false) {
-  console.log('INFO :: MONGODB CONNECTING', process.env.MONGO_URL)
+export default async function connectToDatabase(test = false) {
+  console.log("INFO :: MONGODB CONNECTING", process.env.MONGO_URL);
   try {
-    mongoose.set('strictQuery', false);
-    
+    mongoose.set("strictQuery", false);
+
     let mongo_uri = process.env.MONGO_URL as string;
 
     await mongoose.connect(mongo_uri as string, {
       connectTimeoutMS: 5000,
-      retryWrites: false
+      retryWrites: false,
     });
 
     const dbName = mongoose.connection.db.databaseName;
-    console.log('INFO :: MONGODB CONNECTED TO DATABASE', dbName);
+    console.log("INFO :: MONGODB CONNECTED TO DATABASE", dbName);
 
-    return "CONNECTED"
+    return "CONNECTED";
   } catch (error) {
-    console.log('INFO :: MONGODB ERROR', error);
-    return "ERROR"
+    console.log("INFO :: MONGODB ERROR", error);
+    return "ERROR";
   }
 }

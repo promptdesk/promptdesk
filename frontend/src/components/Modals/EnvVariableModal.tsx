@@ -3,11 +3,11 @@ import { variableStore } from "@/stores/VariableStore";
 import { shouldShowEnvVariableModal } from "@/stores/ModalStore";
 
 const Modal = () => {
-
   const { variables, updateVariables } = variableStore();
-  const { show_env_variable_modal, toggle_env_variable_modal } = shouldShowEnvVariableModal();
+  const { show_env_variable_modal, toggle_env_variable_modal } =
+    shouldShowEnvVariableModal();
 
-  const [ formValues, setFormValues ] = useState({
+  const [formValues, setFormValues] = useState({
     name: "",
     value: "",
   });
@@ -22,32 +22,44 @@ const Modal = () => {
 
   async function createNewVariable() {
     //check if name is unique
-    var name = formValues.name
-    var nameExists = false
+    var name = formValues.name;
+    var nameExists = false;
     variables.forEach((variable) => {
       if (variable.name === name) {
-        nameExists = true
+        nameExists = true;
       }
-    })
-    if(nameExists) {
-      alert("Variable name already exists")
+    });
+    if (nameExists) {
+      alert("Variable name already exists");
       return 0;
     }
     var newVariable = {
       name: formValues.name,
       value: formValues.value,
-    }
-    var newVariables = variables
-    newVariables.push(newVariable)
-    await updateVariables(newVariables)
+    };
+    var newVariables = variables;
+    newVariables.push(newVariable);
+    await updateVariables(newVariables);
     //reset form
-    setFormValues({ name: "", value: "" })
-    toggle_env_variable_modal()
+    setFormValues({ name: "", value: "" });
+    toggle_env_variable_modal();
   }
 
   const saveNewButtonData = [
-    { label: "Cancel", className: "btn-neutral", action: () => { toggle_env_variable_modal() } },
-    { label: "Save", className: "btn-primary", action: () => { createNewVariable() } },
+    {
+      label: "Cancel",
+      className: "btn-neutral",
+      action: () => {
+        toggle_env_variable_modal();
+      },
+    },
+    {
+      label: "Save",
+      className: "btn-primary",
+      action: () => {
+        createNewVariable();
+      },
+    },
   ];
 
   const renderButtons = () => {
@@ -74,16 +86,19 @@ const Modal = () => {
     <div className="modal-root modal-is-open modal-closeable">
       <div className="modal-backdrop" />
       <div className="modal-dialog-container" tabIndex={0}>
-        <div
-          className="modal-dialog modal-size-medium"
-        >
+        <div className="modal-dialog modal-size-medium">
           <div>
-            <div className="modal-header heading-medium">Create new secret key</div>
+            <div className="modal-header heading-medium">
+              Create new secret key
+            </div>
             <div className="modal-body body-small">
               <p>Enter the name and value of your new secret key.</p>
               <br />
               <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                <div
+                  className="body-small mb-2 flex items-center"
+                  id="save-modal-name"
+                >
                   <div className="bold mr-2">Name</div>
                 </div>
                 <input
@@ -95,7 +110,10 @@ const Modal = () => {
               </div>
               <br />
               <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                <div
+                  className="body-small mb-2 flex items-center"
+                  id="save-modal-name"
+                >
                   <div className="bold mr-2">Value</div>
                 </div>
                 <input
@@ -106,9 +124,7 @@ const Modal = () => {
                 />
               </div>
             </div>
-            <div className="modal-footer">
-              {renderButtons()}
-            </div>
+            <div className="modal-footer">{renderButtons()}</div>
           </div>
         </div>
       </div>

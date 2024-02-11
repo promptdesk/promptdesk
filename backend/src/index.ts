@@ -1,37 +1,37 @@
-import express from 'express';
-import cors from 'cors';
-import bodyParser from 'body-parser';
-import dotenv from 'dotenv';
-import path from 'path';
-import { apiKeyMiddleware } from './utils/authorization';
-import fs from 'fs';
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import dotenv from "dotenv";
+import path from "path";
+import { apiKeyMiddleware } from "./utils/authorization";
+import fs from "fs";
 
 var environment = process.env.NODE_ENV;
 
-console.log("INFO :: ENVIRONMENT", environment)
+console.log("INFO :: ENVIRONMENT", environment);
 
-if(environment == 'development') {
-  console.log("INFO :: DEVELOPMENT ENVIRONMENT")
-  dotenv.config({path:'../.env'})
+if (environment == "development") {
+  console.log("INFO :: DEVELOPMENT ENVIRONMENT");
+  dotenv.config({ path: "../.env" });
 }
-if(environment == 'test') {
-  console.log("INFO :: TEST ENVIRONMENT")
-  dotenv.config({path:'../.env'})
+if (environment == "test") {
+  console.log("INFO :: TEST ENVIRONMENT");
+  dotenv.config({ path: "../.env" });
 }
-if(environment == 'production') {
-  console.log("INFO :: PRODUCTION ENVIRONMENT")
-  dotenv.config({path:'../.env.production.local'})
+if (environment == "production") {
+  console.log("INFO :: PRODUCTION ENVIRONMENT");
+  dotenv.config({ path: "../.env.production.local" });
 }
 
 const app = express();
 
-import modelsRouter from './routes/api/models';
-import promptsRouter from './routes/api/prompts';
-import generateRouter from './routes/api/generate';
-import samplesRouter from './routes/api/samples';
-import logsRouter from './routes/api/logs';
-import variablesRouter from './routes/api/variables';
-import organizationRouter from './routes/api/organization';
+import modelsRouter from "./routes/api/models";
+import promptsRouter from "./routes/api/prompts";
+import generateRouter from "./routes/api/generate";
+import samplesRouter from "./routes/api/samples";
+import logsRouter from "./routes/api/logs";
+import variablesRouter from "./routes/api/variables";
+import organizationRouter from "./routes/api/organization";
 
 // Middleware
 app.use(cors());
@@ -46,64 +46,68 @@ app.use(express.json());
 app.use(cors());
 
 // heartbeat route
-app.get(['/api/ping', '/ping'], (req, res) => {
-  return res.send('pong');
+app.get(["/api/ping", "/ping"], (req, res) => {
+  return res.send("pong");
 });
 
-app.use('/api', apiKeyMiddleware);
+app.use("/api", apiKeyMiddleware);
 
-app.use('/api', generateRouter);
-app.use('/api', samplesRouter);
-app.use('/api', promptsRouter);
-app.use('/api', logsRouter);
-app.use('/api', modelsRouter);
-app.use('/api', variablesRouter);
-app.use('/api', organizationRouter);
+app.use("/api", generateRouter);
+app.use("/api", samplesRouter);
+app.use("/api", promptsRouter);
+app.use("/api", logsRouter);
+app.use("/api", modelsRouter);
+app.use("/api", variablesRouter);
+app.use("/api", organizationRouter);
 
-app.all('/api/*', (req, res) => {
-  return res.status(404).send({error: 'API URI Not Found.'});
-})
+app.all("/api/*", (req, res) => {
+  return res.status(404).send({ error: "API URI Not Found." });
+});
 
-app.use(express.static('./assets'))
+app.use(express.static("./assets"));
 
-import {authenticate} from './utils/publicAuth';
+import { authenticate } from "./utils/publicAuth";
 authenticate(app);
 
-app.use(express.static('./public'))
-app.use(express.static('./dist'))
+app.use(express.static("./public"));
+app.use(express.static("./dist"));
 
-app.get(['/','/prompts/all', '/prompts/*'], (req, res) => {
-  if(!fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-    return res.end("You must build the frontend first. Run 'npm run build' in the frontend directory.");
+app.get(["/", "/prompts/all", "/prompts/*"], (req, res) => {
+  if (!fs.existsSync(path.join(__dirname, "../dist/index.html"))) {
+    return res.end(
+      "You must build the frontend first. Run 'npm run build' in the frontend directory.",
+    );
   }
-  return res.sendFile(path.join(__dirname, '../dist/index.html'));
+  return res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.get(['/workspace/*'], (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/workspace/[id].html'));
+app.get(["/workspace/*"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/workspace/[id].html"));
 });
 
-app.get(['/workspace/*/samples'], (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/workspace/[id]/samples.html'));
+app.get(["/workspace/*/samples"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/workspace/[id]/samples.html"));
 });
 
-app.get(['/:filename'], (req, res) => {
+app.get(["/:filename"], (req, res) => {
   var filename = req.params.filename;
   try {
-    res.sendFile(path.join(__dirname, '../dist/' + filename + '.html'));
+    res.sendFile(path.join(__dirname, "../dist/" + filename + ".html"));
   } catch (error) {
-    res.sendFile(path.join(__dirname, '../dist/404.html'));
+    res.sendFile(path.join(__dirname, "../dist/404.html"));
   }
 });
 
 //redirect all other routes to prompts page - main entry point
-app.get(['/*'], (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/404.html'));
+app.get(["/*"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/404.html"));
 });
 
 app.listen(port, () => {
-    console.log('INFO :: INTERNAL SERVER RUNNING ON PORT ' + port)
-    console.log('INFO :: EXTERNAL SERVER RUNNING ON ' + process.env.PROMPT_SERVER_URL)
+  console.log("INFO :: INTERNAL SERVER RUNNING ON PORT " + port);
+  console.log(
+    "INFO :: EXTERNAL SERVER RUNNING ON " + process.env.PROMPT_SERVER_URL,
+  );
 });
 
 export default app;

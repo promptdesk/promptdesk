@@ -33,5 +33,5 @@ jobs:
         run: npm ci
         working-directory: ./frontend
       - name: Build (frontend)
-        run: npm run build
+        run: npm run build-github-actions
         working-directory: ./frontend

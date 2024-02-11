@@ -1,15 +1,15 @@
 {
-    "name": "yoda-test",
-    "description": "A chat prompt to act as Yoda from Star Wars.",
-    "prompt_data": {
-        "context": "Act as Yoda from Star Wars.",
-        "messages": [
-            {
-                "role": "user",
-                "content": "Hello, how are you?"
-            }
-        ]
-    },
-    "model_type": "chat",
-    "project": "test"
+  "name": "yoda-test",
+  "description": "A chat prompt to act as Yoda from Star Wars.",
+  "prompt_data": {
+    "context": "Act as Yoda from Star Wars.",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Hello, how are you?"
+      }
+    ]
+  },
+  "model_type": "chat",
+  "project": "test"
 }

@@ -1,5 +1,5 @@
-import React from 'react';
-import LogRow from '@/components/Table/LogRow';
+import React from "react";
+import LogRow from "@/components/Table/LogRow";
 
 interface LogsTableProps {
   logs: any;
@@ -20,41 +20,56 @@ const LogTable: React.FC<LogsTableProps> = ({
     <table className="min-w-full docs-models-toc">
       <thead>
         <tr>
-          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+          <th
+            scope="col"
+            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+          >
             Prompt
           </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+          <th
+            scope="col"
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+          >
             Model
           </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+          <th
+            scope="col"
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+          >
             Date
           </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+          <th
+            scope="col"
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+          >
             Duration
           </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+          <th
+            scope="col"
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+          >
             Status
           </th>
           <th></th>
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
-        {logs && logs.data ? 
-          logs.data.map((log: any, index:number) => (
-            <LogRow 
-              index={index}
-              log={log} 
-              key={index}
-              handleRowClick={handleRowClick} 
-              getPromptName={getPromptName} 
-              getModelName={getModelName} 
-              expandedRows={expandedRows} 
-            />
-          )) 
+        {logs && logs.data
+          ? logs.data.map((log: any, index: number) => (
+              <LogRow
+                index={index}
+                log={log}
+                key={index}
+                handleRowClick={handleRowClick}
+                getPromptName={getPromptName}
+                getModelName={getModelName}
+                expandedRows={expandedRows}
+              />
+            ))
           : null}
       </tbody>
     </table>
   );
-}
+};
 
 export default LogTable;

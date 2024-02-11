@@ -1,60 +1,62 @@
-import { act } from 'react-dom/test-utils';
-import { generateResultForPrompt } from '@/services/GenerateService'; // Adjust the path as necessary
-import { modelStore } from '@/stores/ModelStore'; // Adjust the path as necessary
-import { promptStore, fetchAllPrompts } from '@/stores/prompts'; // Adjust the path as necessary
-import { variableStore } from '@/stores/VariableStore'; // Adjust the path as necessary
-import { tabStore } from '@/stores/TabStore'; // Adjust the path as necessary
+import { act } from "react-dom/test-utils";
+import { generateResultForPrompt } from "@/services/GenerateService"; // Adjust the path as necessary
+import { modelStore } from "@/stores/ModelStore"; // Adjust the path as necessary
+import { promptStore, fetchAllPrompts } from "@/stores/prompts"; // Adjust the path as necessary
+import { variableStore } from "@/stores/VariableStore"; // Adjust the path as necessary
+import { tabStore } from "@/stores/TabStore"; // Adjust the path as necessary
 
-describe('generateResultForPrompt integration tests', () => {
-    // Function to setup the environment before each test
-    async function setupEnvironment(promptName) {
-        await variableStore.getState().fetchVariables();
-        const prompts = await fetchAllPrompts();
+describe("generateResultForPrompt integration tests", () => {
+  // Function to setup the environment before each test
+  async function setupEnvironment(promptName) {
+    await variableStore.getState().fetchVariables();
+    const prompts = await fetchAllPrompts();
 
-        const targetPrompt = prompts.find(prompt => prompt.name === promptName);
-        if (!targetPrompt) {
-            throw new Error(`Prompt with name "${promptName}" not found.`);
-        }
-
-        await modelStore.getState().fetchAllModels();
-        modelStore.getState().setModelById(targetPrompt.model);
-        promptStore.getState().activateLocalPrompt(targetPrompt.id);
-        tabStore.setState({
-            tabs: [{
-                name: 'Test Tab',
-                prompt_id: targetPrompt.id,
-                current: true,
-                data: {},
-                loading: true
-            }]
-        });
-        tabStore.getState().setActiveTabById(targetPrompt.id);
+    const targetPrompt = prompts.find((prompt) => prompt.name === promptName);
+    if (!targetPrompt) {
+      throw new Error(`Prompt with name "${promptName}" not found.`);
     }
 
-    // Function to generate results for a given prompt name
-    async function generateResultsForNamedPrompt(promptName) {
-        const prompts = await fetchAllPrompts();
-        const targetPrompt = prompts.find(prompt => prompt.name === promptName);
-        if (!targetPrompt) {
-            throw new Error(`Prompt with name "${promptName}" not found.`);
-        }
+    await modelStore.getState().fetchAllModels();
+    modelStore.getState().setModelById(targetPrompt.model);
+    promptStore.getState().activateLocalPrompt(targetPrompt.id);
+    tabStore.setState({
+      tabs: [
+        {
+          name: "Test Tab",
+          prompt_id: targetPrompt.id,
+          current: true,
+          data: {},
+          loading: true,
+        },
+      ],
+    });
+    tabStore.getState().setActiveTabById(targetPrompt.id);
+  }
 
-        return await generateResultForPrompt(targetPrompt.id);
+  // Function to generate results for a given prompt name
+  async function generateResultsForNamedPrompt(promptName) {
+    const prompts = await fetchAllPrompts();
+    const targetPrompt = prompts.find((prompt) => prompt.name === promptName);
+    if (!targetPrompt) {
+      throw new Error(`Prompt with name "${promptName}" not found.`);
     }
 
-    beforeEach(async () => {
-        // Setup with the specific prompt name for each test
-        await setupEnvironment('yoda-test');
-    });
+    return await generateResultForPrompt(targetPrompt.id);
+  }
 
-    it('should handle generating results for a prompt correctly', async () => {
-        const data = await generateResultsForNamedPrompt('yoda-test');
+  beforeEach(async () => {
+    // Setup with the specific prompt name for each test
+    await setupEnvironment("yoda-test");
+  });
 
-        expect(typeof data.message.content).toBe('string');
-        expect(data.error).toBe(false);
-    });
+  it("should handle generating results for a prompt correctly", async () => {
+    const data = await generateResultsForNamedPrompt("yoda-test");
 
-    // This setup allows for easy addition of more tests for different prompts
-    // by just adding more it() blocks and calling setupEnvironment and generateResultsForNamedPrompt
-    // with the desired prompt names
+    expect(typeof data.message.content).toBe("string");
+    expect(data.error).toBe(false);
+  });
+
+  // This setup allows for easy addition of more tests for different prompts
+  // by just adding more it() blocks and calling setupEnvironment and generateResultsForNamedPrompt
+  // with the desired prompt names
 });

@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from "react";
-import {useRouter} from 'next/router';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import SampleTable from "@/components/Table/SampleTable";
-import {sampleStore} from "@/stores/SampleStore";
-import {promptStore} from "@/stores/prompts";
-import Pagination from '@/components/Table/Pagination';
+import { sampleStore } from "@/stores/SampleStore";
+import { promptStore } from "@/stores/prompts";
+import Pagination from "@/components/Table/Pagination";
 import "./sample.scss";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import Head from "next/head";
@@ -12,86 +12,91 @@ import Head from "next/head";
  * This page allows you to view all of the unique samples that have accumulated for a particular prompt.
  */
 export default function SamplesListPage() {
-    const {push, back, query} = useRouter();
-    const {samples, per_page, total, total_pages, fetchSamples} = sampleStore();
-    const {prompts, activateLocalPrompt} = promptStore();
+  const { push, back, query } = useRouter();
+  const { samples, per_page, total, total_pages, fetchSamples } = sampleStore();
+  const { prompts, activateLocalPrompt } = promptStore();
 
-    const initial_page = parseInt(location.search.replace('?page=', ''));
+  const initial_page = parseInt(location.search.replace("?page=", ""));
 
-    const [page, setPage] = useState(initial_page || 1);
+  const [page, setPage] = useState(initial_page || 1);
 
-    const prompt_id = String(query.id);
+  const prompt_id = String(query.id);
 
-    useEffect(() => {
-        activateLocalPrompt(prompt_id);
-    }, [prompt_id]);
+  useEffect(() => {
+    activateLocalPrompt(prompt_id);
+  }, [prompt_id]);
 
-    useEffect(() => {
-        fetchSamples(0, prompt_id?.toString());
-    }, [fetchSamples, prompt_id]);
+  useEffect(() => {
+    fetchSamples(0, prompt_id?.toString());
+  }, [fetchSamples, prompt_id]);
 
-    const handleRowClick = (sampleId: string) => {
-        // Do nothing.
-    };
+  const handleRowClick = (sampleId: string) => {
+    // Do nothing.
+  };
 
-    function getPromptName(id:string) {
-        return prompts.find((prompt:any) => prompt.id === id)?.name || "N/a";
-    }
+  function getPromptName(id: string) {
+    return prompts.find((prompt: any) => prompt.id === id)?.name || "N/a";
+  }
 
-    const handlePrevious = () => {
-        if (page > 1) push({query: {page: page - 1, id: prompt_id}} );
-        setPage(page - 1);
-    };
+  const handlePrevious = () => {
+    if (page > 1) push({ query: { page: page - 1, id: prompt_id } });
+    setPage(page - 1);
+  };
 
-    const handleNext = () => {
-        if (page) push({query: {page: page + 1, id: prompt_id}} );
-        setPage(page + 1);
-    };
+  const handleNext = () => {
+    if (page) push({ query: { page: page + 1, id: prompt_id } });
+    setPage(page + 1);
+  };
 
-    const goBackToPromptPage = () => {
-        push(`/workspace/${prompt_id}`);
-    }
+  const goBackToPromptPage = () => {
+    push(`/workspace/${prompt_id}`);
+  };
 
-    return (
-        <>
-        <Head>
-            <title>Samples for {getPromptName(prompt_id)} - PromptDesk</title>
-        </Head>
-        <div className="page-body full-width flush samples-list-page">
-            <div className="pg-header">
-                <div className="pg-header-title flex justify-between">
-                    <h1 className="pg-page-title" style={{display: 'block'}}>Samples for <span className={"prompt-name"}>{getPromptName(prompt_id)}</span></h1>
-                    <PlaygroundButton
-                        text="Back"
-                        onClick={goBackToPromptPage}
-                        isFull={false}
-                    />
-                </div>
-            </div>
-            <div className="app-page">
-                <div className="mt-2 flow-root markdown-page markdown-content markdown-prompt-blockquote models">
-                    <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                            <SampleTable
-                                samples={samples}
-                            />
-                            {samples && Object.keys(samples).length === 0 ? <p>No samples yet. Try executing this prompt either through the UI or from your client code.</p> : null}
-                        </div>
-                    </div>
-                </div>
-                <Pagination
-                    page={page}
-                    item_counts={{
-                        per_page,
-                        total,
-                        total_pages
-                    }}
-                    handlePrevious={handlePrevious}
-                    handleNext={handleNext}
-                />
-            </div>
+  return (
+    <>
+      <Head>
+        <title>Samples for {getPromptName(prompt_id)} - PromptDesk</title>
+      </Head>
+      <div className="page-body full-width flush samples-list-page">
+        <div className="pg-header">
+          <div className="pg-header-title flex justify-between">
+            <h1 className="pg-page-title" style={{ display: "block" }}>
+              Samples for{" "}
+              <span className={"prompt-name"}>{getPromptName(prompt_id)}</span>
+            </h1>
+            <PlaygroundButton
+              text="Back"
+              onClick={goBackToPromptPage}
+              isFull={false}
+            />
+          </div>
         </div>
-        </>
-    );
+        <div className="app-page">
+          <div className="mt-2 flow-root markdown-page markdown-content markdown-prompt-blockquote models">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <SampleTable samples={samples} />
+                {samples && Object.keys(samples).length === 0 ? (
+                  <p>
+                    No samples yet. Try executing this prompt either through the
+                    UI or from your client code.
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <Pagination
+            page={page}
+            item_counts={{
+              per_page,
+              total,
+              total_pages,
+            }}
+            handlePrevious={handlePrevious}
+            handleNext={handleNext}
+          />
+        </div>
+      </div>
+    </>
+  );
 }
-

@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { Variable } from '@/interfaces/variable';
-import { fetchFromPromptdesk } from '@/services/PromptdeskService';
+import { create } from "zustand";
+import { Variable } from "@/interfaces/variable";
+import { fetchFromPromptdesk } from "@/services/PromptdeskService";
 
 interface VariableStore {
   variables: Variable[];
@@ -9,20 +9,18 @@ interface VariableStore {
 }
 
 const variableStore = create<VariableStore>((set) => ({
-
   variables: [],
-  
+
   fetchVariables: async () => {
-    const variables: Variable[] = await fetchFromPromptdesk('/variables')
+    const variables: Variable[] = await fetchFromPromptdesk("/variables");
     set({ variables });
     return variables;
   },
 
   updateVariables: async (variables: Variable[]) => {
-    await fetchFromPromptdesk('/variables', 'PUT', variables);
+    await fetchFromPromptdesk("/variables", "PUT", variables);
     set({ variables });
-  }
-
+  },
 }));
 
 export { variableStore };

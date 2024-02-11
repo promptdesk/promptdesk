@@ -1,15 +1,15 @@
 {
-    "name": "hashtag_generator",
-    "description": "",
-    "prompt_variables": {
-        "topic": {
-            "type": "text",
-            "value": "technology"
-        }
-    },
-    "prompt_data": {
-        "prompt": "Generate an email subject line regarding {{topic}}."
-    },
-    "model_type": "completion",
-    "project": "marketing"
+  "name": "hashtag_generator",
+  "description": "",
+  "prompt_variables": {
+    "topic": {
+      "type": "text",
+      "value": "technology"
+    }
+  },
+  "prompt_data": {
+    "prompt": "Generate an email subject line regarding {{topic}}."
+  },
+  "model_type": "completion",
+  "project": "marketing"
 }

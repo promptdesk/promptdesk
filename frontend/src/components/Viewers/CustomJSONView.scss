@@ -1,9 +1,6 @@
-
-
 .custom-json-view {
-
-  background-color: #FAFAFA;
-  padding:1em;
+  background-color: #fafafa;
+  padding: 1em;
   border-radius: 10px;
 
   .react-json-view {
@@ -11,7 +8,7 @@
   }
 
   font-size: 0.85rem;
-  line-height: 1.10rem;
+  line-height: 1.1rem;
 
   .variable-row {
     display: flex;
@@ -47,4 +44,3 @@
     margin-left: -17px;
   }
 }
-

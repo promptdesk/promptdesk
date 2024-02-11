@@ -5,7 +5,10 @@ interface ChatMessageRoleProps {
   onRoleToggle: () => void;
 }
 
-const ChatMessageRole: React.FC<ChatMessageRoleProps> = ({ defaultRole, onRoleToggle }) => {
+const ChatMessageRole: React.FC<ChatMessageRoleProps> = ({
+  defaultRole,
+  onRoleToggle,
+}) => {
   return (
     <div className="chat-message-role">
       <div className="chat-message-subheading subheading">

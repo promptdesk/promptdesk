@@ -12,7 +12,13 @@ interface MessageContainerProps {
   onToggleRole: (index: number, roles: string[]) => void;
 }
 
-const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, roles, onEditMessage, onToggleRole }) => {
+const MessageContainer: React.FC<MessageContainerProps> = ({
+  index,
+  message,
+  roles,
+  onEditMessage,
+  onToggleRole,
+}) => {
   const textAreaRef = useRef<HTMLDivElement | null>(null);
 
   let defaultRole = message.role || roles[0];
@@ -36,13 +42,16 @@ const MessageContainer: React.FC<MessageContainerProps> = ({ index, message, rol
 
     onEditMessage(index, text);
   };
-  
+
   const article = defaultRole.startsWith("u") ? "an" : "a";
   const placeholder = `Enter ${article} ${defaultRole} message here.`;
 
   return (
     <div className="chat-pg-message">
-      <ChatMessageRole defaultRole={defaultRole} onRoleToggle={handleRoleToggle} />
+      <ChatMessageRole
+        defaultRole={defaultRole}
+        onRoleToggle={handleRoleToggle}
+      />
       <div className="text-input-with-focus">
         <div
           className="text-input-md text-input chat-message-input"

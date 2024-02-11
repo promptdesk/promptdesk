@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import { modelStore } from "@/stores/ModelStore";
 
 export default function ModelsHomeRedirect() {
@@ -12,11 +12,7 @@ export default function ModelsHomeRedirect() {
     let model = models[0];
     const newUrl = `/models/${model.id}`;
     push(newUrl);
-  }, [])
+  }, []);
 
-  return (
-    <>
-    </>
-  );
-  
+  return <></>;
 }

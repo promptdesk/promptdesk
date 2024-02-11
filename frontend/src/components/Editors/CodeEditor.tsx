@@ -4,7 +4,7 @@ interface CodeEditorProps {
   handleChange?: (e: string | undefined) => void;
   language: string;
   readOnly?: boolean;
-  height? : string;
+  height?: string;
   style?: string;
 }
 
@@ -14,7 +14,7 @@ const Editor: React.FC<CodeEditorProps> = ({
   language,
   readOnly,
   height = "500px",
-  style = "w-full"
+  style = "w-full",
 }) => {
   return (
     <div className={style}>
@@ -30,8 +30,8 @@ const Editor: React.FC<CodeEditorProps> = ({
           fontSize: 14,
           readOnly,
           scrollbar: {
-            alwaysConsumeMouseWheel: false
-          }
+            alwaysConsumeMouseWheel: false,
+          },
         }}
       />
     </div>

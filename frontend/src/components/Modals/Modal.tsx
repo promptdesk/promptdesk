@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import { shouldShowSaveModal } from "@/stores/ModalStore";
 import { tabStore } from "@/stores/TabStore";
-import { promptStore, updateExistingPrompt, createNewPrompt, duplicateExistingPrompt, deletePrompt } from "@/stores/prompts";
-import { useRouter } from 'next/router';
+import {
+  promptStore,
+  updateExistingPrompt,
+  createNewPrompt,
+  duplicateExistingPrompt,
+  deletePrompt,
+} from "@/stores/prompts";
+import { useRouter } from "next/router";
 
 const Modal = () => {
   const { show_modal, toggle_modal } = shouldShowSaveModal();
 
   const { push } = useRouter();
 
-
-  const {
-    updateLocalPromptValues,
-    promptObject,
-    addToLocalPrompts
-  } = promptStore();
+  const { updateLocalPromptValues, promptObject, addToLocalPrompts } =
+    promptStore();
 
   const {
     tabs,
@@ -23,13 +25,13 @@ const Modal = () => {
     findBestNextTab,
     setActiveTab,
     isActiveTab,
-    setActiveTabById
+    setActiveTabById,
   } = tabStore();
 
-  const [ formValues, setFormValues ] = useState({
+  const [formValues, setFormValues] = useState({
     name: promptObject.name,
     description: promptObject.description,
-    project: promptObject.project
+    project: promptObject.project,
   });
 
   function changeName(name: string) {
@@ -57,49 +59,69 @@ const Modal = () => {
 
   const saveExistingButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
-    { label: "Save as new", className: "btn-neutral", action: async () => {
-        var newPrompt = await duplicateExistingPrompt(formValues.name, formValues.description);
+    {
+      label: "Save as new",
+      className: "btn-neutral",
+      action: async () => {
+        var newPrompt = await duplicateExistingPrompt(
+          formValues.name,
+          formValues.description,
+        );
         toggle_modal();
-        if(newPrompt) {
+        if (newPrompt) {
           addToLocalPrompts(newPrompt);
           addTab(newPrompt.name, newPrompt.id, true);
           push("/workspace/" + newPrompt.id);
         }
-      }
+      },
     },
-    { label: "Update", className: "btn-primary", action: () => { setAllPromptInformation(); updateExistingPrompt(); toggle_modal(); } },
-    { label: "Delete", className: "btn-negative", action: () => {
+    {
+      label: "Update",
+      className: "btn-primary",
+      action: () => {
+        setAllPromptInformation();
+        updateExistingPrompt();
+        toggle_modal();
+      },
+    },
+    {
+      label: "Delete",
+      className: "btn-negative",
+      action: () => {
         var id = promptObject.id as string;
-        
+
         deletePrompt();
         toggle_modal();
 
         //also found in the [id].tsx file
-        if(isActiveTab(id) && tabs.length > 1) {
+        if (isActiveTab(id) && tabs.length > 1) {
           const bestNextTab = findBestNextTab();
           bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
         }
-    
-        var x = removeTabFromTabs(id)?.length
-        
+
+        var x = removeTabFromTabs(id)?.length;
+
         if (x === 0) {
           push("/prompts");
         }
-
-      }
+      },
     },
   ];
 
   const saveNewButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
-    { label: "Save", className: "btn-primary", action: async () => {
-      setAllPromptInformation();
-      var id = await createNewPrompt();
-      if(id) {
-        toggle_modal();
-        push(`/workspace/${id}`);
-      }
-    } },
+    {
+      label: "Save",
+      className: "btn-primary",
+      action: async () => {
+        setAllPromptInformation();
+        var id = await createNewPrompt();
+        if (id) {
+          toggle_modal();
+          push(`/workspace/${id}`);
+        }
+      },
+    },
   ];
 
   const renderButtons = () => {
@@ -146,19 +168,20 @@ const Modal = () => {
     <div className="modal-root modal-is-open modal-closeable">
       <div className="modal-backdrop" />
       <div className="modal-dialog-container" tabIndex={0}>
-        <div
-          className="modal-dialog modal-size-medium"
-        >
+        <div className="modal-dialog modal-size-medium">
           <div>
             <div className="modal-header heading-medium">Save preset</div>
             <div className="modal-body body-small">
               <p>
-                This will save the current Playground state as a preset which you
-                can access later or share with others.
+                This will save the current Playground state as a preset which
+                you can access later or share with others.
               </p>
               <br />
               <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                <div
+                  className="body-small mb-2 flex items-center"
+                  id="save-modal-name"
+                >
                   <div className="bold mr-2">Name</div>
                 </div>
                 <input
@@ -170,7 +193,10 @@ const Modal = () => {
               </div>
               <br />
               <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-description">
+                <div
+                  className="body-small mb-2 flex items-center"
+                  id="save-modal-description"
+                >
                   <div className="bold mr-2">Description</div>
                   <div style={{ color: "var(--gray-600)" }}>Optional</div>
                 </div>
@@ -183,7 +209,10 @@ const Modal = () => {
               </div>
               <br />
               <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                <div
+                  className="body-small mb-2 flex items-center"
+                  id="save-modal-name"
+                >
                   <div className="bold mr-2">Project</div>
                 </div>
                 <input
@@ -194,9 +223,7 @@ const Modal = () => {
                 />
               </div>
             </div>
-            <div className="modal-footer">
-              {renderButtons()}
-            </div>
+            <div className="modal-footer">{renderButtons()}</div>
           </div>
         </div>
       </div>

@@ -1,14 +1,14 @@
 {
-    "name": "python_function_generation",
-    "description": "Generates a python function given a description.",
-    "prompt_variables": {
-        "function": {
-            "type": "text",
-            "value": "get the weather from a city - city name as function attribute"
-        }
-    },
-    "prompt_data": {
-        "prompt": "Generate a python function to do the following: {{function}}.\n\nOnly generate the python source code as a function."
-    },
-    "model_type": "completion"
+  "name": "python_function_generation",
+  "description": "Generates a python function given a description.",
+  "prompt_variables": {
+    "function": {
+      "type": "text",
+      "value": "get the weather from a city - city name as function attribute"
+    }
+  },
+  "prompt_data": {
+    "prompt": "Generate a python function to do the following: {{function}}.\n\nOnly generate the python source code as a function."
+  },
+  "model_type": "completion"
 }

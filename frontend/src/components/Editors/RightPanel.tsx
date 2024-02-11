@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import DropDown from "@/components/Form/DropDown";
 import SliderComponent from "@/components/Form/SliderComponent";
-import InputField from '../Form/InputField';
+import InputField from "../Form/InputField";
 
 interface RightPanelProps {
   toggle_modal: () => void;
@@ -33,7 +33,8 @@ const RightPanel: React.FC<RightPanelProps> = ({
               label={"Prompt Name"}
               value={promptObject.name}
               disabled={true}
-            /><br />
+            />
+            <br />
             <DropDown
               label={"Model"}
               options={modelListSelector}
@@ -44,28 +45,27 @@ const RightPanel: React.FC<RightPanelProps> = ({
             />
             <br />
             {modelObject.model_parameters &&
-              Object.keys(modelObject.model_parameters).map(
-                (key, index) =>
-                  modelObject.model_parameters[key]["type"] === "slider" ? (
-                    <SliderComponent
-                      key={index}
-                      sliderInfo={modelObject.model_parameters[key]}
-                      value={
-                        promptObject.prompt_parameters &&
-                        promptObject.prompt_parameters[key] !== undefined
-                          ? promptObject.prompt_parameters[key]
-                          : modelObject.model_parameters[key]
-                          ? modelObject.model_parameters[key]['default']
+              Object.keys(modelObject.model_parameters).map((key, index) =>
+                modelObject.model_parameters[key]["type"] === "slider" ? (
+                  <SliderComponent
+                    key={index}
+                    sliderInfo={modelObject.model_parameters[key]}
+                    value={
+                      promptObject.prompt_parameters &&
+                      promptObject.prompt_parameters[key] !== undefined
+                        ? promptObject.prompt_parameters[key]
+                        : modelObject.model_parameters[key]
+                          ? modelObject.model_parameters[key]["default"]
                           : undefined
-                      }
-                      onChange={(value: any): void => {
-                        updateLocalPromptValues(
-                          'prompt_parameters.' + key,
-                          value
-                        );
-                      }}
-                    />
-                  ) : null
+                    }
+                    onChange={(value: any): void => {
+                      updateLocalPromptValues(
+                        "prompt_parameters." + key,
+                        value,
+                      );
+                    }}
+                  />
+                ) : null,
               )}
           </div>
         </div>

@@ -1,11 +1,11 @@
-
-
 .sample-row {
   &:hover {
     background-color: #fafafa;
   }
 
-  .variables-column, .prompt-column, .result-column {
+  .variables-column,
+  .prompt-column,
+  .result-column {
     width: 30%;
   }
 
@@ -55,7 +55,7 @@
       height: fit-content;
 
       font-size: 0.85rem;
-      line-height: 1.10rem;
+      line-height: 1.1rem;
       font-family: monospace;
       color: #444 !important;
       white-space: pre-wrap;
@@ -71,20 +71,21 @@
       height: 100%;
       max-height: 500px;
       font-size: 0.85rem;
-      line-height: 1.10rem;
+      line-height: 1.1rem;
       font-family: monospace;
       color: #444 !important;
       white-space: pre-wrap;
       overflow-y: auto;
       cursor: text !important;
 
-      &:not(:focus,:hover) {
+      &:not(:focus, :hover) {
         background-color: transparent;
         border-color: transparent;
       }
     }
 
-    .prompt-value-display, .sample-row-textarea {
+    .prompt-value-display,
+    .sample-row-textarea {
       max-height: 500px;
     }
   }
@@ -105,12 +106,20 @@
   }
 
   @-webkit-keyframes action-button-spinner {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
   }
 
   @keyframes action-button-spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }

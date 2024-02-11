@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | PromptDesk</title> 
-    <link rel="stylesheet" href="/authentication.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | PromptDesk</title>
+    <link rel="stylesheet" href="/authentication.css" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
   </head>
@@ -13,34 +13,43 @@
       <h2>Login</h2>
       <form>
         <div class="input-box">
-          <input v-model="email" type="email" placeholder="Enter your email" required>
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Enter your email"
+            required
+          />
         </div>
         <div class="input-box">
-          <input v-model="password" type="password" placeholder="Create password" required>
+          <input
+            v-model="password"
+            type="password"
+            placeholder="Create password"
+            required
+          />
         </div>
         <div class="input-box button">
-          <input type="Submit" value="Login" @click="submit">
+          <input type="Submit" value="Login" @click="submit" />
         </div>
       </form>
     </div>
   </body>
   <script>
-    const { createApp, ref } = Vue
-  
+    const { createApp, ref } = Vue;
+
     createApp({
       setup() {
         return {
-          password:"",
-          email:"",
-          isLoggingIn:false
-        }
+          password: "",
+          email: "",
+          isLoggingIn: false,
+        };
       },
       methods: {
-
         async submit(event) {
           event.preventDefault();
 
-          if(this.isLoggingIn) {
+          if (this.isLoggingIn) {
             return;
           }
 
@@ -48,20 +57,19 @@
 
           var data = {
             email: this.email,
-            password: this.password
+            password: this.password,
           };
 
           try {
-            var response = await axios.post('/auth/login', data);
+            var response = await axios.post("/auth/login", data);
             window.location.href = "/";
-          } catch(e) {
+          } catch (e) {
             this.isLoggingIn = false;
             this.password = "";
             return;
           }
-
-        }
-      }
-    }).mount('#app')
+        },
+      },
+    }).mount("#app");
   </script>
 </html>

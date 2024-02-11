@@ -1,5 +1,5 @@
-import React from 'react';
-import Edit from '../Icons/Edit';
+import React from "react";
+import Edit from "../Icons/Edit";
 
 interface EditButtonProps {
   onClick: () => void;
@@ -8,7 +8,7 @@ interface EditButtonProps {
 function EditButton({ onClick }: EditButtonProps) {
   const handleClick = () => {
     // Call the onClick prop if it is a function
-    if (typeof onClick === 'function') {
+    if (typeof onClick === "function") {
       onClick();
     }
   };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface SliderComponentProps {
   sliderInfo: {
@@ -12,7 +12,11 @@ interface SliderComponentProps {
   onChange: (value: number) => void;
 }
 
-function SliderComponent({ sliderInfo, value, onChange }: SliderComponentProps) {
+function SliderComponent({
+  sliderInfo,
+  value,
+  onChange,
+}: SliderComponentProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(e.target.value);
     onChange(newValue);
@@ -21,11 +25,14 @@ function SliderComponent({ sliderInfo, value, onChange }: SliderComponentProps) 
   return (
     <div aria-haspopup="true" aria-expanded="false">
       <div className="slider css-160w4cx">
-        <div className="css-1povu0j" style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div
+          className="css-1povu0j"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <span className="body-small css-bjbdno">{sliderInfo.name}</span>
           <input
             className="text-input text-sm text-right"
-            style={{ maxWidth: '4em', padding: '0.2em' }}
+            style={{ maxWidth: "4em", padding: "0.2em" }}
             type="number"
             min={sliderInfo.min}
             max={sliderInfo.max}

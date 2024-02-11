@@ -1,35 +1,31 @@
 import React, { useEffect } from "react";
-import { useRouter } from 'next/router';
-import {tabStore} from "@/stores/TabStore";
-import { promptStore } from '@/stores/prompts';
+import { useRouter } from "next/router";
+import { tabStore } from "@/stores/TabStore";
+import { promptStore } from "@/stores/prompts";
 
 export default function WorkspaceHomeRedirector() {
   const { push, query } = useRouter();
 
   var { prompts, createLocalPrompt } = promptStore();
 
-  const {
-    findActiveTab,
-    setActiveTabById,
-    tabs
-  } = tabStore();
+  const { findActiveTab, setActiveTabById, tabs } = tabStore();
 
   useEffect(() => {
     let activeTab = findActiveTab();
     if (!activeTab && tabs.length > 0) {
-      activeTab = tabs[0]
+      activeTab = tabs[0];
     }
     if (activeTab) {
-      changeIdInUrl(activeTab.prompt_id)
+      changeIdInUrl(activeTab.prompt_id);
     } else if (!activeTab && tabs.length === 0) {
-      newPrompt()
+      newPrompt();
     }
-  }, [findActiveTab])
+  }, [findActiveTab]);
 
   const newPrompt = async () => {
-    console.log("newPrompt")
+    console.log("newPrompt");
     const newId = await createLocalPrompt();
-    if(newId === undefined) {
+    if (newId === undefined) {
       return;
     }
     setActiveTabById(newId as string);
@@ -37,11 +33,10 @@ export default function WorkspaceHomeRedirector() {
   };
 
   const changeIdInUrl = (newId: string) => {
-    console.log("changeIdInUrl")
+    console.log("changeIdInUrl");
     const newUrl = `/workspace/${newId}`;
     push(newUrl);
   };
 
   return null;
-  
 }

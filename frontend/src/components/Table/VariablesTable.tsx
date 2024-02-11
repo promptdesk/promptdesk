@@ -1,8 +1,8 @@
-import React from 'react';
-import { Variable } from '@/interfaces/variable';
-import PlaygroundButton from '@/components/Form/PlaygroundButton';
-import EditButton from '@/components/Form/EditButton';
-import DeleteButton from '@/components/Form/DeleteButton';
+import React from "react";
+import { Variable } from "@/interfaces/variable";
+import PlaygroundButton from "@/components/Form/PlaygroundButton";
+import EditButton from "@/components/Form/EditButton";
+import DeleteButton from "@/components/Form/DeleteButton";
 
 interface VariablesTableProps {
   variableList: Variable[];
@@ -31,13 +31,24 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
     <table className="min-w-full divide-y divide-gray-300">
       <thead>
         <tr>
-          <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0" style={{width:'200px'}}>
+          <th
+            scope="col"
+            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+            style={{ width: "200px" }}
+          >
             Name
           </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+          <th
+            scope="col"
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+          >
             Value
           </th>
-          <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-0 text-left" style={{width:'100px'}}>
+          <th
+            scope="col"
+            className="relative py-3.5 pl-3 pr-4 sm:pr-0 text-left"
+            style={{ width: "100px" }}
+          >
             Action
           </th>
         </tr>
@@ -68,7 +79,9 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
               ) : variable.value.length <= 4 ? (
                 variable.value
               ) : (
-                ".".repeat(Math.max(0, 20 - Math.min(4, variable.value.length))) + variable.value.slice(-4)
+                ".".repeat(
+                  Math.max(0, 20 - Math.min(4, variable.value.length)),
+                ) + variable.value.slice(-4)
               )}
             </td>
             <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex">
@@ -79,9 +92,11 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
               ) : (
                 <div className="flex">
                   <div aria-haspopup="true" aria-expanded="false">
-                    <EditButton onClick={() => {
-                      handleEditClick(index, variable)
-                    }} />
+                    <EditButton
+                      onClick={() => {
+                        handleEditClick(index, variable);
+                      }}
+                    />
                   </div>
                   <div aria-haspopup="true" aria-expanded="false">
                     <DeleteButton onClick={() => handleDeleteClick(index)} />
@@ -94,6 +109,6 @@ const VariablesTable: React.FC<VariablesTableProps> = ({
       </tbody>
     </table>
   );
-}
+};
 
 export default VariablesTable;

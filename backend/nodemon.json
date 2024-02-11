@@ -1,12 +1,5 @@
 {
-    "ignore": [
-        ".git",
-        "node_modules/",
-        "dist/",
-        "coverage/"
-    ],
-    "watch": [
-        "src/*"
-    ],
-    "ext": "js, json, ts"
+  "ignore": [".git", "node_modules/", "dist/", "coverage/"],
+  "watch": ["src/*"],
+  "ext": "js, json, ts"
 }
