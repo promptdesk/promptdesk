@@ -6,37 +6,55 @@ import { variableStore } from '@/stores/VariableStore'; // Adjust the path as ne
 import { tabStore } from '@/stores/TabStore'; // Adjust the path as necessary
 
 describe('generateResultForPrompt integration tests', () => {
-    beforeEach(async () => {
+    // Function to setup the environment before each test
+    async function setupEnvironment(promptName) {
         await variableStore.getState().fetchVariables();
-        await fetchAllPrompts();
+        const prompts = await fetchAllPrompts();
+
+        const targetPrompt = prompts.find(prompt => prompt.name === promptName);
+        if (!targetPrompt) {
+            throw new Error(`Prompt with name "${promptName}" not found.`);
+        }
+
         await modelStore.getState().fetchAllModels();
-        modelStore.getState().setModelById("65c033962dbbaf11d088e6b7");
-        promptStore.getState().activateLocalPrompt("65558a1a0393ceadb2c9162c")
-        tabStore.setState({ 
+        modelStore.getState().setModelById(targetPrompt.model);
+        promptStore.getState().activateLocalPrompt(targetPrompt.id);
+        tabStore.setState({
             tabs: [{
                 name: 'Test Tab',
-                prompt_id: '65558a1a0393ceadb2c9162c',
+                prompt_id: targetPrompt.id,
                 current: true,
                 data: {},
                 loading: true
-            }],
-            activeTabIndex: undefined,
-            activeTabId: undefined
+            }]
         });
-        tabStore.getState().setActiveTabById("65558a1a0393ceadb2c9162c");
+        tabStore.getState().setActiveTabById(targetPrompt.id);
+    }
+
+    // Function to generate results for a given prompt name
+    async function generateResultsForNamedPrompt(promptName) {
+        const prompts = await fetchAllPrompts();
+        const targetPrompt = prompts.find(prompt => prompt.name === promptName);
+        if (!targetPrompt) {
+            throw new Error(`Prompt with name "${promptName}" not found.`);
+        }
+
+        return await generateResultForPrompt(targetPrompt.id);
+    }
+
+    beforeEach(async () => {
+        // Setup with the specific prompt name for each test
+        await setupEnvironment('yoda-test');
     });
 
     it('should handle generating results for a prompt correctly', async () => {
-        // Setup necessary state in stores
-        const promptId = '65558a1a0393ceadb2c9162c';
-
-        let data;
-        await act(async () => {
-            data = await generateResultForPrompt(promptId);
-        });
+        const data = await generateResultsForNamedPrompt('yoda-test');
 
         expect(typeof data.message.content).toBe('string');
         expect(data.error).toBe(false);
     });
 
+    // This setup allows for easy addition of more tests for different prompts
+    // by just adding more it() blocks and calling setupEnvironment and generateResultsForNamedPrompt
+    // with the desired prompt names
 });
