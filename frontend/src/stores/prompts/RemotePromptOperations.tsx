@@ -21,7 +21,7 @@ export async function createNewPrompt() {
     !isValidName(promptObject.name) ||
     (promptObject.project && !isValidName(promptObject.project))
   )
-    return;
+    throw new Error('Invalid model name or project name, only `-` and alphabets are allowed')
 
   delete promptObject.new; // Simplified object modification
   const data = await fetchFromPromptdesk("/prompt", "POST", promptObject);
