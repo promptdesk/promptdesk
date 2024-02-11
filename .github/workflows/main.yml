@@ -35,3 +35,7 @@ jobs:
       - name: Build (frontend)
         run: npm run build-github-actions
         working-directory: ./frontend
+      - name: Docker Hub POST Request
+        if: success() # Ensures the POST request is made only if the previous steps succeeded
+        run: |
+          curl -X POST ${{ secrets.DOCKER }}
