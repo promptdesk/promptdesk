@@ -50,7 +50,7 @@ jobs:
         run: npm ci
         working-directory: ./frontend
       - name: Test (frontend)
-        run: npm run test
+        run: npm run test-github-actions
         working-directory: ./frontend
         env:
           NODE_ENV: 'development'
