@@ -18,7 +18,6 @@ describe('Samples API', function() {
 before(async () => {
     const organization_db = new Organization();
     const organization = await organization_db.getOrganization();
-    console.log(organization);
     token = organization.keys[0].key;
     organizationId = organization.id; // Assuming organization object has an id
     const prompt_db = new Prompt();

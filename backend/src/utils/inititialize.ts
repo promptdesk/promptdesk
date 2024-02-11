@@ -38,17 +38,11 @@ export const checkIfFirstRun = async function() {
 export async function generateInitialOrganization(body:any) {
     console.log("INFO :: GENERATING ORGANIZATION + USER")
     body.password = await bcrypt.hash(body.password, saltRounds)
-    console.log("INFO :: PASSWORD HASHED")
     organization = await organization_db.addOrganization(body.organization_api_key);
-    console.log("INFO :: ORGANIZATION SUCCESSFULLY CREATED")
     var data = [{ "name": "OPENAI_API_KEY", "value": body.openai_api_key }];
-    console.log("INFO :: CREATING VARIABLES")
     await variable.createVariables(data, organization.id);
-    console.log("INFO :: VARIABLES SUCCESSFULLY CREATED")
     await populateOrganization(organization.id, model, prompt, logs);
-    console.log("INFO :: ORGANIZATION POPULATED")
     var user = await user_db.createUser(body.email, body.password, organization.id);
-    console.log("INFO :: USER SUCCESSFULLY CREATED")
     isSetupCompleted = false;
     console.log("INFO :: ORGANIZATION + USER SUCCESSFULLY CREATED")
     return "COMPLETE"
@@ -58,18 +52,16 @@ export async function automaticEnvironmentSetup() {
     
     if(process.env.SETUP == 'true' || process.env.NODE_ENV == 'development'  || process.env.NODE_ENV == 'test') {
         let isFirstRun = await checkIfFirstRun();
-        console.log("INFO :: Setting up organization and models");
-        console.log("INFO :: First run: ", isFirstRun);
-        console.log("ENV: ", process.env.NODE_ENV)
+        console.log("INFO :: FIRST RUN:", isFirstRun);
+        console.log("INFO :: ENV:", process.env.NODE_ENV)
         if(!isFirstRun && process.env.NODE_ENV !== 'test') {
             return "NOT CREATED*"
         }
         if(process.env.NODE_ENV == 'test') {
-            //await mongoose.connection.db.dropDatabase();
-            //clear all collections
+            console.log("INFO :: RESET DATABASE")
             let collections = await mongoose.connection.db.listCollections().toArray();
             for(let i=0; i<collections.length; i++) {
-                console.log(await mongoose.connection.db.dropCollection(collections[i].name));
+                await mongoose.connection.db.dropCollection(collections[i].name)
             }
         }
         let body = {
@@ -79,9 +71,9 @@ export async function automaticEnvironmentSetup() {
             organization_api_key: process.env.ORGANIZATION_API_KEY
         }
         await generateInitialOrganization(body);
-        console.log("INFO :: ############### SUCCESS ###############")
-        console.log("INFO :: Setup successful!")
-        console.log("INFO :: ############### SUCCESS ###############")
+        console.log("############### .env ###############")
+        console.log("ORGANIZATION_API_KEY=" + process.env.ORGANIZATION_API_KEY)
+        console.log("############### .env ###############")
         return "CREATED"
     }
 
@@ -142,13 +134,10 @@ export const populateOrganization = async function(organization_id:any, model:an
         }
     }
 
-    console.log("SEGEMENT 1")
-
     //find hashtag_generator prompt
     let hashtag_generator = await prompt.findPromptByName('hashtag_generator', organization_id);
     let python_generator = await prompt.findPromptByName('python_function_generation', organization_id);
     let test_generator = await prompt.findPromptByName('python_test_generation', organization_id);
-    
 
     //function that gets a float and returns the same float +- 0.2
     function getRandomFloat(num:number) {
