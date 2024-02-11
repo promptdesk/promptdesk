@@ -12,7 +12,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '21.x'
-      - name: Install dependencies
+      - name: Install dependencies (backend)
         run: npm ci
         working-directory: ./backend
       - name: Run tests
@@ -29,3 +29,9 @@ jobs:
           PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
           SETUP: ${{ env.SETUP }}
           HOSTING: ${{ env.LOCAL }}
+      - name: Install dependencies (frontend)
+        run: npm ci
+        working-directory: ./frontend
+      - name: Build (frontend)
+        run: npm run build
+        working-directory: ./frontend
