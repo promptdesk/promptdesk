@@ -33,7 +33,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
-        if(alert) {
+        if (alert) {
           alert("Error loading application...");
         }
       });

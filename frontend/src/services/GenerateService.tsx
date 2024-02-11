@@ -78,24 +78,20 @@ const generateResultForPrompt = async (promptId: string) => {
     }
 
     if (model.type === "completion") {
-      tabStore
-        .getState()
-        .updateDataById(promptId, {
-          loading: false,
-          generatedText: data.message,
-          error: undefined,
-        });
+      tabStore.getState().updateDataById(promptId, {
+        loading: false,
+        generatedText: data.message,
+        error: undefined,
+      });
     }
 
     return data;
   } catch (error: any) {
-    tabStore
-      .getState()
-      .updateDataById(promptId, {
-        loading: false,
-        error: error.message,
-        logId: error.response?.data?.log_id,
-      });
+    tabStore.getState().updateDataById(promptId, {
+      loading: false,
+      error: error.message,
+      logId: error.response?.data?.log_id,
+    });
   }
 };
 

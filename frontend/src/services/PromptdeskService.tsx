@@ -16,8 +16,6 @@ const fetchFromPromptdesk = async (
     token = process.env.ORGANIZATION_API_KEY;
   }
 
-  console.log("token", token)
-
   try {
     let url = "";
     //check if process.env.PROMPT_SERVER_URL is set

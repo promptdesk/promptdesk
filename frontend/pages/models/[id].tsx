@@ -82,10 +82,7 @@ export default function ModelsPage() {
     try {
       JSON.parse(JSON.stringify(selectedModel));
     } catch {
-      console.log("Invalid JSON");
-      if(alert) {
-        alert("Invalid JSON");
-      }
+      alert("Invalid JSON");
       return;
     }
     saveModel(selectedModel);

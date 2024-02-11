@@ -14,9 +14,7 @@ describe("MongoDB Database Connection", () => {
     (this as Mocha.Context).timeout(30000);
     const result = await connectToDatabase(true);
     expect(result).to.equal("CONNECTED");
-    console.log("CONNECTED", result);
     const created = await automaticEnvironmentSetup();
-    console.log("CREATED", created);
     expect(created).to.equal("CREATED");
   });
 });

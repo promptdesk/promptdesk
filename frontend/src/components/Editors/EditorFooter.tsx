@@ -35,14 +35,12 @@ function EditorFooter() {
   });
 
   const handleClearResultClicked = () => {
-    tabStore
-      .getState()
-      .updateDataById(activeTabId as string, {
-        loading: false,
-        generatedText: null,
-        error: undefined,
-        logId: undefined,
-      });
+    tabStore.getState().updateDataById(activeTabId as string, {
+      loading: false,
+      generatedText: null,
+      error: undefined,
+      logId: undefined,
+    });
   };
 
   return (
