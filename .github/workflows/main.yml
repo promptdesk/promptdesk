@@ -8,10 +8,16 @@ jobs:
     environment: Test
     steps:
       - uses: actions/checkout@v4
-      - run: echo ${{ secrets.MONGO_URL }}
-      - run: echo ${{ secrets.OPENAI_API_KEY }}
-      # To set and use environment variables directly in GitHub Actions, you can use the 'env' key at the job or step level.
-      - run: echo $NODE_ENV
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.x'
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./backend
+      - name: Run tests
+        run: npm test
+        working-directory: ./backend
         env:
           NODE_ENV: 'test'
           ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
@@ -23,18 +29,3 @@ jobs:
           PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
           SETUP: ${{ env.SETUP }}
           HOSTING: ${{ env.LOCAL }}
-      # GitHub does not provide a built-in short SHA environment variable, but you can create one using set-output and the GITHUB_SHA environment variable.
-      - name: Get short SHA
-        id: vars
-        run: echo "::set-output name=sha_short::$(echo $GITHUB_SHA | cut -c1-8)"
-      - run: echo ${{ steps.vars.outputs.sha_short }}
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.x'
-      - name: Install dependencies
-        run: npm ci
-        working-directory: ./backend
-      - name: Run tests
-        run: npm test
-        working-directory: ./backend
