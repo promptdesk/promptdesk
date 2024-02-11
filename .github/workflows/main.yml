@@ -45,9 +45,7 @@ jobs:
           HOSTING: ${{ env.LOCAL }}
       - name: Healthcheck server # Call /ping endpoint
         run: |
-          curl -X POST ${{ secrets.PROMPT_SERVER_URL }}
-        env:
-          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
+          curl -X POST ${{ secrets.SERVER_LOCALHOST }}/ping
       - name: Install dependencies (frontend)
         run: npm ci
         working-directory: ./frontend
