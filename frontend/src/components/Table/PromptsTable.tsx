@@ -13,7 +13,9 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
 
   const { push, query } = useRouter();
 
-  const folderList = promptList.filter((prompt => prompt.project)).map(prompt => prompt.project)
+  const folderList = promptList
+    .filter((prompt) => prompt.project)
+    .map((prompt) => prompt.project);
 
   useEffect(() => {
     const path = query.path as string;
@@ -84,24 +86,25 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
-        {project === 'undefined' && folderList.map((project_Name) => (
-          <tr
-            key={project_Name}
-            onClick={() => {
-              push(`/prompts/${project_Name}`);
-            }}
-            className="cursor-pointer"
-          >
-            <td
-              className="whitespace-nowrap w-full py-4 px-4 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200"
-              colSpan={5}
+        {project === "undefined" &&
+          folderList.map((project_Name) => (
+            <tr
+              key={project_Name}
+              onClick={() => {
+                push(`/prompts/${project_Name}`);
+              }}
+              className="cursor-pointer"
             >
-              <div className="flex">
-                <Folder /> <span className="ml-2">{project_Name}</span>
-              </div>
-            </td>
-          </tr>
-        ))}
+              <td
+                className="whitespace-nowrap w-full py-4 px-4 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200"
+                colSpan={5}
+              >
+                <div className="flex">
+                  <Folder /> <span className="ml-2">{project_Name}</span>
+                </div>
+              </td>
+            </tr>
+          ))}
         {(prompts as any)[`${project}`]?.map((prompt: any) => (
           <tr
             key={prompt.id}

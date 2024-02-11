@@ -48,8 +48,10 @@ const Modal = () => {
   }
 
   function setAllPromptInformation() {
-    if (prompts.find(prompt => prompt.name === formValues.name)) {
-      throw new Error("Prompt with this name already exists, please choose other name");
+    if (prompts.find((prompt) => prompt.name === formValues.name)) {
+      throw new Error(
+        "Prompt with this name already exists, please choose other name",
+      );
     }
     updateLocalPromptValues("name", formValues.name);
     updateLocalPromptValues("description", formValues.description);
@@ -80,21 +82,24 @@ const Modal = () => {
       },
     },
     {
-      label: "Update", className: "btn-primary", action: () => {
+      label: "Update",
+      className: "btn-primary",
+      action: () => {
         try {
           setAllPromptInformation();
           updateExistingPrompt();
           toggle_modal();
-        }
-        catch (error) {
+        } catch (error) {
           if (error instanceof Error) {
-            toast.error(error.message)
+            toast.error(error.message);
           }
         }
-      }
+      },
     },
     {
-      label: "Delete", className: "btn-negative", action: () => {
+      label: "Delete",
+      className: "btn-negative",
+      action: () => {
         var id = promptObject.id as string;
 
         deletePrompt();
@@ -106,7 +111,7 @@ const Modal = () => {
           bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
         }
 
-        var x = removeTabFromTabs(id)?.length
+        var x = removeTabFromTabs(id)?.length;
 
         if (x === 0) {
           push("/prompts");
@@ -118,7 +123,9 @@ const Modal = () => {
   const saveNewButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
     {
-      label: "Save", className: "btn-primary", action: async () => {
+      label: "Save",
+      className: "btn-primary",
+      action: async () => {
         try {
           setAllPromptInformation();
           var id = await createNewPrompt();
@@ -128,10 +135,10 @@ const Modal = () => {
           }
         } catch (err) {
           if (err instanceof Error) {
-            toast.error(err.message)
+            toast.error(err.message);
           }
         }
-      }
+      },
     },
   ];
 
