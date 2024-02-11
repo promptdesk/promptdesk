@@ -9,13 +9,14 @@ import {
   deletePrompt,
 } from "@/stores/prompts";
 import { useRouter } from "next/router";
+import toast, { Toaster } from "react-hot-toast";
 
 const Modal = () => {
   const { show_modal, toggle_modal } = shouldShowSaveModal();
 
   const { push } = useRouter();
 
-  const { updateLocalPromptValues, promptObject, addToLocalPrompts } =
+  const { updateLocalPromptValues, promptObject, addToLocalPrompts, prompts } =
     promptStore();
 
   const {
@@ -47,6 +48,9 @@ const Modal = () => {
   }
 
   function setAllPromptInformation() {
+    if (prompts.find(prompt => prompt.name === formValues.name)) {
+      throw new Error("Prompt with this name already exists, please choose other name");
+    }
     updateLocalPromptValues("name", formValues.name);
     updateLocalPromptValues("description", formValues.description);
     updateLocalPromptValues("project", formValues.project);
@@ -76,18 +80,21 @@ const Modal = () => {
       },
     },
     {
-      label: "Update",
-      className: "btn-primary",
-      action: () => {
-        setAllPromptInformation();
-        updateExistingPrompt();
-        toggle_modal();
-      },
+      label: "Update", className: "btn-primary", action: () => {
+        try {
+          setAllPromptInformation();
+          updateExistingPrompt();
+          toggle_modal();
+        }
+        catch (error) {
+          if (error instanceof Error) {
+            toast.error(error.message)
+          }
+        }
+      }
     },
     {
-      label: "Delete",
-      className: "btn-negative",
-      action: () => {
+      label: "Delete", className: "btn-negative", action: () => {
         var id = promptObject.id as string;
 
         deletePrompt();
@@ -99,7 +106,7 @@ const Modal = () => {
           bestNextTab?.prompt_id && changeIdInUrl(bestNextTab.prompt_id);
         }
 
-        var x = removeTabFromTabs(id)?.length;
+        var x = removeTabFromTabs(id)?.length
 
         if (x === 0) {
           push("/prompts");
@@ -111,16 +118,20 @@ const Modal = () => {
   const saveNewButtonData = [
     { label: "Cancel", className: "btn-neutral", action: toggle_modal },
     {
-      label: "Save",
-      className: "btn-primary",
-      action: async () => {
-        setAllPromptInformation();
-        var id = await createNewPrompt();
-        if (id) {
-          toggle_modal();
-          push(`/workspace/${id}`);
+      label: "Save", className: "btn-primary", action: async () => {
+        try {
+          setAllPromptInformation();
+          var id = await createNewPrompt();
+          if (id) {
+            toggle_modal();
+            push(`/workspace/${id}`);
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            toast.error(err.message)
+          }
         }
-      },
+      }
     },
   ];
 
@@ -227,6 +238,7 @@ const Modal = () => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
