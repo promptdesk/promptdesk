@@ -13,6 +13,8 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
 
   const { push, query } = useRouter();
 
+  const folderList = promptList.filter((prompt => prompt.project)).map(prompt => prompt.project)
+
   useEffect(() => {
     const path = query.path as string;
     if (path === "all") {
@@ -82,54 +84,48 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200">
-        {Object.keys(prompts).map((project_key) => (
-          <>
-            {((project_key !== "undefined" && project == "undefined") ||
-              (project == "undefined" && project_key !== "undefined")) && (
-              <tr
-                onClick={() => {
-                  push(`/prompts/${project_key}`);
-                }}
-                className="cursor-pointer"
-              >
-                <td
-                  className="whitespace-nowrap w-full py-4 px-4 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200"
-                  colSpan={5}
-                >
-                  <div className="flex">
-                    <Folder /> <span className="ml-2">{project_key}</span>
-                  </div>
-                </td>
-              </tr>
-            )}
-            {(prompts as any)[project_key].map((prompt: any) =>
-              project_key !== project || prompt.new === true ? null : (
-                <tr
-                  key={prompt.id}
-                  onClick={() => {
-                    push(`/workspace/${prompt.id}`);
-                  }}
-                  className="cursor-pointer hover:bg-gray-50"
-                >
-                  <td className="whitespace-nowrap py-4 px-4 text-sm font-medium text-gray-900">
-                    {prompt.name}
-                  </td>
-                  <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
-                    {prompt.description}
-                  </td>
-                  <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
-                    {prompt.model_type}
-                  </td>
-                  <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
-                    {prompt.model}
-                  </td>
-                  <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
-                    {prompt.provider}
-                  </td>
-                </tr>
-              ),
-            )}
-          </>
+        {project === 'undefined' && folderList.map((project_Name) => (
+          <tr
+            key={project_Name}
+            onClick={() => {
+              push(`/prompts/${project_Name}`);
+            }}
+            className="cursor-pointer"
+          >
+            <td
+              className="whitespace-nowrap w-full py-4 px-4 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200"
+              colSpan={5}
+            >
+              <div className="flex">
+                <Folder /> <span className="ml-2">{project_Name}</span>
+              </div>
+            </td>
+          </tr>
+        ))}
+        {(prompts as any)[`${project}`]?.map((prompt: any) => (
+          <tr
+            key={prompt.id}
+            onClick={() => {
+              push(`/workspace/${prompt.id}`);
+            }}
+            className="cursor-pointer hover:bg-gray-50"
+          >
+            <td className="whitespace-nowrap py-4 px-4 text-sm font-medium text-gray-900">
+              {prompt.name}
+            </td>
+            <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
+              {prompt.description}
+            </td>
+            <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
+              {prompt.model_type}
+            </td>
+            <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
+              {prompt.model}
+            </td>
+            <td className="whitespace-nowrap py-4 px-4 text-sm text-gray-500">
+              {prompt.provider}
+            </td>
+          </tr>
         ))}
       </tbody>
     </table>
