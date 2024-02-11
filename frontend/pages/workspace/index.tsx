@@ -23,7 +23,6 @@ export default function WorkspaceHomeRedirector() {
   }, [findActiveTab]);
 
   const newPrompt = async () => {
-    console.log("newPrompt");
     const newId = await createLocalPrompt();
     if (newId === undefined) {
       return;
@@ -33,7 +32,6 @@ export default function WorkspaceHomeRedirector() {
   };
 
   const changeIdInUrl = (newId: string) => {
-    console.log("changeIdInUrl");
     const newUrl = `/workspace/${newId}`;
     push(newUrl);
   };

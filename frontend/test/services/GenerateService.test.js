@@ -50,7 +50,16 @@ describe("generateResultForPrompt integration tests", () => {
   });
 
   it("should handle generating results for a prompt correctly", async () => {
+    //wait 1 second
+    await new Promise((r) => setTimeout(r, 500));
+
     const data = await generateResultsForNamedPrompt("yoda-test");
+
+    await new Promise((r) => setTimeout(r, 500));
+
+    if (!data.message || data.error) {
+      console.log(data);
+    }
 
     expect(typeof data.message.content).toBe("string");
     expect(data.error).toBe(false);

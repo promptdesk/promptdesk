@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies (backend)
         run: npm ci
         working-directory: ./backend
-      - name: Run tests
+      - name: Run tests (backend)
         run: npm run test
         working-directory: ./backend
         env:
@@ -29,7 +29,7 @@ jobs:
           PROMPT_SERVER_PORT: ${{ vars.PROMPT_SERVER_PORT }}
           SETUP: ${{ vars.SETUP }}
           HOSTING: ${{ vars.LOCAL }}
-      - name: Run tests
+      - name: Run server (backend)
         run: npm run dev &
         working-directory: ./backend
         env:
@@ -43,7 +43,7 @@ jobs:
           PROMPT_SERVER_PORT: ${{ vars.PROMPT_SERVER_PORT }}
           SETUP: ${{ vars.SETUP }}
           HOSTING: ${{ vars.LOCAL }}
-      - name: Healthcheck server # Call /ping endpoint
+      - name: Healthcheck server (backend)
         run: |
           curl -X GET ${{ secrets.SERVER_LOCALHOST }}/ping
       - name: Install dependencies (frontend)
