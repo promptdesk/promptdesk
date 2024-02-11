@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "NODE_ENV=development jest",
-    "test-github-actions": "NODE_ENV=development PROMPT_SERVER_URL=http://localhost:4000 ORGANIZATION_API_KEY=51cc56c3f7658fec052ce93f5659be194771b136dae2d8ba jest",
+    "test-github-actions": "NODE_ENV=development PROMPT_SERVER_URL=http://localhost:4000 ORGANIZATION_API_KEY=3e88f0ac3de12e6f0d7518d2c0009b1ae674f02d59d8a937 jest",
     "playwright": "npx playwright test"
   },
   "dependencies": {
