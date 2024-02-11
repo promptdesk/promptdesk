@@ -20,29 +20,29 @@ jobs:
         working-directory: ./backend
         env:
           NODE_ENV: 'test'
-          ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
+          ORGANIZATION_API_KEY: ${{ vars.ORGANIZATION_API_KEY }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PASSWORD: ${{ env.PASSWORD }}
-          EMAIL: ${{ env.EMAIL }}
-          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
-          PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
-          SETUP: ${{ env.SETUP }}
-          HOSTING: ${{ env.LOCAL }}
+          PASSWORD: ${{ vars.PASSWORD }}
+          EMAIL: ${{ vars.EMAIL }}
+          PROMPT_SERVER_URL: ${{ vars.PROMPT_SERVER_URL }}
+          PROMPT_SERVER_PORT: ${{ vars.PROMPT_SERVER_PORT }}
+          SETUP: ${{ vars.SETUP }}
+          HOSTING: ${{ vars.LOCAL }}
       - name: Run tests
         run: npm run dev &
         working-directory: ./backend
         env:
           NODE_ENV: 'development'
-          ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
+          ORGANIZATION_API_KEY: ${{ vars.ORGANIZATION_API_KEY }}
           MONGO_URL: ${{ secrets.MONGO_URL }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          PASSWORD: ${{ env.PASSWORD }}
-          EMAIL: ${{ env.EMAIL }}
-          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
-          PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
-          SETUP: ${{ env.SETUP }}
-          HOSTING: ${{ env.LOCAL }}
+          PASSWORD: ${{ vars.PASSWORD }}
+          EMAIL: ${{ vars.EMAIL }}
+          PROMPT_SERVER_URL: ${{ vars.PROMPT_SERVER_URL }}
+          PROMPT_SERVER_PORT: ${{ vars.PROMPT_SERVER_PORT }}
+          SETUP: ${{ vars.SETUP }}
+          HOSTING: ${{ vars.LOCAL }}
       - name: Healthcheck server # Call /ping endpoint
         run: |
           curl -X GET ${{ secrets.SERVER_LOCALHOST }}/ping

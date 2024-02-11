@@ -37,7 +37,7 @@ export async function generateInitialOrganization(body: any) {
   console.log("INFO :: GENERATING ORGANIZATION + USER");
   body.password = await bcrypt.hash(body.password, saltRounds);
   organization = await organization_db.addOrganization(
-    body.organization_api_key,
+    body.organization_api_key
   );
   var data = [{ name: "OPENAI_API_KEY", value: body.openai_api_key }];
   await variable.createVariables(data, organization.id);
