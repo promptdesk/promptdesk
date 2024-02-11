@@ -43,9 +43,11 @@ jobs:
           PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
           SETUP: ${{ env.SETUP }}
           HOSTING: ${{ env.LOCAL }}
-      - name: Healthcheck server #call /ping endpoint on PROMPT_SERVER_PORT
+      - name: Healthcheck server # Call /ping endpoint
         run: |
-          curl -X GET ${{ env.PROMPT_SERVER_URL }}/ping
+          curl -X GET $PROMPT_SERVER_URL/ping
+        env:
+          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
       - name: Install dependencies (frontend)
         run: npm ci
         working-directory: ./frontend
