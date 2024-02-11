@@ -30,7 +30,10 @@ const Modal = () => {
       }
     });
     if (nameExists) {
-      alert("Variable name already exists");
+      console.log("Variable name already exists");
+      if(alert) {
+        alert("Variable name already exists");
+      }
       return 0;
     }
     var newVariable = {

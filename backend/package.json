@@ -6,7 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=production ts-node src/index.ts",
     "dev": "NODE_ENV=development nodemon src/index.ts",
-    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts --exit"
+    "test": "NODE_ENV=test mocha -r ts-node/register test/**/*.test.ts --exit",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,8 @@
     "@types/mocha": "^10.0.6",
     "@types/supertest": "^2.0.16",
     "chai": "^4.4.1",
+    "husky": "^9.0.10",
+    "lint-staged": "^15.2.2",
     "mocha": "^10.2.0",
     "nodemon": "^3.0.3",
     "prettier": "3.2.5",
@@ -42,5 +45,8 @@
     "sqlite": "^5.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "*.{js,css,md}": "prettier --write"
   }
 }

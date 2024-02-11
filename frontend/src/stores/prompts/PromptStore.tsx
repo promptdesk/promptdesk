@@ -86,7 +86,10 @@ const promptStore = create<PromptStore>((set, get) => ({
     if (!defaultModel) {
       //if models is empty then return
       if (modelStore.getState().models.length === 0) {
-        alert("You must create a model first before creating a prompt.");
+        console.log("You must create a model first before creating a prompt.")
+        if(alert) {
+          alert("You must create a model first before creating a prompt.");
+        }
         return;
       }
 
