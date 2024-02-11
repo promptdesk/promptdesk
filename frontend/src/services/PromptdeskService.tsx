@@ -39,10 +39,7 @@ const fetchFromPromptdesk = async (
     if (error?.response?.data?.message) {
       throw new Error(error.response.data.message);
     } else {
-      console.log(error);
-      if(alert) {
-        alert("Something went wrong. Please try again later.");
-      }
+      throw new Error(error.message);
     }
   }
 };
