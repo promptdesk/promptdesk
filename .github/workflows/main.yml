@@ -15,20 +15,20 @@ jobs:
       - name: Install dependencies (backend)
         run: npm ci
         working-directory: ./backend
-      # - name: Run tests
-      #   run: npm test
-      #   working-directory: ./backend
-      #   env:
-      #     NODE_ENV: 'test'
-      #     ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
-      #     MONGO_URL: ${{ secrets.MONGO_URL }}
-      #     OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      #     PASSWORD: ${{ env.PASSWORD }}
-      #     EMAIL: ${{ env.EMAIL }}
-      #     PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
-      #     PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
-      #     SETUP: ${{ env.SETUP }}
-      #     HOSTING: ${{ env.LOCAL }}
+      - name: Run tests
+        run: npm run test
+        working-directory: ./backend
+        env:
+          NODE_ENV: 'test'
+          ORGANIZATION_API_KEY: ${{ env.ORGANIZATION_API_KEY }}
+          MONGO_URL: ${{ secrets.MONGO_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PASSWORD: ${{ env.PASSWORD }}
+          EMAIL: ${{ env.EMAIL }}
+          PROMPT_SERVER_URL: ${{ env.PROMPT_SERVER_URL }}
+          PROMPT_SERVER_PORT: ${{ env.PROMPT_SERVER_PORT }}
+          SETUP: ${{ env.SETUP }}
+          HOSTING: ${{ env.LOCAL }}
       - name: Run tests
         run: npm run dev &
         working-directory: ./backend

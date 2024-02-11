@@ -41,6 +41,9 @@ app.use(bodyParser.json());
 // Port configuration*/
 const port = process.env.PROMPT_SERVER_PORT || 4000;
 
+console.log("######### process.env.ORGANIZATION_API_KEY")
+console.log(process.env.ORGANIZATION_API_KEY)
+
 // use json for API routes
 app.use(express.json());
 app.use(cors());
