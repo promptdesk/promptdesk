@@ -40,6 +40,27 @@ export async function generateInitialOrganization(body: any) {
     body.organization_api_key,
   );
   var data = [{ name: "OPENAI_API_KEY", value: body.openai_api_key }];
+  if (process.env.ANTHROPIC_API_KEY) {
+    data.push({
+      name: "ANTHROPIC_API_KEY",
+      value: process.env.ANTHROPIC_API_KEY,
+    });
+  }
+  if (process.env.GEMINI_API_KEY) {
+    data.push({ name: "GEMINI_API_KEY", value: process.env.GEMINI_API_KEY });
+  }
+  if (process.env.MISTRAL_API_KEY) {
+    data.push({ name: "MISTRAL_API_KEY", value: process.env.MISTRAL_API_KEY });
+  }
+  if (process.env.COHERE_API_KEY) {
+    data.push({ name: "CLAUDE_API_KEY", value: process.env.COHERE_API_KEY });
+  }
+  if (process.env.HUGGINGFACE_API_KEY) {
+    data.push({
+      name: "COHERE_API_KEY",
+      value: process.env.HUGGINGFACE_API_KEY,
+    });
+  }
   await variable.createVariables(data, organization.id);
   await populateOrganization(organization.id, model, prompt, logs);
   var user = await user_db.createUser(
