@@ -100,7 +100,7 @@ export function exportPrompt(promptObject: any, modelObject: any) {
   delete obj.project;
   delete obj.id;
   delete obj.model;
-  delete obj.prompt_parameters;
+  delete obj.model_parameters;
   obj.model_type = modelObject.type;
   const file = new Blob([JSON.stringify(obj, null, 4)], { type: "text/plain" });
   element.href = URL.createObjectURL(file);

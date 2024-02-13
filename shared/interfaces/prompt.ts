@@ -4,7 +4,7 @@ export interface Prompt {
     description: string;
     model: string;
     prompt_variables: any;
-    prompt_parameters: any;
+    model_parameters: any;
     prompt_data: any;
     new: boolean | undefined;
     model_type: string | undefined;

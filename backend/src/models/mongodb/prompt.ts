@@ -9,7 +9,7 @@ const promptSchema = mongoose.model(
       description: String,
       model: String,
       prompt_variables: mongoose.Schema.Types.Mixed,
-      prompt_parameters: mongoose.Schema.Types.Mixed,
+      model_parameters: mongoose.Schema.Types.Mixed,
       prompt_data: mongoose.Schema.Types.Mixed,
       model_type: String,
       organization_id: String,

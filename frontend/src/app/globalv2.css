@@ -4077,6 +4077,10 @@ body .DocSearch-Footer {
   width: var(--app-navigation-expanded-width);
 }
 
+.app-navigation.static.expanded {
+  width: var(--app-navigation-expanded-width);
+}
+
 @media (max-width: 599px) {
   .app-navigation {
     display: none;
@@ -4187,7 +4191,6 @@ body .DocSearch-Footer {
   --app-navigation-expanded-width: 200px;
   align-items: stretch;
   display: flex;
-  flex-direction: column;
   height: 100%;
 }
 

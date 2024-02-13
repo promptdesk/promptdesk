@@ -51,18 +51,15 @@ const RightPanel: React.FC<RightPanelProps> = ({
                     key={index}
                     sliderInfo={modelObject.model_parameters[key]}
                     value={
-                      promptObject.prompt_parameters &&
-                      promptObject.prompt_parameters[key] !== undefined
-                        ? promptObject.prompt_parameters[key]
+                      promptObject.model_parameters &&
+                      promptObject.model_parameters[key] !== undefined
+                        ? promptObject.model_parameters[key]
                         : modelObject.model_parameters[key]
                           ? modelObject.model_parameters[key]["default"]
                           : undefined
                     }
                     onChange={(value: any): void => {
-                      updateLocalPromptValues(
-                        "prompt_parameters." + key,
-                        value,
-                      );
+                      updateLocalPromptValues("model_parameters." + key, value);
                     }}
                   />
                 ) : null,

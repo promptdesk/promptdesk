@@ -12,11 +12,16 @@ import Logo from "@/components/Logo";
 
 function Navigation() {
   const navItems = [
-    { href: "/workspace", label: "Playground", icon: Playground },
-    { href: "/prompts", label: "Prompts", icon: Folder },
-    { href: "/models", label: "Models", icon: Models },
-    { href: "/logs", label: "Logs", icon: Logs },
-    { href: "/settings", label: "Settings", icon: Settings },
+    {
+      href: "/workspace",
+      label: "Playground",
+      icon: Playground,
+      expanded: false,
+    },
+    { href: "/prompts", label: "Prompts", icon: Folder, expanded: true },
+    { href: "/models", label: "Models", icon: Models, expanded: true },
+    { href: "/logs", label: "Logs", icon: Logs, expanded: true },
+    { href: "/settings", label: "Settings", icon: Settings, expanded: true },
   ];
 
   const footerItems = [
@@ -25,8 +30,9 @@ function Navigation() {
       label: "Documentation",
       icon: Documentation,
       target: "_blank",
+      expanded: true,
     },
-    { href: "/logout", label: "Logout", icon: Logout },
+    { href: "/logout", label: "Logout", icon: Logout, expanded: true },
   ];
 
   // State to track hover status
@@ -47,9 +53,15 @@ function Navigation() {
     ? "app-navigation fixed expanded"
     : "app-navigation fixed";
 
+  const currentNavItem = navItems.find((item) =>
+    window.location.pathname.startsWith(item.href),
+  );
+
   return (
     <div
-      className={className}
+      className={
+        currentNavItem?.expanded ? "app-navigation static expanded" : className
+      }
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -57,6 +69,7 @@ function Navigation() {
         <div className="app-navigation-logo">
           <Link href="/workspace">
             <Logo />
+            {currentNavItem?.expanded}
           </Link>
         </div>
       </div>
@@ -70,7 +83,7 @@ function Navigation() {
             <div className="app-navigation-menu-item-icon">
               <item.icon />
             </div>
-            {isHovered && (
+            {(isHovered || item.expanded || currentNavItem?.expanded) && (
               <div className="app-navigation-menu-item-label">{item.label}</div>
             )}
           </Link>
@@ -87,7 +100,7 @@ function Navigation() {
             <div className="app-navigation-menu-item-icon">
               <item.icon />
             </div>
-            {isHovered && (
+            {(isHovered || item.expanded || currentNavItem?.expanded) && (
               <div className="app-navigation-menu-item-label">{item.label}</div>
             )}
           </Link>

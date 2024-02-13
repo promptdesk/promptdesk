@@ -46,12 +46,12 @@ router.all(["/generate"], async (req, res) => {
     let body = {} as any;
     if (model.input_format) {
       var input_format = eval(model.input_format);
-      body = input_format(prompt_data, prompt.prompt_parameters);
+      body = input_format(prompt_data, prompt.model_parameters);
     } else if (model.request_mapping) {
       body = jmap.applyMapping(
         {
           ...prompt_data,
-          model_parameters: prompt.prompt_parameters,
+          model_parameters: prompt.model_parameters,
         },
         model.request_mapping,
       );
@@ -116,7 +116,7 @@ router.all(["/generate"], async (req, res) => {
           response: obj.response,
         },
         data: {
-          parameters: prompt.prompt_parameters,
+          parameters: prompt.model_parameters,
           ...prompt.prompt_data,
           variables: prompt_variables,
         },

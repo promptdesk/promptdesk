@@ -22,7 +22,7 @@ const defaultPrompt: Prompt = {
   description: "",
   model: "",
   project: undefined,
-  prompt_parameters: {},
+  model_parameters: {},
   prompt_data: {
     prompt: "",
     context: "",
@@ -47,13 +47,13 @@ const promptStore = create<PromptStore>((set, get) => ({
   updateLocalPromptValues: (key: any, value: any) => {
     set((state) => {
       const promptObject = { ...state.promptObject };
-      //create promptObject['prompt_parameters'] if it doesn't exist
-      if (!promptObject.prompt_parameters) {
-        promptObject.prompt_parameters = {};
+      //create promptObject['model_parameters'] if it doesn't exist
+      if (!promptObject.model_parameters) {
+        promptObject.model_parameters = {};
       }
-      if (key.startsWith("prompt_parameters.")) {
+      if (key.startsWith("model_parameters.")) {
         const parameterKey = key.split(".")[1];
-        promptObject.prompt_parameters[parameterKey] = value;
+        promptObject.model_parameters[parameterKey] = value;
       } else if (key.startsWith("prompt_data.")) {
         const promptDataKey = key.split(".")[1];
         promptObject.prompt_data[promptDataKey] = value;

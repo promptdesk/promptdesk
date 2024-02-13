@@ -121,7 +121,7 @@ const modelStore = create<ModelStore>((set) => {
 
       if (currentType === model.type) {
         updateData.prompt_data = currentPromptData;
-        updateData.prompt_parameters = {};
+        updateData.model_parameters = {};
       }
 
       set({ modelObject: model, selectedModel: model.id });
