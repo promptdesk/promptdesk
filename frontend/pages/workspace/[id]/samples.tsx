@@ -27,8 +27,11 @@ export default function SamplesListPage() {
   }, [prompt_id]);
 
   useEffect(() => {
-    fetchSamples(0, prompt_id?.toString());
-  }, [fetchSamples, prompt_id]);
+    if (!prompt_id) {
+      return
+    }
+    fetchSamples(page, prompt_id?.toString());
+  }, [fetchSamples, prompt_id, page]);
 
   const handleRowClick = (sampleId: string) => {
     // Do nothing.
