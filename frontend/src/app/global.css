@@ -723,9 +723,12 @@ input::-webkit-slider-thumb {
 }
 .modal-header {
   margin: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .modal-closeable .modal-header {
-  margin-right: 40px;
+  margin-right: 20px;
 }
 .modal-body {
   margin: 16px 24px 24px;
@@ -737,7 +740,8 @@ input::-webkit-slider-thumb {
   align-items: center;
   display: flex;
   justify-content: flex-end;
-  margin: 32px 24px 24px;
+  width: 100%;
+  margin-top: 32px;
 }
 .modal-footer.modal-footer-shrink-margin {
   margin-top: 24px;

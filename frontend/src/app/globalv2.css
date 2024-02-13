@@ -904,7 +904,8 @@
   align-items: center;
   display: flex;
   justify-content: flex-end;
-  margin: 32px 24px 24px;
+  width: 100%;
+  margin-top: 32px;
 }
 
 .modal-footer.modal-footer-shrink-margin {
