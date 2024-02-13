@@ -35,7 +35,7 @@ The best way to build agents and prompt-based applications.
   </p>
   
   <p align="center">
-  Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a>
+  Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a> - <a href="https://github.com/promptdesk/promptdesk-js">JavaScript</a>
   </p>
 
 ## ⭐️ Why PromptDesk?
@@ -93,7 +93,6 @@ You can call the prompt you build in the application by using the generate metho
 from promptdesk import PromptDesk
 
 pd = PromptDesk(
-    #defaults to os.environ.get("PROMPTDESK_API_KEY")
     api_key = "YOUR_PROMPTDESK_API_KEY"
     service_url = "http://localhost:4000"
 )
@@ -107,6 +106,37 @@ story = pd.generate("short-story", {
 print(story)
 ```
 
+
+## 👨‍💻 JavaScript Integration
+
+To install PromptDesk, use npm:
+
+```shell
+npm install promptdesk
+```
+
+### Usage
+
+You can call the prompt you build in the application by using the generate method.
+
+```python
+const { PromptDesk } = require('promptdesk');
+
+var pd = new PromptDesk({
+    apiKey: "YOUR_PROMPTDESK_API_KEY",
+    serviceUrl: "http://localhost:4000"
+})
+
+
+const story = pd.generate("short-story", {
+    "setting": "dark and stormy night",
+    "character": "lonely farmer",
+    "plot": "visited by a stranger"
+})
+
+console.log(story)
+```
+
 ## 🔗 Important Links
 
 For more information about PromptDesk, please refer to the following resources:
@@ -115,5 +145,6 @@ For more information about PromptDesk, please refer to the following resources:
 - [Application GitHub Repository](https://github.com/promptdesk/promptdesk)
 - [Python GitHub Repository](https://github.com/promptdesk/promptdesk-py)
 - [PyPI Package](https://pypi.org/project/promptdesk/)
+- [npm Package](https://www.npmjs.com/package/promptdesk)
 - [Docker Hub](https://hub.docker.com/r/promptdesk/promptdesk/)
 - [Official Website](https://promptdesk.ai/)
