@@ -3,6 +3,7 @@ import { shouldShowCodeModal } from "@/stores/ModalStore";
 import { promptStore } from "@/stores/prompts";
 import Cookies from "js-cookie";
 import CopyWrapper from "../CopyWrapper";
+import GlobalModal from "./GlobalModal";
 
 const transformObject = (obj: {
   [key: string]: any;
@@ -77,28 +78,18 @@ result = pd.generate("${promptObject.name.replace(/"/g, '\\"')}", ${JSON.stringi
   );
 
   return (
-    <div className="modal-root modal-is-open modal-closeable">
-      <div className="modal-backdrop" onClick={toggle_code_modal} />
-      <div className="modal-dialog-container" tabIndex={0}>
-        <div className="modal-dialog modal-size-large">
-          <div>
-            <div className="modal-header heading-medium">Source Code</div>
-            <div className="modal-body body-small">
-              <CopyWrapper textToCopy={codeTemplate}>
-                <pre
-                  style={{ whiteSpace: "pre-wrap" }}
-                  suppressContentEditableWarning={true}
-                  className="hljs syntax-highlighter dark code-sample-pre p-8 rounded-md"
-                >
-                  {codeTemplate}
-                </pre>
-              </CopyWrapper>
-            </div>
-            <div className="modal-footer">{renderButtons()}</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <GlobalModal isModalOpen={show_code_modal} toggleModal={toggle_code_modal} heading="Source Code" size="large">
+      <CopyWrapper textToCopy={codeTemplate}>
+        <pre
+          style={{ whiteSpace: "pre-wrap" }}
+          suppressContentEditableWarning={true}
+          className="hljs syntax-highlighter dark code-sample-pre p-8 rounded-md"
+        >
+          {codeTemplate}
+        </pre>
+      </CopyWrapper>
+      <div className="modal-footer">{renderButtons()}</div>
+    </GlobalModal>
   );
 };
 
