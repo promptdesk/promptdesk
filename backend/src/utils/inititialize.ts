@@ -1,12 +1,12 @@
 var fs = require("fs");
 var path = require("path");
-var seed_data = fs.readFileSync(path.join(__dirname, "../init/database.json"));
-seed_data = JSON.parse(seed_data);
+var samples = fs.readFileSync(path.join(__dirname, "../init/samples.json"));
+samples = JSON.parse(samples);
 const bcrypt = require("bcryptjs");
 import mongoose from "mongoose";
 const saltRounds = 10;
 
-import { Organization, Model, Prompt, Variable } from "../models/allModels";
+import { Organization, Model, Prompt, Variable, Sample } from "../models/allModels";
 import { User } from "../models/mongodb/user";
 import { Log } from "../models/mongodb/log";
 
@@ -17,6 +17,7 @@ var variable: any = new Variable();
 var organization: any = new Organization();
 var logs: any = new Log();
 var user_db = new User();
+var sample: any = new Sample();
 
 let isSetupCompleted = false;
 
@@ -191,6 +192,21 @@ export const populateOrganization = async function (
   }
 
   //find hashtag_generator prompt
+  let short_story_test = await prompt.findPromptByName(
+    "short-story-test",
+    organization_id,
+  );
+
+  //loop through all samples
+  for (let i = 0; i < samples.length; i++) {
+    let variables = samples[i].variables;
+    let prompt = samples[i].prompt;
+    let result = samples[i].result;
+    let prompt_id = short_story_test.id;
+    await sample.recordSampleDataIfNeeded(variables, prompt, result, prompt_id, organization_id);
+  }
+
+  //find hashtag_generator prompt
   let hashtag_generator = await prompt.findPromptByName(
     "hashtag_generator",
     organization_id,
@@ -338,7 +354,7 @@ export const populateOrganization = async function (
   await logs.createLog(log2, organization_id);
 
   //loop 100 times to create logs
-  for (let i = 0; i < 2; i++) {
+  /*for (let i = 0; i < 2; i++) {
     let log = {
       message: "test data",
       error: false,
@@ -359,27 +375,7 @@ export const populateOrganization = async function (
       duration: getRandomFloat(4.5),
     };
     await logs.createLog(log2, organization_id);
-  }
-
-  /*console.log(chat_model)
-    console.log(completion_model)
-    let model_obj = seed_data['models'][0];
-    model_obj.organization_id = organization_id;
-    var model_id = await model.createModel(model_obj, organization_id);
-
-    let prompt_obj = seed_data['prompts'][0];
-    prompt_obj.organization_id = organization_id;
-    prompt_obj.model = model_id;
-    await prompt.createPrompt(prompt_obj, organization_id)
-
-    model_obj = seed_data['models'][1];
-    model_obj.organization_id = organization_id;
-    model_id = await model.createModel(model_obj, organization_id)
-
-    prompt_obj = seed_data['prompts'][1];
-    prompt_obj.organization_id = organization_id;
-    prompt_obj.model = model_id;
-    await prompt.createPrompt(prompt_obj, organization_id)*/
+  }*/
 
   return "COMPLETE";
 };

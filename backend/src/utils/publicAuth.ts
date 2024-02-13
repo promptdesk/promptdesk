@@ -17,14 +17,11 @@ var logs: any = new Log();
 
 var fs = require("fs");
 var path = require("path");
-var seed_data = fs.readFileSync(path.join(__dirname, "../init/database.json"));
 import {
   checkIfFirstRun,
   generateInitialOrganization,
   automaticEnvironmentSetup,
 } from "./inititialize";
-
-seed_data = JSON.parse(seed_data);
 
 const authenticate = async function (app: any) {
   app.use(cookieParser());

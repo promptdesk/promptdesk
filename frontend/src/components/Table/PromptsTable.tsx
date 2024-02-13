@@ -110,6 +110,7 @@ const PromptsTable: React.FC<PromptsTableProps> = ({ promptList }) => {
                     push(`/workspace/${prompt.id}`);
                   }}
                   className="cursor-pointer hover:bg-gray-50"
+                  id={prompt.name}
                 >
                   <td className="whitespace-nowrap py-4 px-4 text-sm font-medium text-gray-900">
                     {prompt.name}

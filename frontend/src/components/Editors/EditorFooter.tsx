@@ -67,6 +67,7 @@ function EditorFooter() {
           <PlaygroundButton
             text="Samples"
             onClick={goToSamplesPage}
+            id="samples-prompt"
             isFull={true}
           />
           <PlaygroundButton
