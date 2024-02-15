@@ -2,9 +2,11 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 
 export default function WorkspaceHomeRedirector() {
-  const { push, query } = useRouter();
+  const { push } = useRouter();
 
-  push(`/prompts/all`);
+  useEffect(() => {
+    push(`/prompts/all`);
+  }, [push]);
 
-  return <></>;
+  return null;
 }
