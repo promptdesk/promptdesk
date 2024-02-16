@@ -12,7 +12,7 @@ function PlaygroundButton({
   id,
   text,
   onClick,
-  isFull,
+  isFull = false,
   color,
 }: PlaygroundButtonProps) {
   const handleClick = () => {
