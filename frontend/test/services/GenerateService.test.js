@@ -50,7 +50,6 @@ describe("generateResultForPrompt integration tests", () => {
   });
 
   it("should handle generating results for a prompt correctly", async () => {
-    //wait 1 second
     await new Promise((r) => setTimeout(r, 500));
 
     const data = await generateResultsForNamedPrompt("yoda-test");
@@ -61,9 +60,13 @@ describe("generateResultForPrompt integration tests", () => {
       console.log(data);
     }
 
+    if (!data.message || data.error) {
+      console.log(data);
+    }
+
     expect(typeof data.message.content).toBe("string");
     expect(data.error).toBe(false);
-  });
+  }, 10000);
 
   // This setup allows for easy addition of more tests for different prompts
   // by just adding more it() blocks and calling setupEnvironment and generateResultsForNamedPrompt

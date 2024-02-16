@@ -28,7 +28,7 @@ export default function SamplesListPage() {
 
   useEffect(() => {
     if (!prompt_id) {
-      return
+      return;
     }
     fetchSamples(page, prompt_id?.toString());
   }, [fetchSamples, prompt_id, page]);

@@ -1,224 +1,226 @@
-[{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "0300d4d29863f770021f948bf7c78b56712816080e87fb127d4eb6be5d1446bf",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: an old stone home\nPlot: knock on door\nCharacter: an old farmer and his wife"
+[
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "0300d4d29863f770021f948bf7c78b56712816080e87fb127d4eb6be5d1446bf",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: an old stone home\nPlot: knock on door\nCharacter: an old farmer and his wife"
+    },
+    "result": "As the rain poured outside, the old farmer and his wife sat in their old stone home, enjoying a cup of tea, when a sudden knock on the door sent shivers down their spines, breaking the silence of the night.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "an old stone home",
+      "plot": "knock on door",
+      "character": "an old farmer and his wife"
+    }
   },
-  "result": "As the rain poured outside, the old farmer and his wife sat in their old stone home, enjoying a cup of tea, when a sudden knock on the door sent shivers down their spines, breaking the silence of the night.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "an old stone home",
-    "plot": "knock on door",
-    "character": "an old farmer and his wife"
-  }
-},
-{
-  "hash": "d5124a38e27c095c25422d25b5e9b43c4b0d2fafd005882d6d1f8396acbeeb09",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a dark alley\nPlot: scream for help\nCharacter: a young woman"
+  {
+    "hash": "d5124a38e27c095c25422d25b5e9b43c4b0d2fafd005882d6d1f8396acbeeb09",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a dark alley\nPlot: scream for help\nCharacter: a young woman"
+    },
+    "result": "In a dimly lit alley, a young woman stumbled upon a menacing figure. Out of desperation, she mustered all her courage and let out a piercing scream for help, echoing through the night.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a dark alley",
+      "plot": "scream for help",
+      "character": "a young woman"
+    }
   },
-  "result": "In a dimly lit alley, a young woman stumbled upon a menacing figure. Out of desperation, she mustered all her courage and let out a piercing scream for help, echoing through the night.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a dark alley",
-    "plot": "scream for help",
-    "character": "a young woman"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "cc865804cb19f43211457ea1844eb6a1f95025287daaf40f90b71118267e0ebd",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a bustling city\nPlot: get lost\nCharacter: a young man"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "cc865804cb19f43211457ea1844eb6a1f95025287daaf40f90b71118267e0ebd",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a bustling city\nPlot: get lost\nCharacter: a young man"
+    },
+    "result": "In the heart of the bustling city, a young man navigated the chaotic streets, his eyes wide with wonderment, until he realized he had unknowingly strayed from his path, finding himself delightfully lost in a maze of unfamiliar streets and enchanting alleyways.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a bustling city",
+      "plot": "get lost",
+      "character": "a young man"
+    }
   },
-  "result": "In the heart of the bustling city, a young man navigated the chaotic streets, his eyes wide with wonderment, until he realized he had unknowingly strayed from his path, finding himself delightfully lost in a maze of unfamiliar streets and enchanting alleyways.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a bustling city",
-    "plot": "get lost",
-    "character": "a young man"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "e1035f0697facfcd6e77bf8e2d7533588c79c2c9ffd44f5da20fbe776c911b8b",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a quiet forest\nPlot: hear a strange noise\nCharacter: a small child"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "e1035f0697facfcd6e77bf8e2d7533588c79c2c9ffd44f5da20fbe776c911b8b",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a quiet forest\nPlot: hear a strange noise\nCharacter: a small child"
+    },
+    "result": "In a quiet forest, a small child wandered alone, curious and brave. As the golden sunlight filtered through the ancient trees, the child's heart skipped a beat, for in the distance, a peculiar noise echoed, beckoning them deeper into the mysterious depths of the forest.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a quiet forest",
+      "plot": "hear a strange noise",
+      "character": "a small child"
+    }
   },
-  "result": "In a quiet forest, a small child wandered alone, curious and brave. As the golden sunlight filtered through the ancient trees, the child's heart skipped a beat, for in the distance, a peculiar noise echoed, beckoning them deeper into the mysterious depths of the forest.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a quiet forest",
-    "plot": "hear a strange noise",
-    "character": "a small child"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "45f684a57dc22054b3e9e275c41b78277609c9e552e6eb5c29269c9837848497",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a small town\nPlot: find a hidden treasure\nCharacter: a group of friends"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "45f684a57dc22054b3e9e275c41b78277609c9e552e6eb5c29269c9837848497",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a small town\nPlot: find a hidden treasure\nCharacter: a group of friends"
+    },
+    "result": "In a small town, a group of friends embarked on a thrilling adventure to find a hidden treasure left behind by a mysterious resident, their unity and determination holding the key to unimaginable riches.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a small town",
+      "plot": "find a hidden treasure",
+      "character": "a group of friends"
+    }
   },
-  "result": "In a small town, a group of friends embarked on a thrilling adventure to find a hidden treasure left behind by a mysterious resident, their unity and determination holding the key to unimaginable riches.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a small town",
-    "plot": "find a hidden treasure",
-    "character": "a group of friends"
-  }
-},
-{
-  "hash": "0fe6e4ee25ac8b03b2bcc38e635c34b86b1fec3d497589506ff9c3ee2d3a8b3b",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a haunted house\nPlot: hear a ghostly voice\nCharacter: a curious child"
+  {
+    "hash": "0fe6e4ee25ac8b03b2bcc38e635c34b86b1fec3d497589506ff9c3ee2d3a8b3b",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a haunted house\nPlot: hear a ghostly voice\nCharacter: a curious child"
+    },
+    "result": "In the eerie depths of the haunted house, a curious child tiptoed through the creaking hallways, heart racing. Just as they neared an old mirror, a whispering, ghostly voice pierced the silence, beckoning the child to uncover the secrets within.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a haunted house",
+      "plot": "hear a ghostly voice",
+      "character": "a curious child"
+    }
   },
-  "result": "In the eerie depths of the haunted house, a curious child tiptoed through the creaking hallways, heart racing. Just as they neared an old mirror, a whispering, ghostly voice pierced the silence, beckoning the child to uncover the secrets within.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a haunted house",
-    "plot": "hear a ghostly voice",
-    "character": "a curious child"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "bf03d55b3d618f78788eb5afa5db9355e9dba205ad31adddd557609c1b52746e",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a busy street\nPlot: see a strange figure\nCharacter: little red bird"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "bf03d55b3d618f78788eb5afa5db9355e9dba205ad31adddd557609c1b52746e",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a busy street\nPlot: see a strange figure\nCharacter: little red bird"
+    },
+    "result": "As the bustling street filled with people, a little red bird fluttered among the crowd, catching the attention of a young girl. Mesmerized by its vibrant feathers, she followed the bird as it led her to a mysterious figure standing at the corner, engulfed in an ethereal glow.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a busy street",
+      "plot": "see a strange figure",
+      "character": "little red bird"
+    }
   },
-  "result": "As the bustling street filled with people, a little red bird fluttered among the crowd, catching the attention of a young girl. Mesmerized by its vibrant feathers, she followed the bird as it led her to a mysterious figure standing at the corner, engulfed in an ethereal glow.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a busy street",
-    "plot": "see a strange figure",
-    "character": "little red bird"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "3aff0260bad38f037ab758e11dd0577fa252a5261c0d97afd0abcc8a46a55161",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: an old stone home\nPlot: scream for help\nCharacter: an old farmer and his wife"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "3aff0260bad38f037ab758e11dd0577fa252a5261c0d97afd0abcc8a46a55161",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: an old stone home\nPlot: scream for help\nCharacter: an old farmer and his wife"
+    },
+    "result": "In their cozy old stone home, the farmer and his wife sat by the fireplace when suddenly a piercing scream for help echoed from their barn, alarming them both as they rushed outside to discover a lost child pleading for their assistance.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "an old stone home",
+      "plot": "scream for help",
+      "character": "an old farmer and his wife"
+    }
   },
-  "result": "In their cozy old stone home, the farmer and his wife sat by the fireplace when suddenly a piercing scream for help echoed from their barn, alarming them both as they rushed outside to discover a lost child pleading for their assistance.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "an old stone home",
-    "plot": "scream for help",
-    "character": "an old farmer and his wife"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "acf4aa94d0771a125a2e35c0dfa8b2946e9c24fd18f83e848891fdbd84eace1c",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a dark alley\nPlot: knock on door\nCharacter: a young woman"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "acf4aa94d0771a125a2e35c0dfa8b2946e9c24fd18f83e848891fdbd84eace1c",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a dark alley\nPlot: knock on door\nCharacter: a young woman"
+    },
+    "result": "In a dark alley, a young woman hurriedly made her way towards her apartment when she heard a timid knock on a nearby door, prompting her to peer over her shoulder with unease, wondering who could be seeking refuge in the shadows.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a dark alley",
+      "plot": "knock on door",
+      "character": "a young woman"
+    }
   },
-  "result": "In a dark alley, a young woman hurriedly made her way towards her apartment when she heard a timid knock on a nearby door, prompting her to peer over her shoulder with unease, wondering who could be seeking refuge in the shadows.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a dark alley",
-    "plot": "knock on door",
-    "character": "a young woman"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "5583b94950d2aaf17f97bfa19929061b0ef90c168727355b8cf7bfa9af8c0b28",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a bustling city\nPlot: hear a strange noise\nCharacter: a young man"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "5583b94950d2aaf17f97bfa19929061b0ef90c168727355b8cf7bfa9af8c0b28",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a bustling city\nPlot: hear a strange noise\nCharacter: a young man"
+    },
+    "result": "In the bustling city, a young man was walking through the crowded streets when he unexpectedly heard a peculiar noise from an alleyway. Curiosity compels him to investigate, leading him to discover a mother cat and her newborn kittens, mewing and in need of help.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a bustling city",
+      "plot": "hear a strange noise",
+      "character": "a young man"
+    }
   },
-  "result": "In the bustling city, a young man was walking through the crowded streets when he unexpectedly heard a peculiar noise from an alleyway. Curiosity compels him to investigate, leading him to discover a mother cat and her newborn kittens, mewing and in need of help.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a bustling city",
-    "plot": "hear a strange noise",
-    "character": "a young man"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "200a914c9d65d420a6a7b8c4e07d0ed0207aa5a736f7b48767839f927622da94",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a quiet forest\nPlot: find a hidden treasure\nCharacter: a small child"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "200a914c9d65d420a6a7b8c4e07d0ed0207aa5a736f7b48767839f927622da94",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a quiet forest\nPlot: find a hidden treasure\nCharacter: a small child"
+    },
+    "result": "In a quiet forest, a small child stumbled upon an old map that led to a hidden treasure. With twinkling eyes and a curious heart, the child embarked on an enchanting adventure, overcoming obstacles and discovering the true riches of friendship along the way.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a quiet forest",
+      "plot": "find a hidden treasure",
+      "character": "a small child"
+    }
   },
-  "result": "In a quiet forest, a small child stumbled upon an old map that led to a hidden treasure. With twinkling eyes and a curious heart, the child embarked on an enchanting adventure, overcoming obstacles and discovering the true riches of friendship along the way.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a quiet forest",
-    "plot": "find a hidden treasure",
-    "character": "a small child"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "3fadbbd6b15d5a005022ba0de3776efb09f57b1cf2dbb9c0641f4f3ffa0ff514",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a small town\nPlot: see a strange figure\nCharacter: a group of friends"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "3fadbbd6b15d5a005022ba0de3776efb09f57b1cf2dbb9c0641f4f3ffa0ff514",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a small town\nPlot: see a strange figure\nCharacter: a group of friends"
+    },
+    "result": "In a small town, a group of friends decided to explore the woods on the outskirts. However, their adventure took a terrifying twist, as they caught sight of a strange figure lurking in the shadows, leaving them wondering if they would ever uncover the truth.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a small town",
+      "plot": "see a strange figure",
+      "character": "a group of friends"
+    }
   },
-  "result": "In a small town, a group of friends decided to explore the woods on the outskirts. However, their adventure took a terrifying twist, as they caught sight of a strange figure lurking in the shadows, leaving them wondering if they would ever uncover the truth.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a small town",
-    "plot": "see a strange figure",
-    "character": "a group of friends"
-  }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "0c4903d52ef4afacdc5000fb7f8d07590a149518bc675a15729352963c081364",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a haunted house\nPlot: get lost\nCharacter: a curious child"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "0c4903d52ef4afacdc5000fb7f8d07590a149518bc675a15729352963c081364",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a haunted house\nPlot: get lost\nCharacter: a curious child"
+    },
+    "result": "In a decrepit haunted house, a curious child ventured into a hidden room. As he examined an ancient book, a mystical wind blew, transporting him into a labyrinthine maze where the walls shifted and whispered, ensuring he would remain lost forever.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a haunted house",
+      "plot": "get lost",
+      "character": "a curious child"
+    }
   },
-  "result": "In a decrepit haunted house, a curious child ventured into a hidden room. As he examined an ancient book, a mystical wind blew, transporting him into a labyrinthine maze where the walls shifted and whispered, ensuring he would remain lost forever.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a haunted house",
-    "plot": "get lost",
-    "character": "a curious child"
+  {
+    "organization_id": "65cab23b1a4fa990cb470e35",
+    "prompt_id": "65cab23b1a4fa990cb470e66",
+    "hash": "0a247a8c32657f66717e37748f4b447275cfa0041eb0319dfb1e866783c9e1a0",
+    "prompt": {
+      "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a busy street\nPlot: hear a ghostly voice\nCharacter: little red bird"
+    },
+    "result": "As the little red bird fluttered along the busy street, it heard a ghostly voice whispering, guiding it towards an unsuspecting child about to dash into oncoming traffic, and with a sudden burst of bravery, the bird swooped down, catching the child's attention just in time to save them.",
+    "sort_order": 0,
+    "status": "new",
+    "variables": {
+      "setting": "a busy street",
+      "plot": "hear a ghostly voice",
+      "character": "little red bird"
+    }
   }
-},
-{
-  "organization_id": "65cab23b1a4fa990cb470e35",
-  "prompt_id": "65cab23b1a4fa990cb470e66",
-  "hash": "0a247a8c32657f66717e37748f4b447275cfa0041eb0319dfb1e866783c9e1a0",
-  "prompt": {
-    "prompt": "Generate a 2 sentence short story with the following information:\n\nSetting: a busy street\nPlot: hear a ghostly voice\nCharacter: little red bird"
-  },
-  "result": "As the little red bird fluttered along the busy street, it heard a ghostly voice whispering, guiding it towards an unsuspecting child about to dash into oncoming traffic, and with a sudden burst of bravery, the bird swooped down, catching the child's attention just in time to save them.",
-  "sort_order": 0,
-  "status": "new",
-  "variables": {
-    "setting": "a busy street",
-    "plot": "hear a ghostly voice",
-    "character": "little red bird"
-  }
-}]
+]

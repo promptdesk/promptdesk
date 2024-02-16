@@ -84,14 +84,16 @@ const Modal = () => {
   };
 
   return (
-    <GlobalModal heading=" Create new secret key" size="medium" toggleModal={toggle_env_variable_modal} isModalOpen={show_env_variable_modal}>
+    <GlobalModal
+      heading=" Create new secret key"
+      size="medium"
+      toggleModal={toggle_env_variable_modal}
+      isModalOpen={show_env_variable_modal}
+    >
       <p>Enter the name and value of your new secret key.</p>
       <br />
       <div className="css-xeepoz">
-        <div
-          className="body-small mb-2 flex items-center"
-          id="save-modal-name"
-        >
+        <div className="body-small mb-2 flex items-center" id="save-modal-name">
           <div className="bold mr-2">Name</div>
         </div>
         <input
@@ -103,10 +105,7 @@ const Modal = () => {
       </div>
       <br />
       <div className="css-xeepoz">
-        <div
-          className="body-small mb-2 flex items-center"
-          id="save-modal-name"
-        >
+        <div className="body-small mb-2 flex items-center" id="save-modal-name">
           <div className="bold mr-2">Value</div>
         </div>
         <input

@@ -6,7 +6,13 @@ const bcrypt = require("bcryptjs");
 import mongoose from "mongoose";
 const saltRounds = 10;
 
-import { Organization, Model, Prompt, Variable, Sample } from "../models/allModels";
+import {
+  Organization,
+  Model,
+  Prompt,
+  Variable,
+  Sample,
+} from "../models/allModels";
 import { User } from "../models/mongodb/user";
 import { Log } from "../models/mongodb/log";
 
@@ -203,7 +209,13 @@ export const populateOrganization = async function (
     let prompt = samples[i].prompt;
     let result = samples[i].result;
     let prompt_id = short_story_test.id;
-    await sample.recordSampleDataIfNeeded(variables, prompt, result, prompt_id, organization_id);
+    await sample.recordSampleDataIfNeeded(
+      variables,
+      prompt,
+      result,
+      prompt_id,
+      organization_id,
+    );
   }
 
   //find hashtag_generator prompt

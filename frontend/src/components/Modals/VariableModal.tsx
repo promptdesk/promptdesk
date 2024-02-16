@@ -6,7 +6,8 @@ import CodeEditor from "@/components/Editors/CodeEditor";
 import GlobalModal from "./GlobalModal";
 
 const Modal = () => {
-  const { show_variable_modal, toggle_variable_modal } = shouldShowSaveVariableModal();
+  const { show_variable_modal, toggle_variable_modal } =
+    shouldShowSaveVariableModal();
 
   const { promptObject } = promptStore(); // Assuming this is the correct usage for the store
 
@@ -50,8 +51,12 @@ const Modal = () => {
   };
 
   return (
-    <GlobalModal toggleModal={toggle_variable_modal} isModalOpen={show_variable_modal} size="large" heading="Variable">
-
+    <GlobalModal
+      toggleModal={toggle_variable_modal}
+      isModalOpen={show_variable_modal}
+      size="large"
+      heading="Variable"
+    >
       <div className="css-xeepoz">
         <div
           className="body-small mb-2 flex items-center"
@@ -77,7 +82,7 @@ const Modal = () => {
               try {
                 let generated_object = JSON.parse(e as string);
                 modifyValue(generated_object);
-              } catch (e) { }
+              } catch (e) {}
             }}
             language={"json"}
             height={"20em"}

@@ -20,7 +20,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onAccept,
 }) => {
   return (
-    <GlobalModal heading={title} size="medium" isModalOpen={true} toggleModal={onCancel} >
+    <GlobalModal
+      heading={title}
+      size="medium"
+      isModalOpen={true}
+      toggleModal={onCancel}
+    >
       <p>{bodyText}</p>
       <div className="modal-footer">
         <button
@@ -44,7 +49,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </span>
         </button>
       </div>
-    </GlobalModal >
+    </GlobalModal>
   );
 };
 

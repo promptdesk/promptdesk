@@ -53,5 +53,4 @@ describe("Logs API", function () {
       .set("Authorization", "Bearer " + token);
     expect(res.status).to.equal(404);
   });
-  
 });

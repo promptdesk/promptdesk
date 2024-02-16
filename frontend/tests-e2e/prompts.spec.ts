@@ -12,7 +12,105 @@ function randomString(length: any) {
   return result;
 }
 
-test.describe("Create, save run and delete a prompt.", () => {
+//view various prompt views
+/*test('test', async ({ page }) => {
+  await page.goto('http://localhost:3000/prompts/all');
+  await page.waitForTimeout(1000);
+  await expect(page).toHaveScreenshot("prompts-page.png", { maxDiffPixels: 500 });
+  await page.getByRole('cell', { name: 'hashtag_generator' }).click();
+  await page.waitForTimeout(1000);
+  await expect(page).toHaveScreenshot("sub-prompts-page.png", { maxDiffPixels: 500 });
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page).toHaveScreenshot("save-prompts-page.png", { maxDiffPixels: 500 });
+  await page.getByRole('button', { name: 'Cancel' }).click();
+  await page.getByText('topic', { exact: true }).click();
+  await expect(page).toHaveScreenshot("variable-prompts-page.png", { maxDiffPixels: 500 });
+  await page.getByRole('button', { name: 'Okay' }).nth(1).click();
+  await page.getByRole('button', { name: 'Code' }).click();
+  await expect(page).toHaveScreenshot("code-prompts-page.png", { maxDiffPixels: 500 })
+  await page.getByRole('button', { name: 'Close' }).click();
+
+  
+});*/
+
+test("General prompt", async ({ page }) => {
+  await page.goto("http://localhost:3000/prompts/all");
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("prompts-page.png", {
+    maxDiffPixelRatio: 0.02,
+  });
+
+  await page.getByRole("cell", { name: "test" }).click();
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("sub-prompts-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  //view main workspace page
+  await page.getByRole("cell", { name: "short-story-test" }).click();
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("workspace-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  //go to samples page
+  await page.getByRole("button", { name: "Samples" }).click();
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("samples-page.png", {
+    maxDiffPixelRatio: 0.1,
+  });
+
+  await page.getByRole("button", { name: "Back" }).click();
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("workspace-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page).toHaveScreenshot("save-prompt-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByRole("button", { name: "Cancel" }).click();
+  await expect(page).toHaveScreenshot("workspace-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByRole("button", { name: "Code" }).click();
+  await expect(page).toHaveScreenshot("code-prompt-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByRole("button", { name: "Close" }).click();
+  await expect(page).toHaveScreenshot("workspace-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByText("setting", { exact: true }).click();
+  await expect(page).toHaveScreenshot("variable-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  await page.getByRole("button", { name: "Okay" }).nth(1).click();
+  await expect(page).toHaveScreenshot("workspace-page.png", {
+    maxDiffPixels: 100,
+  });
+
+  // await page.getByRole('button', { name: 'Submit' }).click();
+  // await page.waitForTimeout(1000);
+  // await expect(page.locator("pre.generated-output")).toBeVisible();
+
+  // await page.getByRole('button', { name: 'Clear' }).click();
+  // await expect(page).toHaveScreenshot("workspace-page.png", { maxDiffPixels: 100 });
+
+  await page.getByText("x", { exact: true }).click();
+  await page.waitForTimeout(2000);
+  await expect(page).toHaveScreenshot("prompts-page.png", {
+    maxDiffPixels: 100,
+  });
+});
+
+/*test.describe("Create, save run and delete a prompt.", () => {
   test.describe.configure({ mode: "serial" });
 
   test("01.Visit prompt page", async ({ page }) => {
@@ -95,3 +193,4 @@ test.describe("Create, save run and delete a prompt.", () => {
     await expect(page.getByRole("heading", { name: "Prompts" })).toBeVisible();
   });
 });
+*/

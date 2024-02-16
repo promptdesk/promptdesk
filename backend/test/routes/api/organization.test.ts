@@ -35,5 +35,4 @@ describe("Organization API", function () {
       "Organization deleted successfully",
     );
   });
-  
 });

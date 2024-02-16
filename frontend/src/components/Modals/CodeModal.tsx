@@ -78,7 +78,12 @@ result = pd.generate("${promptObject.name.replace(/"/g, '\\"')}", ${JSON.stringi
   );
 
   return (
-    <GlobalModal isModalOpen={show_code_modal} toggleModal={toggle_code_modal} heading="Source Code" size="large">
+    <GlobalModal
+      isModalOpen={show_code_modal}
+      toggleModal={toggle_code_modal}
+      heading="Source Code"
+      size="large"
+    >
       <CopyWrapper textToCopy={codeTemplate}>
         <pre
           style={{ whiteSpace: "pre-wrap" }}

@@ -185,10 +185,15 @@ const Modal = () => {
 
   return (
     <>
-      <GlobalModal isModalOpen={show_modal} toggleModal={toggle_modal} heading={'Save preset'} size="medium">
+      <GlobalModal
+        isModalOpen={show_modal}
+        toggleModal={toggle_modal}
+        heading={"Save preset"}
+        size="medium"
+      >
         <p>
-          This will save the current Playground state as a preset which
-          you can access later or share with others.
+          This will save the current Playground state as a preset which you can
+          access later or share with others.
         </p>
         <br />
         <div className="css-xeepoz">
@@ -237,7 +242,7 @@ const Modal = () => {
           />
         </div>
         <div className="modal-footer">{renderButtons()}</div>
-      </GlobalModal >
+      </GlobalModal>
       <Toaster />
     </>
   );
