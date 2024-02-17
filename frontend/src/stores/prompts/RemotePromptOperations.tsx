@@ -18,8 +18,7 @@ export async function fetchAllPrompts() {
 export async function createNewPrompt() {
   let { promptObject } = promptStore.getState();
   if (
-    !isValidName(promptObject.name) ||
-    (promptObject.project && !isValidName(promptObject.project))
+    !isValidName(promptObject.name)
   )
     throw new Error(
       "Invalid model name or project name, only `-` and alphabets are allowed",
