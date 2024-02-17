@@ -50,8 +50,9 @@ const LogRow: React.FC<LogRowProps> = ({
           {log.duration || 0}
         </td>
         <td
-          className={`whitespace-nowrap px-3 py-4 text-sm ${log.status && log.status !== 200 ? "bg-yellow-300" : ""
-            } text-gray-500`}
+          className={`whitespace-nowrap px-3 py-4 text-sm ${
+            log.status && log.status !== 200 ? "bg-yellow-300" : ""
+          } text-gray-500`}
         >
           {log.status}
         </td>
@@ -67,15 +68,30 @@ const LogRow: React.FC<LogRowProps> = ({
       {expandedRows[log.id] && (
         <tr>
           <td colSpan={6}>
-            {promptName !== 'N/a' && <PlaygroundButton text="Go to Prompt" onClick={() => push(`workspace/${log.prompt_id}`)} />}
-            {modelName !== 'N/a' && <PlaygroundButton text="Go to Model" onClick={() => push(`models/${log.model_id}`)} />}
-            {promptName !== 'N/a' && <PlaygroundButton text="Go to Samples" onClick={() => push(`workspace/${log.prompt_id}/samples`)} />}
+            {promptName !== "N/a" && (
+              <PlaygroundButton
+                text="Go to Prompt"
+                onClick={() => push(`workspace/${log.prompt_id}`)}
+              />
+            )}
+            {modelName !== "N/a" && (
+              <PlaygroundButton
+                text="Go to Model"
+                onClick={() => push(`models/${log.model_id}`)}
+              />
+            )}
+            {promptName !== "N/a" && (
+              <PlaygroundButton
+                text="Go to Samples"
+                onClick={() => push(`workspace/${log.prompt_id}/samples`)}
+              />
+            )}
             <div className="mt-2 bg-gray-100">
               {!log.error && log.data ? (
                 <div className="flex">
                   <div className="w-1/2 p-4" style={{ whiteSpace: "pre-wrap" }}>
                     {log.data.prompt !== undefined ||
-                      log.data.context !== undefined ? (
+                    log.data.context !== undefined ? (
                       <div className="mb-4">
                         <fieldset className="border p-2">
                           <legend className="w-auto">

@@ -14,10 +14,10 @@ import PromptsTableTempporaryRefactor from "@/components/Table/PromptsTableTempo
 
 const getPath = (query: { path?: string[] | string }): string => {
   const { path } = query;
-  if (!path || !Array.isArray(path)) return '';
-  if (!path.length || path[0] === 'all') return '';
-  return path.join("/")
-}
+  if (!path || !Array.isArray(path)) return "";
+  if (!path.length || path[0] === "all") return "";
+  return path.join("/");
+};
 
 export default function PromptsPage() {
   const { push, query, isReady } = useRouter();
@@ -49,7 +49,7 @@ export default function PromptsPage() {
 
   if (!isReady) return null;
 
-  const targetPath = query.pa
+  const targetPath = query.pa;
 
   const search = (searchQuery: string) => {
     //combine name, description, model_type, and model into one string and filter based on searchQuery
@@ -112,7 +112,7 @@ export default function PromptsPage() {
         </div>
       </div>
       <div className="app-page">
-        <Breadcrumbs path={(query.path as string[])?.join('/') || ''} />
+        <Breadcrumbs path={(query.path as string[])?.join("/") || ""} />
         <div className="mt-2 flow-root">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">

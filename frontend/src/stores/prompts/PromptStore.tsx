@@ -78,7 +78,7 @@ const promptStore = create<PromptStore>((set, get) => ({
     });
   },
 
-  createLocalPrompt: (projectName: string = '', prompt?: Prompt) => {
+  createLocalPrompt: (projectName: string = "", prompt?: Prompt) => {
     let defaultModel = modelStore
       .getState()
       .models.find((model) => model.default);
@@ -100,7 +100,7 @@ const promptStore = create<PromptStore>((set, get) => ({
         Math.random().toString(36).substring(2, 10) +
         Math.random().toString(36).substring(2, 10),
       model: defaultModel.id,
-      project: projectName
+      project: projectName,
     };
 
     //check if prompt is passed as argument
@@ -138,8 +138,8 @@ const promptStore = create<PromptStore>((set, get) => ({
     const selectedModel =
       selectedPrompt && selectedPrompt.model
         ? modelStoreState.models.find(
-          (model) => model.id === selectedPrompt.model,
-        )
+            (model) => model.id === selectedPrompt.model,
+          )
         : modelStoreState.models.find((model) => model.default === true);
     if (selectedModel) {
       modelStore.setState({ selectedModel: selectedModel.id });
