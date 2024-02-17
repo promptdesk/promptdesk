@@ -1,6 +1,9 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - '**' # This includes all branches
 
 jobs:
   deployment:
