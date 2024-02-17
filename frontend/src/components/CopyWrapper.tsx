@@ -11,9 +11,7 @@ const CopyWrapper: React.FC<CopyWrapperProps> = ({ textToCopy, children }) => {
   const onClick = () => {
     navigator.clipboard.writeText(textToCopy);
     setText("Copied");
-    setTimeout(() => {
-      setText("Copy");
-    }, 1000);
+    setTimeout(() => setText("Copy"), 1000);
   };
   return (
     <div className="copy-wrapper">
