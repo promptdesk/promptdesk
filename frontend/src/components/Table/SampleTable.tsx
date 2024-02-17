@@ -6,14 +6,12 @@ interface SamplesTableProps {
   samples: any[];
 }
 
-const SampleTable: React.FC<SamplesTableProps> = ({ samples }) => {
-  return (
-    <div>
-      {samples?.map((sample, index) => (
-        <SampleRow key={sample.id} sample={sample} index={index} />
-      ))}
-    </div>
-  );
-};
+const SampleTable: React.FC<SamplesTableProps> = ({ samples }) => (
+  <div>
+    {samples?.map((sample, index) => (
+      <SampleRow key={sample.id} sample={sample} index={index} />
+    ))}
+  </div>
+);
 
 export default SampleTable;
