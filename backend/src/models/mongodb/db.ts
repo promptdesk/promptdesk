@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(__dirname, "../../../../.env") });
 
 export default async function connectToDatabase(test = false) {
   console.log("INFO :: MONGODB CONNECTING", process.env.MONGO_URL);
