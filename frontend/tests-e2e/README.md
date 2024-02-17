@@ -20,6 +20,8 @@ We suggest that you begin by typing:
 
     npx playwright test
 
+    npx playwright show-report
+
 And check out the following files:
 
 - ./tests-e2e/example.spec.ts - Example end-to-end test
