@@ -18,7 +18,7 @@ const TagsInput: React.FC<TagsInputProps> = ({ tagsInfo }) => {
         value={selected}
         onChange={setSelected}
         name={tagsInfo.name}
-        placeHolder="enter fruits"
+        placeHolder="Enter sequence and press Tab"
       />
       <em>Enter sequence and press Tab</em>
     </div>
