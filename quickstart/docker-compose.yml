@@ -26,7 +26,7 @@ services:
       - ./certbot/www/:/var/www/certbot
       - ./certbot/conf/:/etc/letsencrypt
     ports:
-      - "8080:80"
+      - "80:80"
       # - "80:80"
       # - "443:443"
     depends_on:
