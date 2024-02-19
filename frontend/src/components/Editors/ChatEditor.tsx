@@ -61,27 +61,34 @@ function Editor() {
     updateLocalPromptValues("prompt_data", {});
   }
 
+  //render div if modelObject.model_parameters is null
+  function renderDiv() {
+    if (modelObject.model_parameters.context !== false) {
+      return <div>
+        <div className="text-input-with-header chat-pg-instructions">
+          <div className="text-input-header-subheading subheading">
+            System
+          </div>
+          <div className="text-input-header-wrapper overflow-wrapper text-input">
+            <textarea
+              aria-label="Input"
+              className="text-input text-input-lg text-input-full text-input-header-buffer"
+              placeholder="You are a helpful assistant."
+              value={promptObject.prompt_data.context}
+              onInput={handleContextChange}
+            />
+          </div>
+        </div>
+      </div>
+    }
+  }
+
   return (
     <div className="flex flex-col">
       <EnvironmentVariableWarning />
       <Variables />
       <div className="chat-pg-body body-small flex-1 overflow-hidden">
-        <div>
-          <div className="text-input-with-header chat-pg-instructions">
-            <div className="text-input-header-subheading subheading">
-              System
-            </div>
-            <div className="text-input-header-wrapper overflow-wrapper text-input">
-              <textarea
-                aria-label="Input"
-                className="text-input text-input-lg text-input-full text-input-header-buffer"
-                placeholder="You are a helpful assistant."
-                value={promptObject.prompt_data.context}
-                onInput={handleContextChange}
-              />
-            </div>
-          </div>
-        </div>
+        {renderDiv()}
         <div className="chat-pg-mobile-divider" />
         <div className="chat-pg-right-wrapper">
           <div className="chat-pg-panel-wrapper">

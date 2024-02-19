@@ -42,6 +42,25 @@ router.all(["/generate"], async (req, res) => {
       proxy,
     );
 
+    if(!prompt.model_parameters) prompt.model_parameters = {};
+    
+    for (const key in model.model_parameters) {
+      if (model.model_parameters[key].required) {
+        if (!prompt.model_parameters[key]) {
+          //add default value if available
+          if (model.model_parameters[key].default) {
+            prompt.model_parameters[key] = model.model_parameters[key].default;
+          } else {
+            return res.status(400).json({
+              error: true,
+              message: `Model parameter ${key} is required, but default value is not set.`,
+              status: 400,
+            });
+          }
+        }
+      }
+    }
+
     //SET API CALL BODY
     let body = {} as any;
     if (model.input_format) {

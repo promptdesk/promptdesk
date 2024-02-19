@@ -67,10 +67,10 @@
             "key": "max_tokens",
             "type": "slider",
             "name": "Max Tokens",
-            "default": 4000,
+            "default": 100,
             "step": 50,
             "min": 0,
-            "max": 100,
+            "max": 250,
             "required": true
         }
     }
