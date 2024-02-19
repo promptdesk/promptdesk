@@ -9,6 +9,7 @@ import { Log } from "@/interfaces/log";
 import { CustomJSONView } from "@/components/Viewers/CustomJSONView";
 import "./[id].scss";
 import Head from "next/head";
+import PlaygroundButton from "@/components/Form/PlaygroundButton";
 
 function LogAttribute({ label, value }: { label: string; value: string }) {
   return (
@@ -80,10 +81,30 @@ export default function SingleLogPage() {
       </Head>
       <div className="page-body full-width flush">
         <div className="pg-header">
-          <div className="pg-header-title">
+          <div className="pg-header-title flex justify-between">
             <h1 className="pg-page-title" style={{ display: "block" }}>
               Logs
             </h1>
+            <div className="space-x-2">
+              {promptName && (
+                <PlaygroundButton
+                  text="Go to Prompt"
+                  onClick={() => push(`/workspace/${log.prompt_id}`)}
+                />
+              )}
+              {modelName && (
+                <PlaygroundButton
+                  text="Go to Model"
+                  onClick={() => push(`/models/${log.model_id}`)}
+                />
+              )}
+              {promptName && (
+                <PlaygroundButton
+                  text="Go to Samples"
+                  onClick={() => push(`/workspace/${log.prompt_id}/samples`)}
+                />
+              )}
+            </div>
           </div>
         </div>
         <div className="app-page">
