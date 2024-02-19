@@ -13,6 +13,9 @@
   <a href="https://pypi.org/project/promptdesk/">
     <img src="https://badge.fury.io/py/promptdesk.svg" alt="pypi">
   </a>
+  <a href="https://www.npmjs.com/package/promptdesk">
+    <img src="https://badge.fury.io/js/promptdesk.svg" alt="npm">
+  </a>
   <a href="https://hub.docker.com/r/promptdesk/promptdesk">
     <img src="https://badgen.net/badge/icon/docker?icon=docker&label" alt="docker">
   </a>
@@ -62,22 +65,23 @@ We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstar
 
 PromptDesk is available as a Docker image.
 
-### Hosted Web Application
+### Quickstart
 
 ```shell
 wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
-```
-
-Start the Docker container:
-
-
-```shell
 docker compose up
 ```
 
 Open your web browser and navigate to http://localhost:8080/ to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
-## 👨‍💻 Python Integration
+## 👨‍💻 PromptDesk OS
+
+Build, manage prompts and optimize prompt-based applications.
+
+![Alt Text](https://promptdesk.ai/screenshots/completed-prompt.png)
+
+
+## 👨‍💻 Python SDK
 
 To install PromptDesk, use pip:
 
@@ -107,7 +111,7 @@ print(story)
 ```
 
 
-## 👨‍💻 JavaScript Integration
+## 👨‍💻 JavaScript SDK
 
 To install PromptDesk, use npm:
 
