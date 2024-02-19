@@ -1,0 +1,15 @@
+{
+  "name": "is-positive-test",
+  "description": "Determines if test is positive or negative",
+  "prompt_variables": {
+    "text": {
+      "type": "text",
+      "value": "I am very happy today!"
+    }
+  },
+  "prompt_data": {
+    "prompt": "Text: {{text}}\n\nDetermine if the text is positive or negative. Only answer with 'positive' or 'negative'."
+  },
+  "model_type": "completion",
+  "project": "test"
+}

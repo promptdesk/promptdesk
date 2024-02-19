@@ -48,8 +48,8 @@ const Modal = () => {
     setFormValues({ ...formValues, project: project });
   }
 
-  function setAllPromptInformation() {
-    if (prompts.find((prompt) => prompt.name === formValues.name)) {
+  function setAllPromptInformation(validate = false) {
+    if (validate && prompts.find((prompt) => prompt.name === formValues.name)) {
       throw new Error(
         "Prompt with this name already exists, please choose other name",
       );
@@ -87,7 +87,7 @@ const Modal = () => {
       className: "btn-primary",
       action: () => {
         try {
-          setAllPromptInformation();
+          setAllPromptInformation(false);
           updateExistingPrompt();
           toggle_modal();
         } catch (error) {
