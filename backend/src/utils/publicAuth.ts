@@ -140,8 +140,11 @@ const authenticate = async function (app: any) {
 };
 
 const checkAuth = async function (req: any, res: any, next: any) {
+  //get path
+  let path = req.path;
+
   //ignore all files with non api prefix
-  if (!req.path.startsWith("/api")) {
+  if (req.path.startsWith("/api")) {
     return next();
   }
 
@@ -171,6 +174,7 @@ const checkAuth = async function (req: any, res: any, next: any) {
     return res.redirect("/prompts");
   }
 
+  console.log("checkAuth DONE!");
   next();
 };
 

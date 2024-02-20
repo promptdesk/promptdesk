@@ -74,9 +74,9 @@ wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/doc
 docker compose up --pull always
 ```
 
-Open your web browser and navigate to http://localhost to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
-
 **Please ensure that port 80 is available on your machine. If not, you can change the port in the docker-compose.yml file.**
+
+Open your web browser and navigate to http://localhost to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
 ## 👨‍💻 PromptDesk OS
 
@@ -93,19 +93,17 @@ To install PromptDesk, use pip:
 pip install promptdesk
 ```
 
-### Usage
-
 You can call the prompt you build in the application by using the generate method.
 
 ```python
 from promptdesk import PromptDesk
 
 pd = PromptDesk(
-    api_key = "YOUR_PROMPTDESK_API_KEY"
-    service_url = "http://localhost:4000"
+    api_key = "YOUR_PROMPTDESK_API_KEY" #find in /settings
+    service_url = "http://localhost"
 )
 
-story = pd.generate("short-story", {
+story = pd.generate("short-story-test", {
     "setting": "dark and stormy night",
     "character": "lonely farmer",
     "plot": "visited by a stranger"
@@ -113,7 +111,6 @@ story = pd.generate("short-story", {
 
 print(story)
 ```
-
 
 ## 👨‍💻 JavaScript SDK
 
@@ -123,20 +120,19 @@ To install PromptDesk, use npm:
 npm install promptdesk
 ```
 
-### Usage
-
 You can call the prompt you build in the application by using the generate method.
 
-```python
-const { PromptDesk } = require('promptdesk');
+```js
+import { PromptDesk } from 'promptdesk'; //ES6
+//const { PromptDesk } = require('promptdesk'); //CommonJS
 
 var pd = new PromptDesk({
-    apiKey: "YOUR_PROMPTDESK_API_KEY",
-    serviceUrl: "http://localhost:4000"
+    apiKey: "YOUR_PROMPTDESK_API_KEY", //find in /settings
+    serviceUrl: "http://localhost"
 })
 
 
-const story = pd.generate("short-story", {
+const story = pd.generate("short-story-test", {
     "setting": "dark and stormy night",
     "character": "lonely farmer",
     "plot": "visited by a stranger"
