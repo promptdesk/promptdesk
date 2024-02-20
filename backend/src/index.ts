@@ -61,18 +61,16 @@ app.use("/api", variablesRouter);
 app.use("/api", organizationRouter);
 
 app.all("/api/*", (req, res) => {
-  return res.status(404).send({ error: "API URI Not Found." });
+  return res.status(404).send({ error: true, message: "API not found!" });
 });
 
 app.use(express.static("./assets"));
 
-import { authenticate } from "./utils/publicAuth";
+import { authenticate, checkAuth } from "./utils/publicAuth";
 authenticate(app);
+app.use(checkAuth);
 
-app.use(express.static("./public"));
-app.use(express.static("./dist"));
-
-app.get(["/", "/prompts/all", "/prompts/*"], (req, res) => {
+app.get(["/", "/prompts/:path(*)"], (req, res) => {
   if (!fs.existsSync(path.join(__dirname, "../dist/index.html"))) {
     return res.end(
       "You must build the frontend first. Run 'npm run build' in the frontend directory.",
@@ -81,26 +79,39 @@ app.get(["/", "/prompts/all", "/prompts/*"], (req, res) => {
   return res.sendFile(path.join(__dirname, "../dist/index.html"));
 });
 
-app.get(["/workspace/*"], (req, res) => {
+app.get(["/workspace/:id"], (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/workspace/[id].html"));
 });
 
-app.get(["/workspace/*/samples"], (req, res) => {
+app.get(["/workspace/:id/samples"], (req, res) => {
   res.sendFile(path.join(__dirname, "../dist/workspace/[id]/samples.html"));
+});
+
+app.get(["/models/:id"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/models/[id].html"));
+});
+
+app.get(["/logs/:id"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/logs/[id].html"));
 });
 
 app.get(["/:filename"], (req, res) => {
   var filename = req.params.filename;
-  try {
-    res.sendFile(path.join(__dirname, "../dist/" + filename + ".html"));
-  } catch (error) {
-    res.sendFile(path.join(__dirname, "../dist/404.html"));
-  }
+  var filePath = path.join(__dirname, "../dist", filename + ".html");
+
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, "../public/404.html"));
+    }
+  });
 });
+
+app.use(express.static("./public"));
+app.use(express.static("./dist"));
 
 //redirect all other routes to prompts page - main entry point
 app.get(["/*"], (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/404.html"));
+  res.sendFile(path.join(__dirname, "../public/404.html"));
 });
 
 app.listen(port, () => {

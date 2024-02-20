@@ -54,7 +54,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   return (
     <div id="root">
       {loading ? ( // Render loading indicator if loading is true
-        <div>Loading...</div>
+        <div>PromptDesk OS Loading...</div>
       ) : (
         <div className="app-wrapper">
           <Navigation />

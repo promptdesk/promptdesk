@@ -121,7 +121,7 @@ const authenticate = async function (app: any) {
     }
   });
 
-  app.get("/logout", async (req: any, res: any) => {
+  app.get(["/logout", "/auth/logout"], async (req: any, res: any) => {
     res.clearCookie("token");
     res.clearCookie("organization");
     res.redirect("/auth/login");
@@ -137,11 +137,19 @@ const authenticate = async function (app: any) {
     }
     console.log(data);
   });
-
-  app.use(checkAuth);
 };
 
 const checkAuth = async function (req: any, res: any, next: any) {
+  //ignore all files with non api prefix
+  if (!req.path.startsWith("/api")) {
+    return next();
+  }
+
+  //ignore all files with extensions
+  if (req.path.includes(".")) {
+    return next();
+  }
+
   const shouldSetup = await checkIfFirstRun();
   if (shouldSetup) {
     return res.redirect("/auth/setup");

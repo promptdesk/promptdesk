@@ -365,29 +365,5 @@ export const populateOrganization = async function (
   };
   await logs.createLog(log2, organization_id);
 
-  //loop 100 times to create logs
-  /*for (let i = 0; i < 2; i++) {
-    let log = {
-      message: "test data",
-      error: false,
-      status: getRandomStatus(),
-      model_id: python_generator.model,
-      prompt_id: python_generator.id,
-      organization_id: python_generator.organization_id,
-      duration: getRandomFloat(3.5),
-    };
-    await logs.createLog(log, organization_id);
-    let log2 = {
-      message: "test data",
-      error: false,
-      status: getRandomStatus(),
-      model_id: test_generator.model,
-      prompt_id: test_generator.id,
-      organization_id: test_generator.organization_id,
-      duration: getRandomFloat(4.5),
-    };
-    await logs.createLog(log2, organization_id);
-  }*/
-
   return "COMPLETE";
 };

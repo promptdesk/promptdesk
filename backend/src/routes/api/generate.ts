@@ -42,8 +42,8 @@ router.all(["/generate"], async (req, res) => {
       proxy,
     );
 
-    if(!prompt.model_parameters) prompt.model_parameters = {};
-    
+    if (!prompt.model_parameters) prompt.model_parameters = {};
+
     for (const key in model.model_parameters) {
       if (model.model_parameters[key].required) {
         if (!prompt.model_parameters[key]) {
