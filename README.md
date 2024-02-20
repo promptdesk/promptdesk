@@ -68,10 +68,13 @@ PromptDesk is available as a Docker image.
 ### Quickstart
 
 ```shell
-mkdir -p nginx && cd nginx && wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default.conf -O default.conf && cd .. && wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml -O docker-compose.yml && docker compose up
+mkdir -p nginx && cd nginx && \
+wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default.conf -O default.conf && cd .. && \
+wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml -O docker-compose.yml && \
+docker compose up --pull always
 ```
 
-Open your web browser and navigate to http://localhost/ to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
+Open your web browser and navigate to http://localhost to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
 **Please ensure that port 80 is available on your machine. If not, you can change the port in the docker-compose.yml file.**
 
