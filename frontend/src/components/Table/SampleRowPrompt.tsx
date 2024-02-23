@@ -15,7 +15,7 @@ const SampleRowPrompt: React.FC<SampleRowPromptProps> = ({
       {localPromptInfo.prompt || localPromptInfo.content ? (
         <div className="text-input-wrapper">
           <div
-            className={"text-input-md text-input prompt-value-display"}
+            className={"text-input-md text-input prompt-value-display text-gray-500 font-medium leading-relaxed"}
             onClick={(evt) => evt.stopPropagation()}
           >
             {promptText}

@@ -8,7 +8,7 @@ const SampleRowGroundTruth: React.FC<any> = ({
   return (
     <div className="text-input-wrapper h-full">
       <div
-        className="sample-row-textarea"
+        className="sample-row-textarea text-gray-500 font-medium leading-relaxed"
         onClick={(evt) => evt.stopPropagation()}
         contentEditable={true}
         placeholder={"Enter ground truth here."}
