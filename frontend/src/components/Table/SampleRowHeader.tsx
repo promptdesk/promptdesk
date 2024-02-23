@@ -13,7 +13,7 @@ const SampleRowHeader: React.FC<any> = ({
 }) => {
   return (
     <div className="flex justify-between bg-gray-50 p-3 rounded-t-xl border-b border-gray-200">
-      <div className="flex">
+      <div className="flex items-center">
         <DropDown
           options={[
             { value: "new", name: "New" },
@@ -25,12 +25,14 @@ const SampleRowHeader: React.FC<any> = ({
           onChange={handleStatusChange}
         />
         &nbsp;&nbsp;
-        <PlaygroundButton
-          onClick={handleRegenerateClicked as any}
-          text={isRegenerating ? "Processing..." : "Regenerate"}
-          color="primary"
-        />
-        <button onClick={handleDeleteClicked} className="btn btn-sm btn-neutral normal-case bg-red-100 text-red-600 hover:bg-red-200">
+        <div className="ml-2">
+          <PlaygroundButton
+            onClick={handleRegenerateClicked as any}
+            text={isRegenerating ? "Processing..." : "Regenerate"}
+            color="primary"
+          />
+        </div>
+        <button onClick={handleDeleteClicked} className="btn btn-sm btn-neutral normal-case bg-red-100 text-red-600 hover:bg-red-200 ml-2">
           <span className="font-semibold">
             Delete
           </span>
