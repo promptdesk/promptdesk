@@ -5,6 +5,7 @@ WORKDIR /app
 COPY backend ./backend
 COPY frontend ./frontend
 COPY shared ./shared
+COPY models ./models
 
 ENV PROMPT_SERVER_PORT=4000
 ENV HOSTING=local
