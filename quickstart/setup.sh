@@ -71,7 +71,7 @@ if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
         curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/certbot-setup.conf
 
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            sed -i "s/\2/$domain_name/g" ./nginx/default.conf
+            sed -i "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
         elif [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
         fi
