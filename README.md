@@ -10,6 +10,7 @@
 <br/>
 
 <p align="center">
+  <img src="https://github.com/promptdesk/promptdesk/actions/workflows/main.yml/badge.svg">
   <a href="https://pypi.org/project/promptdesk/">
     <img src="https://badge.fury.io/py/promptdesk.svg" alt="pypi">
   </a>
