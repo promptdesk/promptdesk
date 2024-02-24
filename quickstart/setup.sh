@@ -9,7 +9,7 @@ echo "Please be sure you have the following information to proceed:"
 echo "  1. Docker Compose installed"
 echo "  2. OpenAI API Key (can change to different LLM provider later)"
 echo "  3. (OPTIONAL) OpenSSL installed"
-echo "  4. (OPTIONAL) Domain/Subdomain pointing to your server's IP address"
+echo "  4. (OPTIONAL) DNS A record pointing to your server's IP address"
 echo "  5. (OPTIONAL) Email address for your SSL certificate install"
 echo ""
 echo "This process will take approximately 5 minutes"
@@ -86,7 +86,7 @@ if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
         elif [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
         fi
-        curl -L -o ./docker-compose-certbot-setup.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-secure.yml
+        curl -L -o ./docker-compose.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-secure.yml
 
     else
         echo "Setup already exists. If you would like to reconfigure, please remove the ./promptdesk directory and run this script again."
