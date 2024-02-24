@@ -21,10 +21,13 @@ services:
   nginx:
     image: nginx:latest
     volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx:/etc/nginx/conf.d:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/www/:/var/www/certbot:rw
+      - ./certbot/conf/:/etc/letsencrypt:rw
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - app
     networks:
