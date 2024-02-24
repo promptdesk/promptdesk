@@ -61,14 +61,15 @@ if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
         echo "Please enter your email address for SSL certificate install"
         read -r email_address
 
-        cp /Users/justin/Documents/dev/promptdesk/quickstart/nginx/certbot-setup.conf ./nginx/default.conf
+        curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/certbot-setup.conf
+
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
             sed -i "s/\2/$domain_name/g" ./nginx/default.conf
         elif [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
         fi
 
-        cp /Users/justin/Documents/dev/promptdesk/quickstart/docker-compose-certbot-setup.yml ./docker-compose-certbot-setup.yml
+        curl -L -o ./docker-compose-certbot-setup.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-certbot-setup.yml
 
         if [ ! -f ./certbot/conf/ssl-dhparams.pem ]; then
             curl -L --create-dirs -o ./certbot/conf/options-ssl-nginx.conf https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
@@ -78,13 +79,14 @@ if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
         docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d  $domain_name --agree-tos -m $email_address
         docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d  $domain_name --agree-tos -m $email_address
 
-        cp /Users/justin/Documents/dev/promptdesk/quickstart/nginx/default-ssl.conf ./nginx/default.conf
+        curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default-ssl.conf
+
         if [[ "$OSTYPE" == "linux-gnu"* ]]; then
             sed -i "s/\2/$domain_name/g" ./nginx/default.conf
         elif [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
         fi
-        cp /Users/justin/Documents/dev/promptdesk/quickstart/docker-compose-secure.yml ./docker-compose.yml
+        curl -L -o ./docker-compose-certbot-setup.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-secure.yml
 
     else
         echo "Setup already exists. If you would like to reconfigure, please remove the ./promptdesk directory and run this script again."
@@ -93,8 +95,8 @@ if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
 fi
 
 if [ "setup_domain" = "n" ] || [ "setup_domain" = "N" ]; then
-    cp /Users/justin/Documents/dev/promptdesk/quickstart/nginx/default.conf ./nginx/default.conf
-    cp /Users/justin/Documents/dev/promptdesk/quickstart/docker-compose.yml ./docker-compose.yml
+    curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default.conf
+    curl -L -o ./docker-compose.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
 fi
 
 docker compose up
