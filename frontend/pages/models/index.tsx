@@ -3,16 +3,16 @@ import { useRouter } from "next/router";
 import { modelStore } from "@/stores/ModelStore";
 
 export default function ModelsHomeRedirect() {
-  const { push, query } = useRouter();
-
-  var { models } = modelStore();
+  const { push } = useRouter();
+  const { models } = modelStore();
 
   useEffect(() => {
-    //get first model
-    let model = models[0];
-    const newUrl = `/models/${model.id}`;
-    push(newUrl);
-  }, []);
+    if(models.length > 0) {
+      const model = models[0];
+      const newUrl = `/models/${model.id}`;
+      push(newUrl);
+    }
+  }, [models, push]);
 
-  return <></>;
+  return null;
 }
