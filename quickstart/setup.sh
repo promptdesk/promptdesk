@@ -17,8 +17,15 @@ echo "--------------------------------------------------------------------------
 echo "When you are ready to proceed, press Enter"
 echo "To cancel setup, press Ctrl+C and this script will be run again on your next login"
 
+# Confirm removal of existing setup
 if [ -d ./promptdesk ]; then
-    rm -rf ./promptdesk
+    read -p "Existing 'promptdesk' directory found. Remove and continue? (y/N) " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        rm -rf ./promptdesk
+    else
+        echo "Setup canceled. Please run the script in a new directory or manually remove the 'promptdesk' directory."
+        exit 1
+    fi
 fi
 
 #check if docker compose or docker-compose is installed
