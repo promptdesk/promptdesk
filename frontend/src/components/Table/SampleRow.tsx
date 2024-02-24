@@ -125,7 +125,7 @@ const SampleRow: React.FC<any> = ({ index, sample }) => {
 
   return (
     <>
-      <div key={sample.id} className="sample-row mb-4">
+      <div key={sample.id} className="sample-row mb-4 rounded-xl border border-gray-200">
         <div>
           <div>
             <SampleRowHeader
@@ -135,28 +135,31 @@ const SampleRow: React.FC<any> = ({ index, sample }) => {
               handleDeleteClicked={handleDeleteClicked}
               setView={setView}
               isRegenerating={isRegenerating}
+              view={view}
             />
           </div>
-          <div className="">
+          <div className="py-4">
             <div
-              className="inline-block w-1/2 align-top"
+              className="inline-block w-1/2 align-top bg-transparent"
               style={{ maxHeight: "500px", overflowY: "auto" }}
             >
               <SampleRowVariables variables={sample.variables} />
             </div>
             <div className="inline-block w-1/2 align-top">
-              {view === "prompt" ? (
-                <SampleRowPrompt
-                  localPromptInfo={localPromptInfo}
-                  promptText={promptText}
-                />
-              ) : (
-                <SampleRowGroundTruth
-                  localResult={localResult}
-                  handleTextAreaChange={handleTextAreaChange}
-                  resultTextAreaRef={resultTextAreaRef}
-                />
-              )}
+              <div style={{ width: '95%' }}>
+                {view === "prompt" ? (
+                  <SampleRowPrompt
+                    localPromptInfo={localPromptInfo}
+                    promptText={promptText}
+                  />
+                ) : (
+                  <SampleRowGroundTruth
+                    localResult={localResult}
+                    handleTextAreaChange={handleTextAreaChange}
+                    resultTextAreaRef={resultTextAreaRef}
+                  />
+                )}
+              </div>
             </div>
           </div>
         </div>

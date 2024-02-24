@@ -50,14 +50,17 @@
     justify-content: stretch;
     align-items: stretch;
 
+    .text-input {
+      color: rgb(107 114 128 / var(--tw-text-opacity));
+      line-height: 1.4;
+    }
+
     .prompt-value-display {
       width: inherit;
       height: fit-content;
 
       font-size: 0.85rem;
-      line-height: 1.1rem;
       font-family: monospace;
-      color: #444 !important;
       white-space: pre-wrap;
       overflow-y: auto;
       cursor: text !important;
@@ -71,9 +74,7 @@
       height: 100%;
       max-height: 500px;
       font-size: 0.85rem;
-      line-height: 1.1rem;
       font-family: monospace;
-      color: #444 !important;
       white-space: pre-wrap;
       overflow-y: auto;
       cursor: text !important;

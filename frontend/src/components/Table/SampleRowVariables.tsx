@@ -7,7 +7,7 @@ const SampleRowVariables: React.FC<any> = ({ variables }) => {
   };
 
   return (
-    <div style={{ maxWidth: "100%" }} onClick={handleClick}>
+    <div style={{ maxWidth: "100%" }} onClick={handleClick} className="sample-head">
       <CustomJSONView name={null} src={variables} collapsed={1} />
     </div>
   );
