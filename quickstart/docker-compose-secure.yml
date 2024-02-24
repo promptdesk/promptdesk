@@ -12,6 +12,7 @@ services:
       - mongodb-network
   app:
     image: promptdesk/promptdesk:latest
+    pull_policy: always
     environment:
       - MONGO_URL=mongodb://mongodb:27017/app
     depends_on:
@@ -32,6 +33,13 @@ services:
       - app
     networks:
       - mongodb-network
+  certbot:
+    image: certbot/certbot:latest
+    depends_on:
+      - nginx
+    volumes:
+      - ./certbot/www/:/var/www/certbot
+      - ./certbot/conf/:/etc/letsencrypt
 networks:
   mongodb-network:
     driver: bridge

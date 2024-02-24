@@ -12,6 +12,7 @@ services:
       - mongodb-network
   app:
     image: promptdesk/promptdesk:latest
+    pull_policy: always
     environment:
       - MONGO_URL=mongodb://mongodb:27017/app
     depends_on:

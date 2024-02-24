@@ -106,4 +106,5 @@ if [ "setup_domain" = "n" ] || [ "setup_domain" = "N" ]; then
     curl -L -o ./docker-compose.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
 fi
 
+#start the docker compose with pull from latest images
 docker compose up
