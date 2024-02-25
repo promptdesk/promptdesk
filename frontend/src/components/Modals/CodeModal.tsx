@@ -18,7 +18,7 @@ const transformObject = (obj: {
 const CodeModal = () => {
   const { promptObject } = promptStore() as { promptObject: any };
   const [apiKey, setApiKey] = useState("");
-  const [serviceURL, setServiceURL] = useState("");
+  const [serviceURL, setServiceURL] = useState(window.location.origin);
 
   useEffect(() => {
     let token = undefined;

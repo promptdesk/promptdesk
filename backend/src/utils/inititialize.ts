@@ -28,6 +28,11 @@ var sample: any = new Sample();
 let isSetupCompleted = false;
 
 export const checkIfFirstRun = async function () {
+
+  if(process.env.NODE_ENV == "test") {
+    return true;
+  }
+
   if (isSetupCompleted == true) {
     return false;
   }
@@ -81,7 +86,7 @@ export async function generateInitialOrganization(body: any) {
 }
 
 //only runs if the environment is development or test
-export async function automaticDevTestEnvironmentSetup() {
+export async function automaticTestEnvironmentSetup() {
   if (
     process.env.SETUP == "true" ||
     process.env.NODE_ENV == "development" ||
@@ -90,11 +95,22 @@ export async function automaticDevTestEnvironmentSetup() {
     let isFirstRun = await checkIfFirstRun();
     console.log("INFO :: FIRST RUN:", isFirstRun);
     console.log("INFO :: ENV:", process.env.NODE_ENV);
-    if (!isFirstRun && (process.env.NODE_ENV !== "test" && process.env.NODE_ENV !== "development")) {
+
+    if(isFirstRun && (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "test")) {
+      console.log("RUN!");
+    } else {
       return "Test environment already setup or not in test/development mode.";
     }
+
+    //wait until mongoose.connection.readyState is 1
+    while (mongoose.connection.readyState !== 1) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
     if (process.env.NODE_ENV == "test") {
       console.log("INFO :: RESET DATABASE");
+      //print mongoose status
+      console.log("MONGOOSE STATUS", mongoose.connection.readyState);
       let collections = await mongoose.connection.db
         .listCollections()
         .toArray();

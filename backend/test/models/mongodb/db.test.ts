@@ -3,7 +3,7 @@ import { describe, it } from "mocha";
 import mongoose from "mongoose";
 import request from "supertest";
 import connectToDatabase from "../../../src/models/mongodb/db";
-import { automaticDevTestEnvironmentSetup } from "../../../src/utils/inititialize";
+import { automaticTestEnvironmentSetup } from "../../../src/utils/inititialize";
 
 describe("MongoDB Database Connection", () => {
   before(async () => {
@@ -14,7 +14,7 @@ describe("MongoDB Database Connection", () => {
     (this as Mocha.Context).timeout(30000);
     const result = await connectToDatabase(true);
     expect(result).to.equal("CONNECTED");
-    const created = await automaticDevTestEnvironmentSetup();
+    const created = await automaticTestEnvironmentSetup();
     expect(created).to.equal("CREATED");
   });
 });

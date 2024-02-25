@@ -4057,7 +4057,7 @@ body .DocSearch-Footer {
   transition:
     width 0.15s cubic-bezier(0, 0.57, 0.21, 0.99),
     box-shadow 0.15s cubic-bezier(0, 0.57, 0.21, 0.99);
-  z-index: 101;
+  z-index: 5;
 }
 
 .app-navigation.static {

@@ -20,7 +20,7 @@ var path = require("path");
 import {
   checkIfFirstRun,
   generateInitialOrganization,
-  automaticDevTestEnvironmentSetup,
+  automaticTestEnvironmentSetup,
 } from "./inititialize";
 
 const authenticate = async function (app: any) {
@@ -127,9 +127,8 @@ const authenticate = async function (app: any) {
     res.clearCookie("organization");
     res.redirect("/auth/login");
   });
-
-  //check if 
-  await automaticDevTestEnvironmentSetup();
+  
+  await automaticTestEnvironmentSetup();
 
   figlet("PromptDesk OS", function (err: any, data: any) {
     if (err) {
