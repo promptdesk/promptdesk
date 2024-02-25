@@ -12,6 +12,7 @@ services:
       - mongodb-network
   app:
     image: promptdesk/promptdesk:latest
+    restart: always
     pull_policy: always
     environment:
       - MONGO_URL=mongodb://mongodb:27017/app
@@ -21,6 +22,7 @@ services:
       - mongodb-network
   nginx:
     image: nginx:latest
+    restart: always
     volumes:
       - ./nginx:/etc/nginx/conf.d:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
@@ -35,6 +37,7 @@ services:
       - mongodb-network
   certbot:
     image: certbot/certbot:latest
+    restart: always
     depends_on:
       - nginx
     volumes:
