@@ -75,12 +75,13 @@ export async function generateInitialOrganization(body: any) {
     body.password,
     organization.id,
   );
-  isSetupCompleted = false;
+  isSetupCompleted = true;
   console.log("INFO :: ORGANIZATION + USER SUCCESSFULLY CREATED");
   return "COMPLETE";
 }
 
-export async function automaticEnvironmentSetup() {
+//only runs if the environment is development or test
+export async function automaticDevTestEnvironmentSetup() {
   if (
     process.env.SETUP == "true" ||
     process.env.NODE_ENV == "development" ||
@@ -89,8 +90,8 @@ export async function automaticEnvironmentSetup() {
     let isFirstRun = await checkIfFirstRun();
     console.log("INFO :: FIRST RUN:", isFirstRun);
     console.log("INFO :: ENV:", process.env.NODE_ENV);
-    if (!isFirstRun && process.env.NODE_ENV !== "test") {
-      return "NOT CREATED*";
+    if (!isFirstRun && (process.env.NODE_ENV !== "test" && process.env.NODE_ENV !== "development")) {
+      return "Test environment already setup or not in test/development mode.";
     }
     if (process.env.NODE_ENV == "test") {
       console.log("INFO :: RESET DATABASE");
@@ -193,8 +194,19 @@ export const populateOrganization = async function (
         prompt_obj.model = chat_model.id;
       }
 
-      await prompt.createPrompt(prompt_obj, organization_id);
+      if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") {
+        if (prompt_obj.project === "test") {
+          await prompt.createPrompt(prompt_obj, organization_id);
+        }
+      } else {
+        await prompt.createPrompt(prompt_obj, organization_id);
+      }
     }
+  }
+
+  //return if process.env.NODE_ENV is not development or test
+  if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") {
+    return "COMPLETE";
   }
 
   //find hashtag_generator prompt
