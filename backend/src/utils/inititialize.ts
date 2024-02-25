@@ -29,7 +29,7 @@ let isSetupCompleted = false;
 
 export const checkIfFirstRun = async function () {
   if (isSetupCompleted == true) {
-    return true;
+    return false;
   }
   var existing_organization = await organization_db.getOrganization();
 
@@ -196,6 +196,10 @@ export const populateOrganization = async function (
 
       if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") {
         if (prompt_obj.project === "test") {
+          if(prompt_obj.name === "short-story-test") {
+            prompt_obj.name = "short-story";
+            delete prompt_obj.project;
+          }
           await prompt.createPrompt(prompt_obj, organization_id);
         }
       } else {

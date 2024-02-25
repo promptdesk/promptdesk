@@ -32,6 +32,7 @@ const authenticate = async function (app: any) {
 
   app.get(["/auth/setup"], async (req: any, res: any) => {
     const shouldSetup = await checkIfFirstRun();
+    console.log("shouldSetup", shouldSetup);
     if (shouldSetup) {
       return res.sendFile(path.join(__dirname, "../../public/setup.html"));
     }
