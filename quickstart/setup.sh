@@ -97,7 +97,7 @@ fi
 
 
 if [ "$setup_domain" = "n" ] || [ "$setup_domain" = "N" ]; then
-    curl -L -o ./nginx/default.conf "$conf_url/nginx/default.conf"
+    curl -L -o ./nginx/default.conf "$conf_url/default.conf"
     curl -L -o ./docker-compose.yml "$compose_url/docker-compose.yml"
 fi
 
