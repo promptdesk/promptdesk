@@ -15,32 +15,34 @@ echo ""
 echo "This process will take approximately 5 minutes"
 echo "----------------------------------------------------------------------------"
 echo "When you are ready to proceed, press Enter"
-echo "To cancel setup, press Ctrl+C and this script will be run again on your next login"
+echo "To cancel setup, press Ctrl+C"
 
 # Confirm removal of existing setup
 if [ -d ./promptdesk ]; then
-    read -p "Existing 'promptdesk' directory found. Remove and continue? (y/N) " confirm
+    echo "Existing 'promptdesk' directory found. Remove and continue? (y/N)"
+    read -r confirm
     if [[ "$confirm" =~ ^[Yy]$ ]]; then
         rm -rf ./promptdesk
+        echo "Removed existing 'promptdesk' directory"
     else
         echo "Setup canceled. Please run the script in a new directory or manually remove the 'promptdesk' directory."
         exit 1
     fi
+else
+    read -r proceed
 fi
 
-#check if docker compose or docker-compose is installed
-if ! [ -x "$(command -v docker compose)" ]; then
-    echo 'Error: docker compose is not installed. Please install docker compose and try again.' >&2
-    echo 'You can find the installation guide here: https://docs.docker.com/compose/install/' >&2
-    exit 1
-fi
+# Check for Docker Compose and OpenSSL installation
+required_commands=("docker compose" "openssl")
+install_guides=("https://docs.docker.com/compose/install/" "https://www.openssl.org/source/")
 
-#check if openssl is installed
-if ! [ -x "$(command -v openssl)" ]; then
-    echo 'Error: openssl is not installed. Please install openssl and try again.' >&2
-    echo 'You can find the installation guide here: https://www.openssl.org/source/' >&2
+for i in "${!required_commands[@]}"; do
+  if ! [ -x "$(command -v ${required_commands[$i]})" ]; then
+    echo "Error: ${required_commands[$i]} is not installed. Please install it and try again." >&2
+    echo "Installation guide: ${install_guides[$i]}" >&2
     exit 1
-fi
+  fi
+done
 
 #check if files can be written to the current directory
 if [ -w . ]; then
@@ -50,8 +52,6 @@ else
     exit 1
 fi
 
-read -r proceed
-
 mkdir -p promptdesk && cd promptdesk &&
 mkdir -p nginx
 
@@ -59,52 +59,46 @@ mkdir -p nginx
 echo "Do you want to setup a domain name with SSL? (y/n)"
 read -r setup_domain
 
-if [ "$setup_domain" = "y" ] || [ "$setup_domain" = "Y" ]; then
+conf_url="https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx"
+compose_url="https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart"
+certbot_config_url="https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs"
 
-    if [ ! -f ./certbot/conf/live/$domain_name/fullchain.pem ]; then
+if [[ "$setup_domain" == "y" || "$setup_domain" == "Y" ]] && [ ! -f "./certbot/conf/live/$domain_name/fullchain.pem" ]; then
 
-        echo "Please enter your domain name (e.g. example.com, subdomain.example.com)"
-        read -r domain_name
-        echo "Please enter your email address for SSL certificate install"
-        read -r email_address
+    echo "Please enter your domain name (e.g. example.com, subdomain.example.com)"
+    read -r domain_name
+    echo "Please enter your email address for SSL certificate install"
+    read -r email_address
 
-        curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/certbot-setup.conf
+    curl -L -o ./nginx/default.conf "$conf_url/certbot-setup.conf"
 
-        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            sed -i "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
-        elif [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
-        fi
+    sed -i'' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
 
-        curl -L -o ./docker-compose-certbot-setup.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-certbot-setup.yml
+    curl -L -o ./docker-compose-certbot-setup.yml "$compose_url/docker-compose-certbot-setup.yml"
 
-        if [ ! -f ./certbot/conf/ssl-dhparams.pem ]; then
-            curl -L --create-dirs -o ./certbot/conf/options-ssl-nginx.conf https://raw.githubusercontent.com/certbot/certbot/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
-            openssl dhparam -out ./certbot/conf/ssl-dhparams.pem 2048
-        fi
-
-        docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d  $domain_name --agree-tos -m $email_address
-        docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d  $domain_name --agree-tos -m $email_address
-
-        curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default-ssl.conf
-
-        if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            sed -i "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
-        elif [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
-        fi
-        curl -L -o ./docker-compose.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose-secure.yml
-
-    else
-        echo "Setup already exists. If you would like to reconfigure, please remove the ./promptdesk directory and run this script again."
+    if [ ! -f ./certbot/conf/ssl-dhparams.pem ]; then
+        mkdir -p ./certbot/conf
+        curl -L -o ./certbot/conf/options-ssl-nginx.conf "$certbot_config_url/options-ssl-nginx.conf"
+        openssl dhparam -out ./certbot/conf/ssl-dhparams.pem 2048
     fi
 
+    docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d "$domain_name" --agree-tos -m "$email_address"
+    docker compose -f docker-compose-certbot-setup.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d "$domain_name" --agree-tos -m "$email_address"
+
+    curl -L -o ./nginx/default.conf "$conf_url/default-ssl.conf"
+
+    sed -i'' -e "s/\${DOMAIN}/$domain_name/g" ./nginx/default.conf
+
+    curl -L -o ./docker-compose.yml "$compose_url/docker-compose-secure.yml"
+
+else
+    echo "Setup already exists or domain not set. To reconfigure, remove ./promptdesk directory and rerun."
 fi
 
-if [ "setup_domain" = "n" ] || [ "setup_domain" = "N" ]; then
-    curl -L -o ./nginx/default.conf https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default.conf
-    curl -L -o ./docker-compose.yml https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml
+
+if [ "$setup_domain" = "n" ] || [ "$setup_domain" = "N" ]; then
+    curl -L -o ./nginx/default.conf "$conf_url/nginx/default.conf"
+    curl -L -o ./docker-compose.yml "$compose_url/docker-compose.yml"
 fi
 
-#start the docker compose with pull from latest images
 docker compose up
