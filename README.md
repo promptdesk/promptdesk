@@ -69,15 +69,15 @@ PromptDesk is available as a Docker image.
 ### Quickstart
 
 ```shell
-mkdir -p nginx && cd nginx && \
-wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/nginx/default.conf -O default.conf && cd .. && \
-wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/docker-compose.yml -O docker-compose.yml && \
-docker compose up --pull always
+wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/setup.sh
+chmod +x setup.sh && ./setup.sh
 ```
 
-**Please ensure that port 80 is available on your machine. If not, you can change the port in the docker-compose.yml file.**
+**Please ensure that port 80 and 443 (optional) is available on your system. If you have a web server running, you may need to stop it before running the setup script.**
 
-Open your web browser and navigate to http://localhost to access the PromptDesk application. Initial setup will require a valid OpenAI API key for installation testing purposes.
+Open your web browser and navigate to [http://localhost](http://localhost) or the domain name provided to access PromptDesk OS. Initial setup will require a valid OpenAI API key for installation testing purposes.
+
+More installation options are available in the [PromptDesk OS GitHub Repository](https://github.com/promptdesk/promptdesk/tree/main/quickstart).
 
 ## 👨‍💻 PromptDesk OS
 
@@ -100,7 +100,7 @@ You can call the prompt you build in the application by using the generate metho
 from promptdesk import PromptDesk
 
 pd = PromptDesk(
-    api_key = "YOUR_PROMPTDESK_API_KEY" #find in /settings
+    api_key = "YOUR_PROMPTDESK_API_KEY", #find in /settings
     service_url = "http://localhost"
 )
 
