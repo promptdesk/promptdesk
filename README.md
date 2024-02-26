@@ -28,15 +28,30 @@
   </a>
 </p>
 
-<h1 align="center">A simple open-source prompt management platform.</h1>
+<h1 align="center">Unlock Bold Innovation with Simplified AI</h1>
 
 <div align="center">
-The best way to build agents and prompt-based applications.
+Cut through the market hype, focus on delivering impactful and meaningful solutions in a rapidly evolving tech landscape.
 </div>
     </br>
   <p align="center">
     <a href="https://promptdesk.ai/docs" rel="dofollow"><strong>Explore the docs »</strong></a>
+    <br />
+      <br/>
+    <a href="https://promptdesk.ai/features">Features</a>
+    ·
+      <a href="https://promptdesk.ai/docs/walkthroughs">Walkthroughs</a>
+    ·
+  <a href="https://promptdesk.ai/podcast">Podcast</a>
+    ·
+    <a href="https://promptdesk.ai/articles">Articles</a>
+    ·
+    <a href="https://promptdesk.ai/contributors">Contributors</a>
+    ·
+    <a href="https://github.com/promptdesk/promptdesk/discussions">Community</a>
   </p>
+
+  
   
   <p align="center">
   Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a> - <a href="https://github.com/promptdesk/promptdesk-js">JavaScript</a>
@@ -54,19 +69,20 @@ We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstar
 
 ## ✨ Features
 
-- 👨‍💻 OpenAI-like minimalist prompt builder
-- 🥸 Prompt variable and logic support with Handlebars.js syntax
-- 📊 Complete audit log of all API calls
-- 🌐 Unlimited vendor-agnostic LLM API integrations
-- 📦 Environment variables support
+- 🤝 Cross-team Collaboration
+- 🔐 Data Privacy and Security
+- 🌐 Any model, any scale
+- 👨‍💻 Python and Javascript SDK
+- 🏠 Local or Proxied Calls 
+- 📈 Comprehensive Logs
+- ♾️ Unlimited Models
 - 🚀 Easy to set up and integrate (5 minutes)
-- 👨‍💻 Community-driven
 
 ## 🚀 Getting Started
 
-PromptDesk is available as a Docker image.
-
 ### Quickstart
+
+Walkthrough the [Quickstart](https://promptdesk.ai/docs/quickstart) guide to get PromptDesk OS up and running in 5 minutes.
 
 ```shell
 wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/setup.sh
