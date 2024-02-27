@@ -32,10 +32,11 @@ const SampleRowHeader: React.FC<any> = ({
             color="primary"
           />
         </div>
-        <button onClick={handleDeleteClicked} className="btn btn-sm btn-neutral normal-case bg-red-100 text-red-600 hover:bg-red-200 ml-2">
-          <span className="font-semibold">
-            Delete
-          </span>
+        <button
+          onClick={handleDeleteClicked}
+          className="btn btn-sm btn-neutral normal-case bg-red-100 text-red-600 hover:bg-red-200 ml-2"
+        >
+          <span className="font-semibold">Delete</span>
         </button>
       </div>
       <div>

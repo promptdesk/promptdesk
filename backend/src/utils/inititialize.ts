@@ -28,8 +28,7 @@ var sample: any = new Sample();
 let isSetupCompleted = false;
 
 export const checkIfFirstRun = async function () {
-
-  if(process.env.NODE_ENV == "test") {
+  if (process.env.NODE_ENV == "test") {
     return true;
   }
 
@@ -96,7 +95,10 @@ export async function automaticTestEnvironmentSetup() {
     console.log("INFO :: FIRST RUN:", isFirstRun);
     console.log("INFO :: ENV:", process.env.NODE_ENV);
 
-    if(isFirstRun && (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "test")) {
+    if (
+      isFirstRun &&
+      (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "test")
+    ) {
       console.log("RUN!");
     } else {
       return "Test environment already setup or not in test/development mode.";
@@ -210,9 +212,12 @@ export const populateOrganization = async function (
         prompt_obj.model = chat_model.id;
       }
 
-      if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") {
+      if (
+        process.env.NODE_ENV !== "development" &&
+        process.env.NODE_ENV !== "test"
+      ) {
         if (prompt_obj.project === "test") {
-          if(prompt_obj.name === "short-story-test") {
+          if (prompt_obj.name === "short-story-test") {
             prompt_obj.name = "short-story";
             delete prompt_obj.project;
           }
@@ -225,7 +230,10 @@ export const populateOrganization = async function (
   }
 
   //return if process.env.NODE_ENV is not development or test
-  if (process.env.NODE_ENV !== "development" && process.env.NODE_ENV !== "test") {
+  if (
+    process.env.NODE_ENV !== "development" &&
+    process.env.NODE_ENV !== "test"
+  ) {
     return "COMPLETE";
   }
 

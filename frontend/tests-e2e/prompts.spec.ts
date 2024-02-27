@@ -53,7 +53,7 @@ test("General prompt", async ({ page }) => {
     maxDiffPixels: 100,
   });
 
-  //go to samples page
+  //View Samples page
   await page.getByRole("button", { name: "Samples" }).click();
   await page.waitForTimeout(2000);
   await expect(page).toHaveScreenshot("samples-page.png", {

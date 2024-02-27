@@ -25,12 +25,6 @@ const CodeArea: React.FC<CodeAreaProps> = ({ label, code, test }) => {
     <>
       <div className="flex justify-between">
         <span>{label}</span>
-        <div className="mb-4">
-          {/*<PlaygroundButton
-                        text="Test"
-                        onClick={() => test()}
-                    />*/}
-        </div>
       </div>
       <pre
         style={{ whiteSpace: "pre-wrap" }}

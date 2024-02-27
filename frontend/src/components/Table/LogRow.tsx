@@ -1,6 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
 import PlaygroundButton from "../Form/PlaygroundButton";
+import Down from "../Icons/Down";
+import Logs from "../Icons/Logs";
 
 interface LogRowProps {
   index: number;
@@ -56,13 +58,16 @@ const LogRow: React.FC<LogRowProps> = ({
         >
           {log.status}
         </td>
-        <td
-          onClick={() => {
-            goToLogDetails(log.id);
-          }}
-          className="px-3 py-4 text-sm font-medium text-right whitespace-nowrap"
-        >
-          View
+        <td className="text-sm py-1 font-medium text-right text-right whitespace-nowrap flex items-center space-x-2">
+          <div className="p-1 hover:bg-gray-200 rounded cursor-pointer text-gray-600 hover:text-gray-800">
+            <Down />
+          </div>
+          <div
+            className="p-1 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded cursor-pointer"
+            onClick={() => goToLogDetails(log.id)}
+          >
+            <Logs />
+          </div>
         </td>
       </tr>
       {expandedRows[log.id] && (
@@ -70,19 +75,19 @@ const LogRow: React.FC<LogRowProps> = ({
           <td colSpan={6}>
             {promptName !== "N/a" && (
               <PlaygroundButton
-                text="Go to Prompt"
+                text="Edit Prompt"
                 onClick={() => push(`workspace/${log.prompt_id}`)}
               />
             )}
             {modelName !== "N/a" && (
               <PlaygroundButton
-                text="Go to Model"
+                text="View Model"
                 onClick={() => push(`models/${log.model_id}`)}
               />
             )}
             {promptName !== "N/a" && (
               <PlaygroundButton
-                text="Go to Samples"
+                text="View Samples"
                 onClick={() => push(`workspace/${log.prompt_id}/samples`)}
               />
             )}

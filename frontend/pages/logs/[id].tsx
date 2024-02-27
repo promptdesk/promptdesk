@@ -88,19 +88,19 @@ export default function SingleLogPage() {
             <div className="space-x-2">
               {promptName && (
                 <PlaygroundButton
-                  text="Go to Prompt"
+                  text="Edit Prompt"
                   onClick={() => push(`/workspace/${log.prompt_id}`)}
                 />
               )}
               {modelName && (
                 <PlaygroundButton
-                  text="Go to Model"
+                  text="View Model"
                   onClick={() => push(`/models/${log.model_id}`)}
                 />
               )}
               {promptName && (
                 <PlaygroundButton
-                  text="Go to Samples"
+                  text="View Samples"
                   onClick={() => push(`/workspace/${log.prompt_id}/samples`)}
                 />
               )}

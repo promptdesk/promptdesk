@@ -7,7 +7,7 @@ export default function ModelsHomeRedirect() {
   const { models } = modelStore();
 
   useEffect(() => {
-    if(models.length > 0) {
+    if (models.length > 0) {
       const model = models[0];
       const newUrl = `/models/${model.id}`;
       push(newUrl);

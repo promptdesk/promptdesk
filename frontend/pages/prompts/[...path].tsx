@@ -5,7 +5,6 @@ import { modelStore } from "@/stores/ModelStore";
 import { tabStore } from "@/stores/TabStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import { Prompt } from "@/interfaces/prompt";
-import PromptsTable from "@/components/Table/PromptsTable";
 import Head from "next/head";
 import InputField from "@/components/Form/InputField";
 import Link from "next/link";
@@ -30,7 +29,7 @@ export default function PromptsPage() {
 
   useEffect(() => {
     const fetchPrompts = async () => {
-      const promptList = await Promise.all(
+      let promptList = await Promise.all(
         JSON.parse(JSON.stringify(prompts)).map(async (prompt: Prompt) => {
           const model = models.find((model) => model.id === prompt.model);
           if (model) {
@@ -41,6 +40,8 @@ export default function PromptsPage() {
           return prompt;
         }),
       );
+      //only include prompts where prompt.new is undefined or false
+      promptList = promptList.filter((prompt) => !prompt.new);
       setPromptList(promptList);
     };
 
@@ -53,10 +54,11 @@ export default function PromptsPage() {
 
   const search = (searchQuery: string) => {
     //combine name, description, model_type, and model into one string and filter based on searchQuery
-    const filteredList = promptList.filter((prompt) => {
+    let filteredList = promptList.filter((prompt) => {
       const promptString = `${prompt.name} ${prompt.description} ${prompt.model_type} ${prompt.model}`;
       return promptString.toLowerCase().includes(searchQuery.toLowerCase());
     });
+    filteredList = filteredList.filter((prompt) => !prompt.new);
 
     setFilteredList(filteredList);
   };

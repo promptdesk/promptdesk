@@ -16,19 +16,6 @@ const ModelAPISettings: React.FC<any> = ({
 }) => {
   return (
     <>
-      <div className="flex justify-between mb-2 mt-4">
-        <h3 className="mb-0">API Call</h3>{" "}
-        <PlaygroundButton
-          text="Test"
-          onClick={async () => {
-            var api_response = await testAPI({
-              api_call: api,
-              type: selectedModel.type,
-            });
-            setApiResponse(api_response);
-          }}
-        />
-      </div>
       <CodeEditor
         height="30vh"
         style={style}

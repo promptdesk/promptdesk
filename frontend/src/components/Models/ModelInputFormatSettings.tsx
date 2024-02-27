@@ -19,17 +19,6 @@ const ModelInputFormatSettings: React.FC<any> = ({
     <>
       <div className="flex justify-between mb-2 mt-4">
         <h3 className="mb-0">Input format</h3>
-        <PlaygroundButton
-          text="Test"
-          onClick={async () => {
-            const api_response = await testAPI({
-              api_call: api,
-              input_format: inputFormat,
-              type: selectedModel.type,
-            });
-            setInputFormatResponse(api_response);
-          }}
-        />
       </div>
       <CodeEditor
         height="50vh"

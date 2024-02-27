@@ -20,18 +20,6 @@ const ModelOutputFormatSettings: React.FC<any> = ({
     <>
       <div className="flex justify-between mb-2 mt-4">
         <h3 className="mb-0">Output format</h3>
-        <PlaygroundButton
-          text="Test"
-          onClick={async () => {
-            const api_response = await testAPI({
-              api_call: api,
-              input_format: inputFormat,
-              output_format: outputFormat,
-              type: selectedModel.type,
-            });
-            setOutputFormatResponse(api_response);
-          }}
-        />
       </div>
       <CodeEditor
         height="30vh"

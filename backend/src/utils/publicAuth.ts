@@ -127,7 +127,7 @@ const authenticate = async function (app: any) {
     res.clearCookie("organization");
     res.redirect("/auth/login");
   });
-  
+
   await automaticTestEnvironmentSetup();
 
   figlet("PromptDesk OS", function (err: any, data: any) {

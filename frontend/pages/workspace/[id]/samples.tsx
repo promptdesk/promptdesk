@@ -68,7 +68,7 @@ export default function SamplesListPage() {
               <span className={"prompt-name"}>{getPromptName(prompt_id)}</span>
             </h1>
             <PlaygroundButton
-              text="Back"
+              text="Edit Prompt"
               onClick={goBackToPromptPage}
               isFull={false}
             />
