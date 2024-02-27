@@ -67,27 +67,27 @@ const authenticate = async function (app: any) {
 
     //validate email, password and  openai_api_key - make sure they are not empty
     if (body.email == undefined || body.email == "") {
-      return res.status(400).json({ error: "Email cannot be empty." });
+      return res.status(400).json({ error:true, message: "Email cannot be empty." });
     }
 
     if (body.password == undefined || body.password == "") {
-      return res.status(400).json({ error: "Password cannot be empty." });
+      return res.status(400).json({ error:true, message: "Password cannot be empty." });
     }
 
     if (body.openai_api_key == undefined || body.openai_api_key == "") {
-      return res.status(400).json({ error: "OpenAI API key cannot be empty." });
+      return res.status(400).json({ error:true, message: "OpenAI API key cannot be empty." });
     }
 
     //check if email already exists
     let existing_user = await user_db.findUser(body.email);
 
     if (existing_user != undefined) {
-      return res.status(400).json({ error: "Email already exists." });
+      return res.status(400).json({ error:true, message: "Email already exists." });
     }
 
     const shouldSetup = await checkIfFirstRun();
     if (!shouldSetup) {
-      return res.status(400).json({ error: "Organization already exists." });
+      return res.status(400).json({ error:true, message: "Organization already exists." });
     }
 
     await generateInitialOrganization(body);
@@ -100,7 +100,7 @@ const authenticate = async function (app: any) {
       let body = req.body;
       let user = await user_db.findUser(body.email);
       if (user == undefined) {
-        return res.status(400).json({ error: "Wrong email or password." });
+        return res.status(400).json({ error: true, message: "Wrong email or password." });
       }
       let match = await bcrypt.compare(body.password, user.password);
       if (match) {
@@ -114,11 +114,11 @@ const authenticate = async function (app: any) {
           maxAge: expiry,
           httpOnly: false,
         });
-        return res.status(200).json({ message: "Login successful." });
+        return res.status(200).json({ error:false, message: "Login successful." });
       }
-      return res.status(400).json({ error: "Wrong email or password." });
+      return res.status(400).json({ error:true, message: "Wrong email or password." });
     } catch (error) {
-      return res.status(400).json({ error: "Wrong email or password." });
+      return res.status(400).json({ error:true, message: "Wrong email or password." });
     }
   });
 
@@ -136,7 +136,9 @@ const authenticate = async function (app: any) {
       console.dir(err);
       return;
     }
-    console.log(data);
+    setTimeout(() => {
+      console.log(data);
+    }, 2000);
   });
 };
 

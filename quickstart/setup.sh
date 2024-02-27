@@ -19,15 +19,34 @@ echo "To cancel setup, press Ctrl+C"
 
 # Confirm removal of existing setup
 if [ -d ./promptdesk ]; then
-    echo "Existing 'promptdesk' directory found. Remove and continue? (y/N)"
-    read -r confirm
-    if [[ "$confirm" =~ ^[Yy]$ ]]; then
-        rm -rf ./promptdesk
-        echo "Removed existing 'promptdesk' directory"
-    else
-        echo "Setup canceled. Please run the script in a new directory or manually remove the 'promptdesk' directory."
-        exit 1
-    fi
+    echo ""
+    echo "Existing 'promptdesk' directory found. Choose an option:"
+    echo "1) Start app with 'docker-compose up'"
+    echo "2) Quit setup"
+    echo "3) Delete 'promptdesk' and setup again"
+    read -r user_choice
+
+    case $user_choice in
+        1)
+            echo "Starting app with 'docker compose up'..."
+            docker compose up
+            ;;
+        2)
+            echo "Setup canceled. Exiting..."
+            exit 0
+            ;;
+        3)
+            echo "Removing existing 'promptdesk' directory..."
+            rm -rf ./promptdesk
+            echo "Removed. Proceeding with setup..."
+            # Insert your setup commands here
+            ;;
+        *)
+            echo "Invalid option. Exiting..."
+            exit 1
+            ;;
+    esac
+
 else
     read -r proceed
 fi

@@ -66,6 +66,7 @@
           } catch (e) {
             this.isLoggingIn = false;
             this.password = "";
+            alert(e.response.data.message || "500 - an error occurred");
             return;
           }
         },

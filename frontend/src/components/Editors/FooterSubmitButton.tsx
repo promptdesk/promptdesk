@@ -23,9 +23,10 @@ const FooterSubmitButton: React.FC<any> = ({
       type="button"
       aria-haspopup="true"
       aria-expanded="false"
+      onClick={handleClick}
     >
       <span className="btn-label-wrap">
-        <span className="btn-label-inner" onClick={handleClick}>
+        <span className="btn-label-inner">
           {data.loading ? "Processing..." : "Submit"}
         </span>
       </span>

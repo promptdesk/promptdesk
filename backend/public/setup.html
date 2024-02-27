@@ -146,7 +146,7 @@
             var response = await axios.post("/auth/setup", data);
             window.location.href = "/auth/login";
           } catch (e) {
-            alert(e.response.data.error);
+            alert(e.response.data.message || "500 - an error occurred");
             this.isSettingUp = false;
             return;
           }
