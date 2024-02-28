@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import path from "path";
 import { apiKeyMiddleware } from "./utils/authorization";
 import fs from "fs";
+import helmet from "helmet";
 
 var environment = process.env.NODE_ENV;
 
@@ -37,6 +38,8 @@ import organizationRouter from "./routes/api/organization";
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(helmet())
+app.disable('x-powered-by')
 
 // Port configuration*/
 const port = process.env.PROMPT_SERVER_PORT || 4000;
@@ -113,6 +116,17 @@ app.use(express.static("./dist"));
 app.get(["/*"], (req, res) => {
   res.sendFile(path.join(__dirname, "../public/404.html"));
 });
+
+// custom 404
+app.use((req, res, next) => {
+  res.status(404).send("Sorry can't find that!")
+})
+
+// custom error handler
+app.use((err:any, req:any, res:any, next:any) => {
+  console.error(err.stack)
+  res.status(500).send({ error: true, message: '500 Something broke!'})
+})
 
 app.listen(port, () => {
   console.log("INFO :: INTERNAL SERVER RUNNING ON PORT " + port);
