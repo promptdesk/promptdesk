@@ -38,8 +38,8 @@ import organizationRouter from "./routes/api/organization";
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(helmet())
-app.disable('x-powered-by')
+//app.use(helmet())
+//app.disable('x-powered-by')
 
 // Port configuration*/
 const port = process.env.PROMPT_SERVER_PORT || 4000;

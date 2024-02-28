@@ -6,6 +6,14 @@ import { Organization, Model, Prompt, Variable } from "../models/allModels";
 import { User } from "../models/mongodb/user";
 import { Log } from "../models/mongodb/log";
 var figlet = require("figlet");
+import { rateLimit } from 'express-rate-limit'
+
+const limiter = rateLimit({
+	windowMs: 60 * 60 * 1000, // 1 hour
+	limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+})
 
 var organization_db = new Organization();
 var user_db = new User();
@@ -95,7 +103,7 @@ const authenticate = async function (app: any) {
     return res.status(200).json({ message: "Setup successful." });
   });
 
-  app.post("/auth/login", async (req: any, res: any) => {
+  app.post("/auth/login", limiter, async (req: any, res: any) => {
     try {
       let body = req.body;
       let user = await user_db.findUser(body.email);
