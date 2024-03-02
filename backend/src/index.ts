@@ -33,6 +33,7 @@ import samplesRouter from "./routes/api/samples";
 import logsRouter from "./routes/api/logs";
 import variablesRouter from "./routes/api/variables";
 import organizationRouter from "./routes/api/organization";
+import usersRouter from "./routes/api/users";
 
 // Middleware
 app.use(cors());
@@ -62,6 +63,7 @@ app.use("/api", logsRouter);
 app.use("/api", modelsRouter);
 app.use("/api", variablesRouter);
 app.use("/api", organizationRouter);
+app.use("/api", usersRouter);
 
 app.all("/api/*", (req, res) => {
   return res.status(404).send({ error: true, message: "API not found!" });
@@ -119,14 +121,14 @@ app.get(["/*"], (req, res) => {
 
 // custom 404
 app.use((req, res, next) => {
-  res.status(404).send("Sorry can't find that!")
-})
+  res.status(404).send("Sorry can't find that!");
+});
 
 // custom error handler
-app.use((err:any, req:any, res:any, next:any) => {
-  console.error(err.stack)
-  res.status(500).send({ error: true, message: '500 Something broke!'})
-})
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err.stack);
+  res.status(500).send({ error: true, message: "500 Something broke!" });
+});
 
 app.listen(port, () => {
   console.log("INFO :: INTERNAL SERVER RUNNING ON PORT " + port);

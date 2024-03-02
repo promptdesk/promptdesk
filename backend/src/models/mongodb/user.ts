@@ -28,6 +28,16 @@ class User {
     await user.save();
     return user._id.toString();
   }
+
+  async findUsersByOrganizationId(organizationId: string) {
+    const users = await userSchema.find({ organization_id: organizationId });
+    return users;
+  }
+
+  async deleteUserByEmail(email: string) {
+    const user = await userSchema.deleteOne({ email });
+    return user.acknowledged;
+  }
 }
 
 export { User };
