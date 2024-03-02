@@ -35,8 +35,8 @@ const GlobalModal: React.FC<IGlobalModalProps> = ({
       }
     });
     return () => {
-      document.removeEventListener("click", () => { });
-      document.removeEventListener("keydown", () => { });
+      document.removeEventListener("click", () => {});
+      document.removeEventListener("keydown", () => {});
     };
   }, []);
 

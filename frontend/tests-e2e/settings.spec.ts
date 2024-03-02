@@ -10,7 +10,7 @@ test("View settings", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Environment Variables" }),
   ).toBeVisible();
-  await expect(page.getByTestId("pg-save-btn")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Users" })).toBeVisible();
   await expect(page).toHaveScreenshot("settings.png", {
     maxDiffPixelRatio: 0.02,
   });

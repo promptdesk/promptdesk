@@ -4,18 +4,23 @@ import { variableStore } from "@/stores/VariableStore";
 import { organizationStore } from "@/stores/OrganizationStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import EnvVariableModal from "@/components/Modals/EnvVariableModal";
-import { shouldShowCreateUserModal, shouldShowEnvVariableModal } from "@/stores/ModalStore";
+import {
+  shouldShowCreateUserModal,
+  shouldShowEnvVariableModal,
+} from "@/stores/ModalStore";
 import VariablesTable from "@/components/Table/VariablesTable";
-import CreateUserModal from "@/components/Modals/CreateUserModal"
+import CreateUserModal from "@/components/Modals/CreateUserModal";
 import OrganizationTable from "@/components/Table/OrganizationTable";
 import Head from "next/head";
 import UsersTable from "@/components/Table/UsersTable";
 import { userStore } from "@/stores/UserStore";
+import InputField from "@/components/Form/InputField";
 
 export default function VariablesPage() {
   const { show_env_variable_modal, toggle_env_variable_modal } =
     shouldShowEnvVariableModal();
-  const { show_create_user_modal, toggle_create_user_modal } = shouldShowCreateUserModal()
+  const { show_create_user_modal, toggle_create_user_modal } =
+    shouldShowCreateUserModal();
   const { variables, fetchVariables, updateVariables } = variableStore();
   const { organization, fetchOrganization } = organizationStore();
   const [variableList, setVariableList] = useState<Variable[]>([]);

@@ -52,6 +52,9 @@ const ModelSettings = ({
           display={inputFormat != undefined}
           text="This model format is deprecated. Please download and upload sample models here: https://github.com/promptdesk/promptdesk/tree/main/models."
         />
+        <div className="flex justify-between mb-2 mt-4">
+          <h3 className="mb-0">API Call</h3>
+        </div>
         <ModelAPISettings
           api={api}
           selectedModel={selectedModel}

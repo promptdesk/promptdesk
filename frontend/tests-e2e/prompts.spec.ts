@@ -60,7 +60,7 @@ test("General prompt", async ({ page }) => {
     maxDiffPixelRatio: 0.1,
   });
 
-  await page.getByRole("button", { name: "Back" }).click();
+  await page.getByRole("button", { name: "Edit Prompt" }).click();
   await page.waitForTimeout(2000);
   await expect(page).toHaveScreenshot("workspace-page.png", {
     maxDiffPixels: 100,
