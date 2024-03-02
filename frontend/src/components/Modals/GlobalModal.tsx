@@ -22,17 +22,21 @@ const GlobalModal: React.FC<IGlobalModalProps> = ({
 
     document.addEventListener("click", (e) => {
       if (isModalOpen && modeRef.current?.contains(e.target as Node))
-        toggleModal();
+        if (isModalOpen) {
+          toggleModal();
+        }
     });
 
     document.addEventListener("keydown", (e) => {
       if (isModalOpen && e.key === "Escape") {
-        toggleModal();
+        if (isModalOpen) {
+          toggleModal();
+        }
       }
     });
     return () => {
-      document.removeEventListener("click", () => {});
-      document.removeEventListener("keydown", () => {});
+      document.removeEventListener("click", () => { });
+      document.removeEventListener("keydown", () => { });
     };
   }, []);
 

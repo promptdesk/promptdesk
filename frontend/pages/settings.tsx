@@ -4,14 +4,18 @@ import { variableStore } from "@/stores/VariableStore";
 import { organizationStore } from "@/stores/OrganizationStore";
 import PlaygroundButton from "@/components/Form/PlaygroundButton";
 import EnvVariableModal from "@/components/Modals/EnvVariableModal";
-import { shouldShowEnvVariableModal } from "@/stores/ModalStore";
+import { shouldShowCreateUserModal, shouldShowEnvVariableModal } from "@/stores/ModalStore";
 import VariablesTable from "@/components/Table/VariablesTable";
+import CreateUserModal from "@/components/Modals/CreateUserModal"
 import OrganizationTable from "@/components/Table/OrganizationTable";
 import Head from "next/head";
+import UsersTable from "@/components/Table/UsersTable";
+import { userStore } from "@/stores/UserStore";
 
 export default function VariablesPage() {
   const { show_env_variable_modal, toggle_env_variable_modal } =
     shouldShowEnvVariableModal();
+  const { show_create_user_modal, toggle_create_user_modal } = shouldShowCreateUserModal()
   const { variables, fetchVariables, updateVariables } = variableStore();
   const { organization, fetchOrganization } = organizationStore();
 
@@ -71,6 +75,7 @@ export default function VariablesPage() {
       </Head>
       {/* only show EnvVariableModal if show_env_variable_modal is true */}
       {show_env_variable_modal && <EnvVariableModal />}
+      {show_create_user_modal && <CreateUserModal />}
       <div className="pg-header">
         <div className="pg-header-section pg-header-title">
           <h1 className="pg-page-title">Settings</h1>
@@ -133,6 +138,31 @@ export default function VariablesPage() {
                 handleSave={handleSave}
                 handleDeleteClick={handleDeleteClick}
               />
+            </div>
+          </div>
+        </div>
+        <div className="sm:flex sm:items-center mt-8">
+          <div className="sm:flex-auto">
+            <h1 className="text-base font-semibold leading-6 text-gray-900">
+              Users
+            </h1>
+            <p className="mt-2 text-sm text-gray-700">
+              Manage users within your organization
+            </p>
+          </div>
+          <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+            <PlaygroundButton
+              text="Add user"
+              onClick={() => {
+                toggle_create_user_modal();
+              }}
+            />
+          </div>
+        </div>
+        <div className="mt-2 flow-root">
+          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+              <UsersTable />
             </div>
           </div>
         </div>

@@ -8,7 +8,6 @@ const UsersTable = () => {
     const { users, fetchUsers } = userStore();
     const [usersList, setUsersList] = useState<User[]>([])
 
-
     useEffect(() => {
         fetchUsers()
     }, [fetchUsers])

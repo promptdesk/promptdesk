@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { variableStore } from "@/stores/VariableStore";
-import { shouldShowCreateUserModal, shouldShowEnvVariableModal } from "@/stores/ModalStore";
+import { shouldShowCreateUserModal } from "@/stores/ModalStore";
 import GlobalModal from "./GlobalModal";
 import { userStore } from "@/stores/UserStore";
 

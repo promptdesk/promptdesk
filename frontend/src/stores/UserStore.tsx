@@ -29,7 +29,6 @@ const userStore = create<IUserStore>((set) => {
         },
         resetPassword: async (email: string) => {
             const data = await fetchFromPromptdesk("/users/reset", "POST", { email })
-            console.log(data)
             return data
         }
     }
