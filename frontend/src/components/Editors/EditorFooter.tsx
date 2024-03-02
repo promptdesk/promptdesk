@@ -64,12 +64,14 @@ function EditorFooter() {
             onClick={toggle_code_modal}
             isFull={true}
           />
-          <PlaygroundButton
-            text="Samples"
-            onClick={goToSamplesPage}
-            id="samples-prompt"
-            isFull={true}
-          />
+          {!promptObject.new && (
+            <PlaygroundButton
+              text="Samples"
+              onClick={goToSamplesPage}
+              id="samples-prompt"
+              isFull={true}
+            />
+          )}
           <PlaygroundButton
             text="Export"
             onClick={() => exportPrompt(promptObject, modelObject)}

@@ -81,7 +81,14 @@ export default function PromptsPage() {
           const text = e.target?.result;
           if (text) {
             const prompt = JSON.parse(text as string) as any;
-            const newId = await createLocalPrompt(prompt);
+            prompt.new = true;
+            if (prompt.notes) {
+              alert(prompt.notes);
+            }
+            const newId = await createLocalPrompt(
+              getPath({ path: query.path }),
+              prompt,
+            );
             setActiveTabById(newId as string);
             push(`/workspace/${newId}`);
           }

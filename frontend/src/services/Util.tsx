@@ -100,13 +100,44 @@ export function exportPrompt(promptObject: any, modelObject: any) {
   delete obj.project;
   delete obj.id;
   delete obj.model;
+  obj["notes"] = "";
+  //loop through model_parameters and add to notes
+  if (obj.model_parameters) {
+    obj.notes += "Model Parameters\n";
+    Object.keys(obj.model_parameters).forEach((key) => {
+      obj.notes += `${key}: ${obj.model_parameters[key]}\n`;
+    });
+    obj.notes += "\n";
+  }
+  obj.notes += "Model Information\n";
+  obj.notes += `Name: ${modelObject.name}\n`;
+  obj.notes += `Provider: ${modelObject.provider}\n`;
   delete obj.model_parameters;
   obj.model_type = modelObject.type;
   const file = new Blob([JSON.stringify(obj, null, 4)], { type: "text/plain" });
   element.href = URL.createObjectURL(file);
-  element.download = `${promptObject.name}.json`;
+  element.download = `prompt.json`;
   document.body.appendChild(element); // Required for this to work in FireFox
   element.click();
   //remove element
+  document.body.removeChild(element);
+}
+
+export function exportModel(selectedModel: any) {
+  const element = document.createElement("a");
+  var json_file = JSON.parse(JSON.stringify(selectedModel));
+  delete json_file.organization_id;
+  delete json_file.createdAt;
+  delete json_file.updatedAt;
+  delete json_file.__v;
+  delete json_file.id;
+  json_file["default"] = false;
+  const file = new Blob([JSON.stringify(json_file, null, 4)], {
+    type: "application/json",
+  });
+  element.href = URL.createObjectURL(file);
+  element.download = "model.json";
+  document.body.appendChild(element);
+  element.click();
   document.body.removeChild(element);
 }

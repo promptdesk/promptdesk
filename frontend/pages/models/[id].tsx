@@ -8,6 +8,7 @@ import ModelSettings from "@/components/Models/ModelSettings";
 import Head from "next/head";
 import ConfirmModal from "@/components/Modals/ConfirmModal";
 import toast, { Toaster } from "react-hot-toast";
+import { exportModel } from "@/services/Util";
 import _ from "lodash";
 
 export default function ModelsPage() {
@@ -76,8 +77,8 @@ export default function ModelsPage() {
 
   const handleSave = () => {
     selectedModel["api_call"] = api;
-    selectedModel["input_format"] = inputFormat;
-    selectedModel["output_format"] = outputFormat;
+    selectedModel["response_mapping"] = responseMapping;
+    selectedModel["request_mapping"] = requestMapping;
     selectedModel["model_parameters"] = parameters;
     try {
       JSON.parse(JSON.stringify(selectedModel));
@@ -106,25 +107,6 @@ export default function ModelsPage() {
         const msg = err?.message;
         toast.error(msg, { position: "bottom-right" });
       });
-  };
-
-  const handleExport = () => {
-    const element = document.createElement("a");
-    var json_file = JSON.parse(JSON.stringify(selectedModel));
-    delete json_file.organization_id;
-    delete json_file.createdAt;
-    delete json_file.updatedAt;
-    delete json_file.__v;
-    delete json_file.id;
-    json_file["default"] = false;
-    const file = new Blob([JSON.stringify(json_file, null, 4)], {
-      type: "application/json",
-    });
-    element.href = URL.createObjectURL(file);
-    element.download = "model.json";
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
   };
 
   const handleImport = () => {
@@ -156,9 +138,12 @@ export default function ModelsPage() {
           (model) => model.default,
         )
       ) {
-        toast.error("Default model exist, can't set this model as default", {
-          position: "bottom-right",
-        });
+        toast.error(
+          "Default model already exists. Please set existing default model to false.",
+          {
+            position: "bottom-right",
+          },
+        );
         return;
       }
     }
@@ -184,7 +169,10 @@ export default function ModelsPage() {
             <div className="space-x-2">
               <PlaygroundButton text="Save" onClick={handleSave} />
               <PlaygroundButton text="Duplicate" onClick={handleDuplicate} />
-              <PlaygroundButton text="Export" onClick={handleExport} />
+              <PlaygroundButton
+                text="Export"
+                onClick={() => exportModel(selectedModel)}
+              />
               <PlaygroundButton text="Import" onClick={handleImport} />
               <PlaygroundButton
                 text="Delete"

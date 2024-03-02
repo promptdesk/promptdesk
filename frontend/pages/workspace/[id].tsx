@@ -95,6 +95,11 @@ export default function SinglePromptEditPage() {
     push(`/workspace/${newId}`);
   };
 
+  //if promptObject.id === "" and no elements in tabs redirect to /prompts
+  if (promptObject.id === "" && tabs.length === 0) {
+    push("/prompts");
+  }
+
   return (
     <>
       <Head>

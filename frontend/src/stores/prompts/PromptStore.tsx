@@ -11,7 +11,7 @@ interface PromptStore {
   parsingError: string | null;
   updateLocalPromptValues: (key: any, value: any) => void;
   activateLocalPrompt: (id: string) => void;
-  createLocalPrompt: (prompt?: any) => string | undefined;
+  createLocalPrompt: (projectName?: string, prompt?: any) => string | undefined;
   updateLocalPrompt: (promptObject: Prompt) => void;
   addToLocalPrompts: (prompt: Prompt) => void;
 }
@@ -79,18 +79,35 @@ const promptStore = create<PromptStore>((set, get) => ({
   },
 
   createLocalPrompt: (projectName: string = "", prompt?: Prompt) => {
+    let promptModelType = prompt?.model_type;
+
     let defaultModel = modelStore
       .getState()
       .models.find((model) => model.default);
 
-    if (!defaultModel) {
+    console.log("defaultModel - 1");
+
+    if (
+      !defaultModel ||
+      (promptModelType !== defaultModel.type && promptModelType)
+    ) {
       //if models is empty then return
       if (modelStore.getState().models.length === 0) {
         alert("You must create a model first before creating a prompt.");
         return;
       }
 
-      defaultModel = modelStore.getState().models[0];
+      //return first model with type promptModelType
+      defaultModel = modelStore
+        .getState()
+        .models.find((model) => model.type === promptModelType);
+
+      if (!defaultModel) {
+        alert(
+          `You must create a model of type ${promptModelType} before creating a prompt.`,
+        );
+        return;
+      }
     }
 
     let newPrompt: Prompt = {
@@ -121,6 +138,8 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
       }
     }
+
+    console.log("defaultModel - 4", newPrompt, "asdf");
 
     set((state) => {
       const prompts = [...state.prompts, newPrompt];

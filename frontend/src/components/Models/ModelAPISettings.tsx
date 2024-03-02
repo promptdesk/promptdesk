@@ -25,18 +25,6 @@ const ModelAPISettings: React.FC<any> = ({
           setFormattedApi(value);
         }}
       />
-      <Error
-        display={apiResponse.status >= 500 || apiResponse.status === 404}
-        text="Please verify the URL, headers and other API-related request information."
-      />
-      <Warning
-        display={apiResponse.status < 500 && apiResponse.status !== 404}
-        text="A 400 series response code may indicate that the API call was valid. If the response status code is not 404 or 500+, you may proceed to the next step. Make sure you define all {{environment_variables}} in Settings => Environment Variables."
-      />
-      {generate_pre_compontent(
-        apiResponse.status,
-        JSON.stringify(apiResponse.data, null, 4),
-      )}
     </>
   );
 };

@@ -4,30 +4,20 @@ import CodeEditor from "@/components/Editors/CodeEditor";
 import Warning from "../Alerts/Warning";
 import ModelSettingsOptions from "./ModelSettingsOptions";
 import ModelAPISettings from "./ModelAPISettings";
-import ModelInputFormatSettings from "./ModelInputFormatSettings";
-import ModelOutputFormatSettings from "./ModelOutputFormatSettings";
 
 const ModelSettings = ({
   selectedModel,
   updateModel,
   setFormattedApi,
   api,
-  apiResponse,
   setApiResponse,
-  inputFormatResponse,
-  setInputFormatResponse,
   setFormattedParameters,
-  outputFormatResponse,
-  setOutputFormatResponse,
   parameters,
   inputFormat,
-  setInputFormat,
-  outputFormat,
-  setOutputFormat,
-  testAPI,
   responseMapping,
   requestMapping,
   setRequestMapping,
+  setResponseMapping,
 }: any) => {
   const style = "rounded-xl overflow-hidden shadow-lg";
 
@@ -64,9 +54,7 @@ const ModelSettings = ({
         />
         <ModelAPISettings
           api={api}
-          testAPI={testAPI}
           selectedModel={selectedModel}
-          apiResponse={apiResponse}
           setApiResponse={setApiResponse}
           style={style}
           setFormattedApi={setFormattedApi}
@@ -75,29 +63,7 @@ const ModelSettings = ({
 
         {inputFormat != undefined ? (
           <>
-            <ModelInputFormatSettings
-              api={api}
-              testAPI={testAPI}
-              selectedModel={selectedModel}
-              inputFormat={inputFormat}
-              setInputFormat={setInputFormat}
-              inputFormatResponse={inputFormatResponse}
-              setInputFormatResponse={setInputFormatResponse}
-              style={style}
-              generate_pre_compontent={generate_pre_compontent}
-            />
-            <ModelOutputFormatSettings
-              api={api}
-              testAPI={testAPI}
-              selectedModel={selectedModel}
-              inputFormat={inputFormat}
-              outputFormat={outputFormat}
-              setOutputFormat={setOutputFormat}
-              outputFormatResponse={outputFormatResponse}
-              setOutputFormatResponse={setOutputFormatResponse}
-              style={style}
-              generate_pre_compontent={generate_pre_compontent}
-            />
+            <p>Please update this model.</p>
           </>
         ) : (
           <>
@@ -125,7 +91,7 @@ const ModelSettings = ({
               language="json"
               handleChange={(value: any) => {
                 value = JSON.parse(value);
-                setRequestMapping(value);
+                setResponseMapping(value);
               }}
             />
           </>

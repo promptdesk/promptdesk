@@ -6,14 +6,14 @@ import { Organization, Model, Prompt, Variable } from "../models/allModels";
 import { User } from "../models/mongodb/user";
 import { Log } from "../models/mongodb/log";
 var figlet = require("figlet");
-import { rateLimit } from 'express-rate-limit'
+import { rateLimit } from "express-rate-limit";
 
 const limiter = rateLimit({
-	windowMs: 60 * 60 * 1000, // 1 hour
-	limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-	standardHeaders: 'draft-7', // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
-	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-})
+  windowMs: 60 * 60 * 1000, // 1 hour
+  limit: 5, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-7", // draft-6: `RateLimit-*` headers; draft-7: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+});
 
 var organization_db = new Organization();
 var user_db = new User();
@@ -40,7 +40,6 @@ const authenticate = async function (app: any) {
 
   app.get(["/auth/setup"], async (req: any, res: any) => {
     const shouldSetup = await checkIfFirstRun();
-    console.log("shouldSetup", shouldSetup);
     if (shouldSetup) {
       return res.sendFile(path.join(__dirname, "../../public/setup.html"));
     }
@@ -75,27 +74,37 @@ const authenticate = async function (app: any) {
 
     //validate email, password and  openai_api_key - make sure they are not empty
     if (body.email == undefined || body.email == "") {
-      return res.status(400).json({ error:true, message: "Email cannot be empty." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Email cannot be empty." });
     }
 
     if (body.password == undefined || body.password == "") {
-      return res.status(400).json({ error:true, message: "Password cannot be empty." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Password cannot be empty." });
     }
 
     if (body.openai_api_key == undefined || body.openai_api_key == "") {
-      return res.status(400).json({ error:true, message: "OpenAI API key cannot be empty." });
+      return res
+        .status(400)
+        .json({ error: true, message: "OpenAI API key cannot be empty." });
     }
 
     //check if email already exists
     let existing_user = await user_db.findUser(body.email);
 
     if (existing_user != undefined) {
-      return res.status(400).json({ error:true, message: "Email already exists." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Email already exists." });
     }
 
     const shouldSetup = await checkIfFirstRun();
     if (!shouldSetup) {
-      return res.status(400).json({ error:true, message: "Organization already exists." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Organization already exists." });
     }
 
     await generateInitialOrganization(body);
@@ -108,7 +117,9 @@ const authenticate = async function (app: any) {
       let body = req.body;
       let user = await user_db.findUser(body.email);
       if (user == undefined) {
-        return res.status(400).json({ error: true, message: "Wrong email or password." });
+        return res
+          .status(400)
+          .json({ error: true, message: "Wrong email or password." });
       }
       let match = await bcrypt.compare(body.password, user.password);
       if (match) {
@@ -122,11 +133,17 @@ const authenticate = async function (app: any) {
           maxAge: expiry,
           httpOnly: false,
         });
-        return res.status(200).json({ error:false, message: "Login successful." });
+        return res
+          .status(200)
+          .json({ error: false, message: "Login successful." });
       }
-      return res.status(400).json({ error:true, message: "Wrong email or password." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Wrong email or password." });
     } catch (error) {
-      return res.status(400).json({ error:true, message: "Wrong email or password." });
+      return res
+        .status(400)
+        .json({ error: true, message: "Wrong email or password." });
     }
   });
 

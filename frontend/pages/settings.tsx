@@ -18,8 +18,11 @@ export default function VariablesPage() {
   const { show_create_user_modal, toggle_create_user_modal } = shouldShowCreateUserModal()
   const { variables, fetchVariables, updateVariables } = variableStore();
   const { organization, fetchOrganization } = organizationStore();
-
   const [variableList, setVariableList] = useState<Variable[]>([]);
+
+  const [serviceURL, setServiceURL] = useState(
+    process.env.PROMPT_SERVER_URL || window.location.origin,
+  );
 
   useEffect(() => {
     fetchVariables();
@@ -85,10 +88,14 @@ export default function VariablesPage() {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Organization Information
+              Organization Information and Credentials
             </h1>
             <p className="mt-2 text-sm text-gray-700">
               Use these credentials to access the PromptDesk API.
+              <br />
+              <br />
+              Your service URL is:{" "}
+              <InputField value={serviceURL} disabled={true} />
             </p>
           </div>
           <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none"></div>

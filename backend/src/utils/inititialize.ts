@@ -99,15 +99,18 @@ export async function automaticTestEnvironmentSetup() {
       isFirstRun &&
       (process.env.NODE_ENV == "development" || process.env.NODE_ENV == "test")
     ) {
-      console.log("RUN!");
+      console.log("INFO :: SETTING UP TEST ENVIRONMENT");
     } else {
       return "Test environment already setup or not in test/development mode.";
     }
 
     //wait until mongoose.connection.readyState is 1
     while (mongoose.connection.readyState !== 1) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("INFO :: WAITING FOR MONGOOSE TO CONNECT...");
+      await new Promise((resolve) => setTimeout(resolve, 250));
     }
+
+    console.log("INFO :: MONGOOSE CONNECTED");
 
     if (process.env.NODE_ENV == "test") {
       console.log("INFO :: RESET DATABASE");
@@ -116,6 +119,7 @@ export async function automaticTestEnvironmentSetup() {
       let collections = await mongoose.connection.db
         .listCollections()
         .toArray();
+      console.log(`INFO :: DROPPING ${collections.length} COLLECTIONS`);
       for (let i = 0; i < collections.length; i++) {
         await mongoose.connection.db.dropCollection(collections[i].name);
       }

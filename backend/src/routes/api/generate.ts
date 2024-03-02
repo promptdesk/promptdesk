@@ -20,6 +20,8 @@ router.all(["/generate"], async (req, res) => {
 
   var start_time = Date.now();
 
+  let tempPrompt = req.body.new;
+
   let [prompt, model, proxy, error, cache] = await prompt_model_validation(
     req.body,
     organization,
@@ -147,7 +149,7 @@ router.all(["/generate"], async (req, res) => {
       let log = await log_db.createLog(obj, organization.id);
       obj["log_id"] = log;
 
-      if (!obj.error) {
+      if (!obj.error && !tempPrompt) {
         sample_db.recordSampleDataIfNeeded(
           prompt_variables,
           prompt_data,
