@@ -21,6 +21,21 @@ export interface ShouldShowEnvVariableModal {
   toggle_env_variable_modal: () => void;
 }
 
+export interface ShouldShowPasswordResetModal {
+  show_password_reset_modal: boolean;
+  toggle_password_reset_modal: () => void;
+}
+
+export interface ShouldShowCreatUserModal {
+  show_create_user_modal: boolean;
+  toggle_create_user_modal: () => void;
+}
+
+export interface ShouldShowDeleteUserModal {
+  show_delete_user_modal: boolean;
+  toggle_delete_user_modal: () => void;
+}
+
 // Store for managing save modal visibility
 export const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
   show_modal: false,
@@ -57,3 +72,25 @@ export const shouldShowEnvVariableModal = create<ShouldShowEnvVariableModal>(
       })),
   }),
 );
+
+export const shouldShowResetPasswordUserModal = create<ShouldShowPasswordResetModal>((set) => ({
+  show_password_reset_modal: false,
+  toggle_password_reset_modal: () => {
+    set(state => ({ show_password_reset_modal: !state.show_password_reset_modal }))
+  }
+}))
+
+
+export const shouldShowCreateUserModal = create<ShouldShowCreatUserModal>((set) => ({
+  show_create_user_modal: false,
+  toggle_create_user_modal: () => {
+    set(state => ({ show_create_user_modal: !state.show_create_user_modal }))
+  }
+}))
+
+export const shouldShowDeleteUserModal = create<ShouldShowDeleteUserModal>((set) => ({
+  show_delete_user_modal: false,
+  toggle_delete_user_modal: () => {
+    set(state => ({ show_delete_user_modal: !state.show_delete_user_modal }))
+  }
+}))

@@ -5,6 +5,7 @@ import { Log as mongoLog } from "./mongodb/log";
 import { Variable as mongoVariable } from "./mongodb/variable";
 import { Organization as mongoOrganization } from "./mongodb/organization";
 import { Sample as mongoSample } from "./mongodb/sample";
+import { User as mongoUser } from "./mongodb/user";
 import connectToDatabase from "../models/mongodb/db";
 
 async function importModule(moduleName: string): Promise<any> {
@@ -17,7 +18,8 @@ let Prompt: any,
   Log: any,
   Variable: any,
   Organization: any,
-  Sample: any;
+  Sample: any,
+  User: any;
 
 if (true) {
   setTimeout(async () => {
@@ -43,6 +45,7 @@ if (true) {
   Variable = mongoVariable;
   Organization = mongoOrganization;
   Sample = mongoSample;
+  User = mongoUser;
   importModule("./mongodb/db");
 }
 
