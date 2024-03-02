@@ -50,7 +50,7 @@ jobs:
         run: |
           curl -X GET ${{ secrets.SERVER_LOCALHOST }}/ping
       - name: Install dependencies (frontend)
-        run: npm ci
+        run: npm install
         working-directory: ./frontend
       - name: Test (frontend)
         run: npm run test-github-actions
