@@ -37,7 +37,7 @@ const LogRow: React.FC<LogRowProps> = ({
         onClick={() => handleRowClick(log.id)}
         className="cursor-pointer"
         //add id if index is 0
-        id={index === 3 ? "sample-log" : ""}
+        id={index === 1 ? "sample-log" : ""}
       >
         <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
           {promptName}
@@ -65,6 +65,7 @@ const LogRow: React.FC<LogRowProps> = ({
           <div
             className="p-1 hover:bg-gray-200 text-gray-600 hover:text-gray-800 rounded cursor-pointer"
             onClick={() => goToLogDetails(log.id)}
+            id={index === 1 ? "log-details" : ""}
           >
             <Logs />
           </div>

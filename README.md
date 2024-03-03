@@ -57,17 +57,17 @@ Cut through the market hype, focus on delivering impactful and meaningful soluti
   Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a> - <a href="https://github.com/promptdesk/promptdesk-js">JavaScript</a>
   </p>
 
-## ⭐️ Why PromptDesk?
+## Why PromptDesk?
 
 PromptDesk is 100% free and open-source minimalist tool to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications, agents and Large Language Models (LLMs).
 
 If you like this project, please consider giving this repo a ⭐️ star.
 
-![Alt Text](https://promptdesk.ai/branding/flowchart_banner.png)
+![Alt Text](https://promptdesk.ai/screenshots/completed-prompt.png)
 
 We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. You can also jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in python with [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
-## ✨ Features
+## Features
 
 - 🤝 Cross-team Collaboration
 - 🔐 Data Privacy and Security
@@ -95,14 +95,7 @@ Open your web browser and navigate to [http://localhost](http://localhost) or th
 
 More installation options are available in the [PromptDesk OS GitHub Repository](https://github.com/promptdesk/promptdesk/tree/main/quickstart).
 
-## 👨‍💻 PromptDesk OS
-
-Build, manage prompts and optimize prompt-based applications.
-
-![Alt Text](https://promptdesk.ai/screenshots/completed-prompt.png)
-
-
-## 👨‍💻 Python SDK
+## Python SDK
 
 To install PromptDesk, use pip:
 
@@ -129,7 +122,7 @@ story = pd.generate("short-story-test", {
 print(story)
 ```
 
-## 👨‍💻 JavaScript SDK
+## JavaScript SDK
 
 To install PromptDesk, use npm:
 

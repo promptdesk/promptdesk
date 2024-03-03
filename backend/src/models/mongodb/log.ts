@@ -12,6 +12,7 @@ const logSchema = mongoose.model(
       error: Boolean,
       status: Number,
       model_id: String,
+      deleted: { type: Boolean, default: false },
       prompt_id: String,
       organization_id: String,
       duration: Number,
@@ -39,7 +40,7 @@ class Log {
   }
 
   async findLog(id: any, organization_id: string) {
-    const log = await logSchema.findOne({ _id: id, organization_id });
+    const log = await logSchema.findOne({ _id: id, organization_id }, { deleted: false });
     return log ? this.transformLog(log) : null;
   }
 
@@ -118,6 +119,7 @@ class Log {
   ) {
     let query = {
       organization_id,
+      status: { "$exists": true}
     } as any;
 
     if (model_id) {
@@ -135,6 +137,8 @@ class Log {
     if (status) {
       query.status = status;
     }
+
+    query.deleted = false;
 
     const skip = (page - 1) * limit;
     let logs = await logSchema
@@ -186,7 +190,11 @@ class Log {
   }
 
   async findLogByHash(hash: string, organization_id: string) {
-    return logSchema.findOne({ hash, organization_id });
+    return logSchema.findOne({ hash, organization_id, deleted: false });
+  }
+
+  async deleteLog(id: any, organization_id: string) {
+    return logSchema.updateOne({ _id: id, organization_id }, { deleted: true });
   }
 
   transformLog(log: any) {

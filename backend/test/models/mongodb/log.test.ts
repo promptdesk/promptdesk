@@ -20,6 +20,11 @@ describe("Log tests", () => {
     log.id = response;
   });
 
+  // Clean up data after running tests
+  after(async () => {
+    await log_db.deleteLog(log.id, organization.id);
+  })
+
   it("should create a log", async () => {
     expect(log.id).to.be.a("string");
   });

@@ -282,27 +282,12 @@ export const populateOrganization = async function (
     return num.toFixed(2);
   }
 
-  function getRandomStatus() {
-    let status = [200, 400, 500];
-    //get 200 97% of the time
-    let random = Math.random();
-    if (random < 0.97) {
-      return 200;
-    }
-    //get 400 2% of the time
-    if (random < 0.99) {
-      return 400;
-    }
-    //get 500 1% of the time
-    return 500;
-  }
-
   //loop 100 times to create logs
   for (let i = 0; i < 20; i++) {
     let log = {
       message: "test data",
       error: false,
-      status: getRandomStatus(),
+      status: 200,
       model_id: hashtag_generator.model,
       prompt_id: hashtag_generator.id,
       organization_id: hashtag_generator.organization_id,
