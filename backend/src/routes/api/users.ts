@@ -20,8 +20,8 @@ router.post("/users", async (req, res) => {
   if (!organizationId) {
     return res.status(404).json({ messaage: "Missing organization id" });
   }
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { email } = req.body;
+  if (!email) {
     return res.status(400).json({ message: "Required fields not present" });
   }
   const user = await user_db.findUser(email);
@@ -30,12 +30,15 @@ router.post("/users", async (req, res) => {
       .status(400)
       .json({ message: "User with given email already exists" });
   }
+  const new_pass = randomPassword(8);
   await user_db.createUser(
     email,
-    await bcrypt.hash(password, 10),
+    await bcrypt.hash(new_pass, 10),
     organizationId,
   );
-  return res.status(201).json({ message: "User created successfully" });
+  return res
+    .status(201)
+    .json({ message: "User created successfully", created_password: new_pass });
 });
 
 router.delete("/users", async (req, res) => {
