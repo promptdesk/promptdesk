@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { shouldShowCreateUserModal } from "@/stores/ModalStore";
 import GlobalModal from "./GlobalModal";
 import { userStore } from "@/stores/UserStore";
+import toast from "react-hot-toast";
 
 const Modal = () => {
     const { createUser, users, fetchUsers } = userStore();
     const { show_create_user_modal, toggle_create_user_modal } =
         shouldShowCreateUserModal();
 
+    const [password, setPassword] = useState('')
+
     const [formValues, setFormValues] = useState({
         email: "",
-        password: "",
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,10 +22,15 @@ const Modal = () => {
     const createNewUser = () => {
         const userExists = users.find((user) => user.email === formValues.email)
         if (userExists) {
-            return
+            toast.error('User with email already exists')
+            return;
         }
-        createUser(formValues.email, formValues.password)
-        setFormValues({ email: '', password: '' })
+        try {
+            createUser(formValues.email).then((res) => setPassword(res.created_password))
+            toast.success("User created successfully")
+        } catch (e) {
+            toast.error('Something went wrong!, Please check if user already exists')
+        }
     }
 
     const saveNewButtonData = [
@@ -84,19 +91,20 @@ const Modal = () => {
                     autoFocus
                 />
             </div>
-            <br />
-            <div className="css-xeepoz">
-                <div className="body-small mb-2 flex items-center" id="save-modal-name">
-                    <div className="bold mr-2">Password</div>
+            {password.length ?
+                <div className="css-xeepoz mt-4">
+                    <div className="body-small mb-2 flex items-center" id="save-modal-name">
+                        <div className="bold mr-2">Password</div>
+                    </div>
+                    <input
+                        className="text-input text-input-sm text-input-full"
+                        type="text"
+                        onChange={handleChange}
+                        value={password}
+                        disabled
+                    />
                 </div>
-                <input
-                    className="text-input text-input-sm text-input-full"
-                    type="password"
-                    name="password"
-                    onChange={handleChange}
-                    value={formValues['password']}
-                />
-            </div>
+                : null}
             <div className="modal-footer">{renderButtons()}</div>
         </GlobalModal>
     );
