@@ -39,7 +39,7 @@ export interface ShouldShowDeleteUserModal {
 export interface ShowingResetModalFor {
   user_email: string;
   hide_reset_modal: () => void;
-  show_reset_modal_for_email: (email: string) => void
+  show_reset_modal_for_email: (email: string) => void;
 }
 
 export interface ShowingDeleteUserModalFor {
@@ -105,29 +105,35 @@ export const shouldShowCreateUserModal = create<ShouldShowCreatUserModal>(
   }),
 );
 
-export const shouldShowDeleteUserModal = create<ShouldShowDeleteUserModal>((set) => ({
-  show_delete_user_modal: false,
-  toggle_delete_user_modal: () => {
-    set(state => ({ show_delete_user_modal: !state.show_delete_user_modal }))
-  }
-}))
+export const shouldShowDeleteUserModal = create<ShouldShowDeleteUserModal>(
+  (set) => ({
+    show_delete_user_modal: false,
+    toggle_delete_user_modal: () => {
+      set((state) => ({
+        show_delete_user_modal: !state.show_delete_user_modal,
+      }));
+    },
+  }),
+);
 
 export const showingResetModalForUser = create<ShowingResetModalFor>((set) => ({
-  user_email: '',
+  user_email: "",
   show_reset_modal_for_email: (email) => {
-    set({ user_email: email })
+    set({ user_email: email });
   },
   hide_reset_modal: () => {
-    set({ user_email: '' })
-  }
-}))
-
-export const showingDeleteUserModalFor = create<ShowingDeleteUserModalFor>(set => ({
-  user_email: '',
-  show_delete_user_modal_for: (email: string) => {
-    set({ user_email: email })
+    set({ user_email: "" });
   },
-  hide_delete_modal: () => {
-    set({ user_email: '' })
-  }
-}))
+}));
+
+export const showingDeleteUserModalFor = create<ShowingDeleteUserModalFor>(
+  (set) => ({
+    user_email: "",
+    show_delete_user_modal_for: (email: string) => {
+      set({ user_email: email });
+    },
+    hide_delete_modal: () => {
+      set({ user_email: "" });
+    },
+  }),
+);

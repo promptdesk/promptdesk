@@ -9,7 +9,7 @@ const Modal = () => {
   const { show_create_user_modal, toggle_create_user_modal } =
     shouldShowCreateUserModal();
 
-  const [password, setPassword] = useState('')
+  const [password, setPassword] = useState("");
 
   const [formValues, setFormValues] = useState({
     email: "",
@@ -20,18 +20,20 @@ const Modal = () => {
   };
 
   const createNewUser = () => {
-    const userExists = users.find((user) => user.email === formValues.email)
+    const userExists = users.find((user) => user.email === formValues.email);
     if (userExists) {
-      toast.error('User with email already exists')
+      toast.error("User with email already exists");
       return;
     }
     try {
-      createUser(formValues.email).then((res) => setPassword(res.created_password))
-      toast.success("User created successfully")
+      createUser(formValues.email).then((res) =>
+        setPassword(res.created_password),
+      );
+      toast.success("User created successfully");
     } catch (e) {
-      toast.error('Something went wrong!, Please check if user already exists')
+      toast.error("Something went wrong!, Please check if user already exists");
     }
-  }
+  };
 
   const saveNewButtonData = [
     {
@@ -86,14 +88,17 @@ const Modal = () => {
           type="email"
           name="email"
           onChange={handleChange}
-          value={formValues['email']}
+          value={formValues["email"]}
           required
           autoFocus
         />
       </div>
-      {password.length ?
+      {password.length ? (
         <div className="css-xeepoz mt-4">
-          <div className="body-small mb-2 flex items-center" id="save-modal-name">
+          <div
+            className="body-small mb-2 flex items-center"
+            id="save-modal-name"
+          >
             <div className="bold mr-2">Password</div>
           </div>
           <input
@@ -104,10 +109,10 @@ const Modal = () => {
             disabled
           />
         </div>
-        : null}
+      ) : null}
       <div className="modal-footer">{renderButtons()}</div>
     </GlobalModal>
   );
-}
+};
 
 export default Modal;
