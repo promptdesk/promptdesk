@@ -36,6 +36,17 @@ export interface ShouldShowDeleteUserModal {
   toggle_delete_user_modal: () => void;
 }
 
+export interface ShowingResetModalFor {
+  user_email: string;
+  hide_reset_modal: () => void;
+  show_reset_modal_for_email: (email: string) => void;
+}
+
+export interface ShowingDeleteUserModalFor {
+  user_email: string;
+  hide_delete_modal: () => void;
+  show_delete_user_modal_for: (email: string) => void;
+}
 // Store for managing save modal visibility
 export const shouldShowSaveModal = create<SnowShouldShowSaveModal>((set) => ({
   show_modal: false,
@@ -101,6 +112,28 @@ export const shouldShowDeleteUserModal = create<ShouldShowDeleteUserModal>(
       set((state) => ({
         show_delete_user_modal: !state.show_delete_user_modal,
       }));
+    },
+  }),
+);
+
+export const showingResetModalForUser = create<ShowingResetModalFor>((set) => ({
+  user_email: "",
+  show_reset_modal_for_email: (email) => {
+    set({ user_email: email });
+  },
+  hide_reset_modal: () => {
+    set({ user_email: "" });
+  },
+}));
+
+export const showingDeleteUserModalFor = create<ShowingDeleteUserModalFor>(
+  (set) => ({
+    user_email: "",
+    show_delete_user_modal_for: (email: string) => {
+      set({ user_email: email });
+    },
+    hide_delete_modal: () => {
+      set({ user_email: "" });
     },
   }),
 );

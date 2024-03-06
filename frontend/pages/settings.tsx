@@ -15,6 +15,7 @@ import Head from "next/head";
 import UsersTable from "@/components/Table/UsersTable";
 import { userStore } from "@/stores/UserStore";
 import InputField from "@/components/Form/InputField";
+import { Toaster } from "react-hot-toast";
 
 export default function VariablesPage() {
   const { show_env_variable_modal, toggle_env_variable_modal } =
@@ -78,6 +79,7 @@ export default function VariablesPage() {
 
   return (
     <div className="page-body full-width flush">
+      <Toaster />
       <Head>
         <title>Settings - PromptDesk</title>
       </Head>
