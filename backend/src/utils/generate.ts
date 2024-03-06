@@ -111,7 +111,7 @@ export async function prompt_model_validation(body: any, organization: any) {
           undefined,
           undefined,
           undefined,
-          { error: true, message: "Prompt name is required.", status: 404 },
+          { error: true, message: "Prompt not found.", status: 404 },
           organization,
           cache,
         ];

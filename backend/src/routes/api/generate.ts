@@ -165,7 +165,7 @@ router.all(["/generate"], async (req, res) => {
     console.log("ERROR :: GENERATE", error);
     return res
       .status(500)
-      .json({ error: error, message: error.message, status: 500 });
+      .json({ error: true, message: error.message, status: 500 });
   }
 });
 

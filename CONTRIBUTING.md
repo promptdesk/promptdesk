@@ -58,9 +58,12 @@ docker compose up
 It may take a few minutes to start the development environment for the first time. Once the development environment is ready, you should see the following success message in your terminal:
 
 ```
-############### SUCCESS ###############
-Setup successful!
-############### SUCCESS ###############
+  ____                            _   ____            _       ___  ____  
+ |  _ \ _ __ ___  _ __ ___  _ __ | |_|  _ \  ___  ___| | __  / _ \/ ___| 
+ | |_) | '__/ _ \| '_ ` _ \| '_ \| __| | | |/ _ \/ __| |/ / | | | \___ \ 
+ |  __/| | | (_) | | | | | | |_) | |_| |_| |  __/\__ \   <  | |_| |___) |
+ |_|   |_|  \___/|_| |_| |_| .__/ \__|____/ \___||___/_|\_\  \___/|____/ 
+                           |_|                                           
 ```
 
 You can access the front-end React code here:

@@ -50,11 +50,15 @@ app.use(express.json());
 app.use(cors());
 
 // heartbeat route
-app.get(["/api/ping", "/ping"], (req, res) => {
+app.get("/ping", (req, res) => {
   return res.send("pong");
 });
 
 app.use("/api", apiKeyMiddleware);
+
+app.get("/api/ping", (req, res) => {
+  return res.send("pong");
+});
 
 app.use("/api", generateRouter);
 app.use("/api", samplesRouter);

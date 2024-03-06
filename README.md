@@ -28,10 +28,10 @@
   </a>
 </p>
 
-<h1 align="center">Unlock Bold Innovation with Simplified AI</h1>
+<h1 align="center">Bold Innovation, Simplified AI</h1>
 
 <div align="center">
-Cut through the market hype, focus on delivering impactful and meaningful solutions in a rapidly evolving tech landscape.
+PromptDesk is 100% free and open-source minimalist tool to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications, agents and Large Language Models (LLMs).
 </div>
     </br>
   <p align="center">
@@ -56,16 +56,11 @@ Cut through the market hype, focus on delivering impactful and meaningful soluti
   <p align="center">
   Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a> - <a href="https://github.com/promptdesk/promptdesk-js">JavaScript</a>
   </p>
-
-## Why PromptDesk?
-
-PromptDesk is 100% free and open-source minimalist tool to facilitate the creation, organization, integration, and evaluation of prompts, prompt-based applications, agents and Large Language Models (LLMs).
+</div>
 
 If you like this project, please consider giving this repo a ⭐️ star.
 
 ![Alt Text](https://promptdesk.ai/screenshots/completed-prompt.png)
-
-We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstart) guide. You can also jump straight to the [Build Prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in python with [Integrate Prompts](https://promptdesk.ai/docs/python-sdk/) guides.
 
 ## Features
 
@@ -80,9 +75,10 @@ We recommend starting with the [Quickstart](https://promptdesk.ai/docs/quickstar
 
 ## 🚀 Getting Started
 
+We recommend starting with the [Quickstart guide](https://promptdesk.ai/docs/quickstart). You can also jump straight to [building prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in [python](https://promptdesk.ai/docs/python-pip-package) or [javascript](https://promptdesk.ai/docs/javascript-npm-package).
 ### Quickstart
 
-Walkthrough the [Quickstart](https://promptdesk.ai/docs/quickstart) guide to get PromptDesk OS up and running in 5 minutes.
+Run the following commands to install PromptDesk OS in your CLI:
 
 ```shell
 wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/setup.sh
@@ -91,7 +87,7 @@ chmod +x setup.sh && ./setup.sh
 
 **Please ensure that port 80 and 443 (optional) is available on your system. If you have a web server running, you may need to stop it before running the setup script.**
 
-Open your web browser and navigate to [http://localhost](http://localhost) or the domain name provided to access PromptDesk OS. Initial setup will require a valid OpenAI API key for installation testing purposes.
+Open your web browser and navigate to [http://localhost](http://localhost), the IP address, or the domain name provided to access PromptDesk OS. Initial setup will require a valid OpenAI API key for installation testing purposes.
 
 More installation options are available in the [PromptDesk OS GitHub Repository](https://github.com/promptdesk/promptdesk/tree/main/quickstart).
 

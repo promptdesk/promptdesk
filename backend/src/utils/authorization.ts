@@ -5,7 +5,7 @@ const apiKeyMiddleware = async function (req: any, res: any, next: any) {
   const token = req.headers.authorization;
 
   if (!token) {
-    res.status(401).json({ error: "Missing Authorization Header" });
+    res.status(401).json({ error: true, message: "Missing Authorization Header" });
     return;
   }
 
@@ -19,7 +19,7 @@ const apiKeyMiddleware = async function (req: any, res: any, next: any) {
   );
 
   if (db_organization == null) {
-    res.status(401).json({ error: "Invalid API Authorization" });
+    res.status(401).json({ error:true, message: "Invalid API Authorization" });
     return;
   }
 
