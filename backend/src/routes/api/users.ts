@@ -46,10 +46,13 @@ router.delete("/users", async (req, res) => {
   if (!email) {
     return res.status(400).json({ message: "Please provide email" });
   }
+  if (!(await user_db.findUser(email))) {
+    return res.status(404).json({ message: "User not found" });
+  }
   if (await user_db.deleteUserByEmail(email)) {
     return res.status(200).json({ message: "User deleted succeessfully" });
   }
-  return res.status(400).json({ message: "Someting went wrong" });
+  return res.status(404).json({ message: "Something went wrong" });
 });
 
 router.post("/users/reset", async (req, res) => {
