@@ -38,6 +38,11 @@ class User {
     const user = await userSchema.deleteOne({ email });
     return user.acknowledged;
   }
+
+  async deleteUsers(emails: string[]) {
+    const users = await userSchema.deleteMany({ email: emails });
+    return users.acknowledged;
+  }
 }
 
 export { User };

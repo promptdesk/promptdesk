@@ -40,7 +40,10 @@ class Log {
   }
 
   async findLog(id: any, organization_id: string) {
-    const log = await logSchema.findOne({ _id: id, organization_id }, { deleted: false });
+    const log = await logSchema.findOne(
+      { _id: id, organization_id },
+      { deleted: false },
+    );
     return log ? this.transformLog(log) : null;
   }
 
@@ -119,7 +122,7 @@ class Log {
   ) {
     let query = {
       organization_id,
-      status: { "$exists": true}
+      status: { $exists: true },
     } as any;
 
     if (model_id) {
