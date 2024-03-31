@@ -137,8 +137,7 @@ var pd = new PromptDesk({
     serviceUrl: "http://localhost"
 })
 
-
-const story = pd.generate("short-story-test", {
+const story = await pd.generate("short-story-test", {
     "setting": "dark and stormy night",
     "character": "lonely farmer",
     "plot": "visited by a stranger"
