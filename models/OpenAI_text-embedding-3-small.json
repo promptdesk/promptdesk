@@ -1,0 +1,37 @@
+{
+    "provider": "DEV - OpenAI",
+    "type": "embedding",
+    "name": "DEV - openai-3-small",
+    "default": false,
+    "api_call": {
+        "url": "DEV - https://api.openai.com/v1/embeddings",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{OPENAI_API_KEY}}"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "text_list",
+            "targetField": "input"
+        },
+        {
+            "sourceField": null,
+            "targetField": "model",
+            "default": "text-embedding-3-small"
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "data",
+            "targetField": "embeddings",
+            "action": "mapArray",
+            "subRules": [
+                {
+                    "sourceField": "embedding"
+                }
+            ]
+        }
+    ]
+}

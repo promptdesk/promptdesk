@@ -1,0 +1,87 @@
+{
+    "provider": "OpenAI",
+    "type": "chat",
+    "name": "gpt-4-turbo-preview",
+    "default": false,
+    "api_call": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer {{OPENAI_API_KEY}}"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "messages",
+            "targetField": "messages"
+        },
+        {
+            "sourceField": "context",
+            "targetField": "content",
+            "groupId": "context",
+            "prependTo": "messages"
+        },
+        {
+            "sourceField": null,
+            "targetField": "role",
+            "groupId": "context",
+            "prependTo": "messages",
+            "default": "system"
+        },
+        {
+            "sourceField": null,
+            "targetField": "model",
+            "default": "gpt-4-turbo-preview"
+        },
+        {
+            "sourceField": "model_parameters.temperature",
+            "targetField": "temperature",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.temperature",
+                    "check": "exists"
+                }
+            ]
+        },
+        {
+            "sourceField": "model_parameters.max_tokens",
+            "targetField": "max_tokens",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.max_tokens",
+                    "check": "exists"
+                }
+            ]
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "choices.0.message"
+        }
+    ],
+    "model_parameters": {
+        "roles": [
+            "user",
+            "assistant"
+        ],
+        "max_tokens": {
+            "key": "max_tokens",
+            "type": "slider",
+            "name": "Max Tokens",
+            "default": 2000,
+            "step": 50,
+            "min": 0,
+            "max": 4000
+        },
+        "temperature": {
+            "key": "temperature",
+            "type": "slider",
+            "name": "Temperature",
+            "default": 0.7,
+            "step": 0.01,
+            "min": 0,
+            "max": 1
+        }
+    }
+}

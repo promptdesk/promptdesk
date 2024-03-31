@@ -34,6 +34,7 @@ import logsRouter from "./routes/api/logs";
 import variablesRouter from "./routes/api/variables";
 import organizationRouter from "./routes/api/organization";
 import usersRouter from "./routes/api/users";
+import embedRouter from "./routes/api/embed";
 
 // Middleware
 app.use(cors());
@@ -68,6 +69,7 @@ app.use("/api", modelsRouter);
 app.use("/api", variablesRouter);
 app.use("/api", organizationRouter);
 app.use("/api", usersRouter);
+app.use("/api", embedRouter);
 
 app.all("/api/*", (req, res) => {
   return res.status(404).send({ error: true, message: "API not found!" });

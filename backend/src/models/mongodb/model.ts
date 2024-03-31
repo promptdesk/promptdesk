@@ -49,6 +49,16 @@ class Model {
     return model ? this.transformModel(model) : null;
   }
 
+  async findModelByName(name: string, organization_id: string) {
+    //find where name and organization_id match and deleted is not true
+    const model = await modelSchema.findOne({
+      name,
+      organization_id,
+      deleted: { $ne: true },
+    });
+    return model ? this.transformModel(model) : null;
+  }
+
   async updateModelById(updatedModel: any, organization_id: string) {
     const { id, ...modelData } = updatedModel;
     await modelSchema.updateOne({ _id: id, organization_id }, modelData);

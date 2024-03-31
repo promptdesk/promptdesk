@@ -100,18 +100,21 @@ const ModelSettings = ({
           </>
         )}
 
-        <div className="mb-2 mt-4">
-          <h3 className="mb-0">Model parameters</h3>
-        </div>
-        <CodeEditor
-          height="50vh"
-          style={style}
-          code={JSON.stringify(parameters, null, 4)}
-          language="json"
-          handleChange={(value) => {
-            setFormattedParameters(value);
-          }}
-        />
+        {parameters && (
+        <>
+          <div className="mb-2 mt-4">
+            <h3 className="mb-0">Model parameters</h3>
+          </div>
+          <CodeEditor
+            height="50vh"
+            style={style}
+            code={JSON.stringify(parameters || null, null, 4)}
+            language="json"
+            handleChange={(value) => {
+              setFormattedParameters(value);
+            }}
+          />
+        </>)}
       </div>
     </div>
   );

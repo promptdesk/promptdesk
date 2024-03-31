@@ -1,0 +1,79 @@
+{
+    "provider": "Anthropic",
+    "type": "completion",
+    "name": "claude-3-sonnet-20240229",
+    "default": false,
+    "api_call": {
+        "url": "https://api.anthropic.com/v1/messages",
+        "method": "POST",
+        "headers": {
+            "x-api-key": "{{ANTHROPIC_API_KEY}}",
+            "anthropic-version": "2023-06-01",
+            "anthropic-beta": "messages-2023-12-15",
+            "content-type": "application/json"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "prompt",
+            "targetField": "messages.0.content"
+        },
+        {
+            "sourceField": null,
+            "targetField": "messages.0.role",
+            "default": "user"
+        },
+        {
+            "sourceField": null,
+            "targetField": "model",
+            "default": "claude-3-sonnet-20240229"
+        },
+        {
+            "sourceField": "model_parameters.temperature",
+            "targetField": "temperature",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.temperature",
+                    "check": "exists"
+                }
+            ]
+        },
+        {
+            "sourceField": "model_parameters.max_tokens",
+            "targetField": "max_tokens",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.max_tokens",
+                    "check": "exists"
+                }
+            ]
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "content.0.text",
+            "targetField": "text"
+        }
+    ],
+    "model_parameters": {
+        "max_tokens": {
+            "key": "max_tokens",
+            "type": "slider",
+            "name": "Max Tokens",
+            "default": 2000,
+            "step": 50,
+            "min": 0,
+            "max": 4096,
+            "required": true
+        },
+        "temperature": {
+            "key": "temperature",
+            "type": "slider",
+            "name": "Temperature",
+            "default": 0.7,
+            "step": 0.01,
+            "min": 0,
+            "max": 1
+        }
+    }
+}

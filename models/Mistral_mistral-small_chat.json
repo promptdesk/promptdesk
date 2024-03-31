@@ -1,0 +1,84 @@
+{
+    "provider": "Mistral",
+    "type": "chat",
+    "name": "mistral-small",
+    "default": false,
+    "api_call": {
+        "url": "https://api.mistral.ai/v1/chat/completions",
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+            "x-api-key": "{{MISTRAL_API_KEY}}"
+        }
+    },
+    "request_mapping": [
+        {
+            "sourceField": "messages",
+            "targetField": "messages"
+        },
+        {
+            "sourceField": "context",
+            "targetField": "content",
+            "groupId": "context",
+            "prependTo": "messages"
+        },
+        {
+            "sourceField": null,
+            "targetField": "role",
+            "groupId": "context",
+            "prependTo": "messages",
+            "default": "system"
+        },
+        {
+            "sourceField": null,
+            "targetField": "model",
+            "default": "mistral-small-latest"
+        },
+        {
+            "sourceField": "model_parameters.temperature",
+            "targetField": "temperature",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.temperature",
+                    "check": "exists"
+                }
+            ]
+        },
+        {
+            "sourceField": "model_parameters.max_tokens",
+            "targetField": "max_tokens",
+            "conditions": [
+                {
+                    "sourceField": "model_parameters.max_tokens",
+                    "check": "exists"
+                }
+            ]
+        }
+    ],
+    "response_mapping": [
+        {
+            "sourceField": "choices.0.message"
+        }
+    ],
+    "model_parameters": {
+        "temperature": {
+            "key": "temperature",
+            "type": "slider",
+            "name": "Temperature",
+            "default": 0.7,
+            "step": 0.01,
+            "min": 0,
+            "max": 1
+        },
+        "max_tokens": {
+            "key": "max_tokens",
+            "type": "slider",
+            "name": "Max Tokens",
+            "default": 100,
+            "step": 50,
+            "min": 0,
+            "max": 1000,
+            "required": true
+        }
+    }
+}

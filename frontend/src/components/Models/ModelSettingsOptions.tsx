@@ -31,6 +31,7 @@ const ModelSettingsOptions: React.FC<any> = ({
           options={[
             { name: "Completion", value: "completion" },
             { name: "Chat", value: "chat" },
+            { name: "Embedding", value: "embedding" },
           ]}
           selected={selectedModel.type}
           onChange={(value: any) => updateModel("type", value)}
