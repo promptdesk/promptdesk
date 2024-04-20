@@ -85,6 +85,16 @@ function EditorFooter() {
               isFull={true}
             />
           ) : null}
+          {promptObject.app && (
+            //go to /workspace/:id/samples
+            <PlaygroundButton
+              text="App"
+              href={`/apps/${promptObject.app}`}
+              id="samples-prompt"
+              isFull={true}
+              newTab={true}
+            />
+          )}
         </div>
         {show_code_modal && <CodeModal />}
       </div>

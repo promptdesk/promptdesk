@@ -4,10 +4,6 @@ import { Log } from "../../models/allModels";
 const router = express.Router();
 const log_db = new Log();
 
-async function hellop() {
-  const response = await log_db.getLogDetails("65558a1a0393ceadb2c91624");
-}
-
 router.get("/logs", async (req: Request, res: Response) => {
   const organization = (req as any).organization;
   const page: number = parseInt(req.query.page as string) || 1;

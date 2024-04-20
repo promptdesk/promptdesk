@@ -35,6 +35,7 @@ import variablesRouter from "./routes/api/variables";
 import organizationRouter from "./routes/api/organization";
 import usersRouter from "./routes/api/users";
 import embedRouter from "./routes/api/embed";
+import appsRouter from "./routes/api/apps";
 
 // Middleware
 app.use(cors());
@@ -54,6 +55,8 @@ app.use(cors());
 app.get("/ping", (req, res) => {
   return res.send("pong");
 });
+
+app.use("/api", appsRouter);
 
 app.use("/api", apiKeyMiddleware);
 
@@ -76,6 +79,10 @@ app.all("/api/*", (req, res) => {
 });
 
 app.use(express.static("./assets"));
+
+app.get(["/apps/:id"], (req, res) => {
+  res.sendFile(path.join(__dirname, "../public/apps.html"));
+});
 
 import { authenticate, checkAuth } from "./utils/publicAuth";
 authenticate(app);

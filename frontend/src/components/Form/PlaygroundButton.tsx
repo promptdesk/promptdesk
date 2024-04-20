@@ -5,7 +5,9 @@ interface PlaygroundButtonProps {
   text: string;
   isFull?: boolean;
   color?: string;
-  onClick: () => void;
+  onClick?: () => void;
+  newTab?: boolean;
+  href?: string;
 }
 
 function PlaygroundButton({
@@ -14,7 +16,10 @@ function PlaygroundButton({
   onClick,
   isFull = false,
   color,
+  newTab,
+  href
 }: PlaygroundButtonProps) {
+
   const handleClick = () => {
     if (typeof onClick === "function") {
       onClick();
@@ -26,6 +31,16 @@ function PlaygroundButton({
     baseClass = `btn btn-sm btn-filled btn-${color}`;
   }
   const className = isFull ? `${baseClass} w-full` : baseClass;
+
+  if (newTab) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={className}>
+        <span className="btn-label-wrap">
+          <span className="btn-label-inner">{text}</span>
+        </span>
+      </a>
+    );
+  }
 
   return (
     <button

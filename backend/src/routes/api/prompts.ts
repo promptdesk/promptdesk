@@ -42,6 +42,7 @@ router.get("/prompt/name/:name", async (req, res) => {
 router.put("/prompt/:id", async (req, res) => {
   const organization = (req as any).organization;
   const promptJson = req.body;
+  console.log(promptJson);
   prompt_db.updatePrompt(promptJson, organization.id);
   res.status(200).json(promptJson);
 });

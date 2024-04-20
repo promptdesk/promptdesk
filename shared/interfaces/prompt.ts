@@ -11,4 +11,5 @@ export interface Prompt {
     organization_id: string;
     project: string | undefined;
     provider: string | undefined;
+    app?: string | null;
 }

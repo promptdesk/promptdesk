@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Standalone Template</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="app" style="min-height:100vh;background-color: #111827;" class="text-white">
+      <div v-if="loaded" class="max-w-3xl mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold leading-8 text-white mb-4">{{ readableName(prompt.name) }}</h1>
+        <p class="mt-1 text-base leading-6 text-gray-400 mb-8">{{prompt.description}}</p>
+        <div class="space-y-8">
+          <div v-for="item in variableItems" :key="item">
+            <label :for="item" class="block text-sm font-medium leading-6 text-white">{{readableName(item)}}</label>
+            <div class="mt-2">
+              <textarea :placeholder="prompt.prompt_variables[item].value" v-model="data.prompt_variables[item].value" :id="item" :name="item" rows="3" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"></textarea>
+            </div>
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-x-6">
+            <button @click="submit()" :disabled="submitting" type="submit" class="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span v-if="submitting">Submitting...</span>
+              <span v-else>Submit</span>
+            </button>
+          </div>
+          <div v-if="response.message">
+            <label for="response" class="block text-sm font-medium leading-6 text-white">Response</label>
+            <div class="mt-2">
+              <pre id="response" style="white-space: pre-line;" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6">{{response.message.content || response.message.text || response.message}}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="flex items-center justify-center h-screen">
+        <div v-if="!failedToFindApp" class="loader"></div>
+        <div v-if="failedToFindApp" class="text-white text-2xl">
+          Sorry, that app cannot be found.
+        </div>
+      </div>
+  </body>
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+  data() {
+    return {
+      title: 'My Vue App',
+      prompt: {},
+      data: {},
+      error: null,
+      loaded: false,
+      id: null,
+      response: {},
+      submitting: false,
+      failedToFindApp: false
+    };
+  },
+    mounted() {
+        this.fetchData();
+    },
+    computed: {
+        variableItems() {
+            return this.prompt.prompt_variables ? Object.keys(this.prompt.prompt_variables) : [];   
+        }
+    },
+  methods: {
+    readableName(name) {
+        if(!name) return;
+        return name.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    },
+    async fetchData() {
+      try {
+        const url = new URL(window.location.href);
+        this.id = url.pathname.split('/').pop();
+
+        const response = await fetch('/api/apps/' + this.id);
+        if (!response.ok) {
+        this.failedToFindApp = true;
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        this.prompt = data;
+        this.data = JSON.parse(JSON.stringify(data));
+
+        //loop through prompt variables and set default values
+        if(this.prompt.prompt_variables) {
+            for (const key in this.prompt.prompt_variables) {
+                this.data.prompt_variables[key].value = "";
+            }
+        }
+        
+        document.title = this.readableName(this.prompt.name)
+        this.loaded = true;
+
+      } catch (error) {
+        this.error = error.message;
+      }
+    },
+    async submit() {
+        try {
+            this.submitting = true;
+            this.response = {};
+            
+            const response = await fetch('/api/apps/' + this.id, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(this.data),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to submit data');
+            }
+            this.response = await response.json();
+        } catch (error) {
+            this.error = error.message;
+        } finally {
+            this.submitting = false;
+        }
+    }
+  }
+}).mount('#app');
+
+
+  </script>
+  <style>
+    .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #FFF;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+  </style>
+</html>

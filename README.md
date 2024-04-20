@@ -35,12 +35,10 @@ PromptDesk is 100% free and open-source minimalist tool to facilitate the creati
 </div>
     </br>
   <p align="center">
-    <a href="https://promptdesk.ai/docs" rel="dofollow"><strong>Explore the docs »</strong></a>
+    <a href="https://promptdesk.ai/docs/quickstart" rel="dofollow"><strong>Quickstart Guide »</strong></a>
     <br />
       <br/>
     <a href="https://promptdesk.ai/features">Features</a>
-    ·
-      <a href="https://promptdesk.ai/docs/walkthroughs">Walkthroughs</a>
     ·
   <a href="https://promptdesk.ai/podcast">Podcast</a>
     ·
@@ -51,11 +49,10 @@ PromptDesk is 100% free and open-source minimalist tool to facilitate the creati
     <a href="https://github.com/promptdesk/promptdesk/discussions">Community</a>
   </p>
 
-  
-  
   <p align="center">
   Available in: <a href="https://github.com/promptdesk/promptdesk-py">Python</a> - <a href="https://github.com/promptdesk/promptdesk-js">JavaScript</a>
   </p>
+
 </div>
 
 If you like this project, please consider giving this repo a ⭐️ star.
@@ -65,35 +62,27 @@ If you like this project, please consider giving this repo a ⭐️ star.
 ## Features
 
 - 🤝 Cross-team Collaboration
-- 🔐 Data Privacy and Security
-- 🌐 Any model, any scale
+- 📚 Comprehensive Documentation
+- 📅 Deploy One-click Apps for Sharing
 - 👨‍💻 Python and Javascript SDK
 - 🏠 Local or Proxied Calls 
 - 📈 Comprehensive Logs
 - ♾️ Unlimited Models
+- 🔐 Data Privacy and Security
+- 🌐 Any model, any scale
 - 🚀 Easy to set up and integrate (5 minutes)
 
-## 🚀 Getting Started
+## 🚀 Getting Started and Installation
 
-We recommend starting with the [Quickstart guide](https://promptdesk.ai/docs/quickstart). You can also jump straight to [building prompts](https://promptdesk.ai/docs/building-prompts/) or start integrating prompts in [python](https://promptdesk.ai/docs/python-pip-package) or [javascript](https://promptdesk.ai/docs/javascript-npm-package).
-### Quickstart
+To get started with PromptDesk OS, visit [promptdesk.ai/docs/quickstart](https://promptdesk.ai/docs/quickstart) for the installation script. It's a simple, two-line install process that takes an average of just 5 minutes from start to finish.
 
-Run the following commands to install PromptDesk OS in your CLI:
+PromptDesk OS is a self-hosted, 100% free and open-source Docker container that can be deployed anywhere.
 
-```shell
-wget https://raw.githubusercontent.com/promptdesk/promptdesk/main/quickstart/setup.sh
-chmod +x setup.sh && ./setup.sh
-```
-
-**Please ensure that port 80 and 443 (optional) is available on your system. If you have a web server running, you may need to stop it before running the setup script.**
-
-Open your web browser and navigate to [http://localhost](http://localhost), the IP address, or the domain name provided to access PromptDesk OS. Initial setup will require a valid OpenAI API key for installation testing purposes.
-
-More installation options are available in the [PromptDesk OS GitHub Repository](https://github.com/promptdesk/promptdesk/tree/main/quickstart).
+You can also jump straight to [building prompts](https://promptdesk.ai/docs/building-prompts) or start integrating prompts in [python](https://promptdesk.ai/docs/python-sdk/pip-package) or [javascript](https://promptdesk.ai/docs/javascript-sdk/npm-package).
 
 ## Python SDK
 
-To install PromptDesk, use pip:
+Using the PromptDesk Python SDK, you can easily integrate your prompts into your Python applications.
 
 ```shell
 pip install promptdesk
@@ -120,7 +109,7 @@ print(story)
 
 ## JavaScript SDK
 
-To install PromptDesk, use npm:
+Using the PromptDesk JavaScript SDK, you can easily integrate your prompts into your Python applications.
 
 ```shell
 npm install promptdesk
@@ -150,7 +139,7 @@ console.log(story)
 
 For more information about PromptDesk, please refer to the following resources:
 
-- [Documentation](https://promptdesk.ai/docs/)
+- [Quickstart Guide](https://promptdesk.ai/docs/quickstart)
 - [Application GitHub Repository](https://github.com/promptdesk/promptdesk)
 - [Python GitHub Repository](https://github.com/promptdesk/promptdesk-py)
 - [PyPI Package](https://pypi.org/project/promptdesk/)

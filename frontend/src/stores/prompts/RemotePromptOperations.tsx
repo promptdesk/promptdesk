@@ -33,6 +33,7 @@ export async function createNewPrompt() {
 
 export async function updateExistingPrompt() {
   let { promptObject } = promptStore.getState();
+  console.log(promptObject)
   if (
     !isValidName(promptObject.name) ||
     (promptObject.project && !isValidName(promptObject.project))
@@ -61,6 +62,7 @@ export async function duplicateExistingPrompt(name: any, description: any) {
     ...promptStore.getState().promptObject,
     name: nameExists ? `${name}_copy` : name,
     description,
+    app: undefined
   };
 
   const data = await fetchFromPromptdesk("/prompt", "POST", promptObject);

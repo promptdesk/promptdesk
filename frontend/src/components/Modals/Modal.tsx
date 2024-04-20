@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { shouldShowSaveModal } from "@/stores/ModalStore";
 import { tabStore } from "@/stores/TabStore";
+import { Switch } from '@headlessui/react'
+import { v4 as uuidv4 } from 'uuid';
+
 import {
   promptStore,
   updateExistingPrompt,
@@ -12,14 +15,33 @@ import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import GlobalModal from "./GlobalModal";
 
+function classNames(...classes: string[]) {
+  return classes.filter(Boolean).join(' ')
+}
+
 const Modal = () => {
+
   const { show_modal, toggle_modal } = shouldShowSaveModal();
+
 
   const { push } = useRouter();
 
   const { updateLocalPromptValues, promptObject, addToLocalPrompts, prompts } =
     promptStore();
 
+  const [appId, setAppId] = useState(promptObject.app)
+  const [isAppEnabled, setIsAppEnabled] = useState(promptObject.app !== null && promptObject.app !== undefined)
+
+  useEffect(() => {
+    if (isAppEnabled && !appId) {
+      setAppId(uuidv4() as any)
+    }
+    if(!isAppEnabled){
+      setAppId(null)
+    }
+  }, [isAppEnabled])
+
+  
   const {
     tabs,
     addTab,
@@ -34,6 +56,7 @@ const Modal = () => {
     name: promptObject.name,
     description: promptObject.description,
     project: promptObject.project,
+    app: promptObject.app,
   });
 
   function changeName(name: string) {
@@ -57,6 +80,7 @@ const Modal = () => {
     updateLocalPromptValues("name", formValues.name);
     updateLocalPromptValues("description", formValues.description);
     updateLocalPromptValues("project", formValues.project);
+    updateLocalPromptValues("app", appId);
   }
 
   const changeIdInUrl = (newId: string) => {
@@ -194,6 +218,7 @@ const Modal = () => {
         <p>
           This will save the current Playground state as a preset which you can
           access later or share with others.
+          {promptObject.app}
         </p>
         <br />
         <div className="css-xeepoz">
@@ -241,6 +266,35 @@ const Modal = () => {
             onInput={(e) => changeProject(e.currentTarget.value)}
           />
         </div>
+        <hr className="mt-4" />
+        <div className="mt-4">
+
+        <Switch.Group as="div" className="flex items-center">
+          <Switch
+            checked={isAppEnabled}
+            onChange={setIsAppEnabled}
+            className={classNames(
+              isAppEnabled ? 'bg-indigo-600' : 'bg-gray-200',
+              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2'
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className={classNames(
+                isAppEnabled ? 'translate-x-5' : 'translate-x-0',
+                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+              )}
+            />
+          </Switch>
+          <label className="ml-3 text-sm">
+            <span className="font-medium text-gray-900">Enable App</span>{' '}
+            <span className="text-gray-500">(Get a unique URL to share with others.)
+            </span>
+          </label>
+        </Switch.Group>
+
+        </div>
+
         <div className="modal-footer">{renderButtons()}</div>
       </GlobalModal>
       <Toaster />
