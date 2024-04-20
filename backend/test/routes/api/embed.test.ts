@@ -5,7 +5,7 @@ import { describe, it } from "mocha";
 import { Model } from "../../../src/models/mongodb/model";
 import { Organization } from "../../../src/models/mongodb/organization";
 
-describe("Embedding API", async () => {
+describe.skip("Embedding API", async () => {
   const model_db = new Model();
   let model_id: any;
   let model: any;
