@@ -16,11 +16,21 @@ export async function fetchAllPrompts() {
 }
 
 export async function createNewPrompt() {
+
   let { promptObject } = promptStore.getState();
   if (!isValidName(promptObject.name))
     throw new Error(
       "Invalid model name or project name, only `-` and alphabets are allowed",
     );
+
+  let isDuplicate = await isDuplicatePromptName(promptObject.name, undefined);
+  if (isDuplicate) {
+    throw new Error("Prompt with this name already exists, please choose other name");
+  }
+
+  if(!promptObject.project) {
+    throw new Error("You must select a project name.");
+  }
 
   delete promptObject.new; // Simplified object modification
   const data = await fetchFromPromptdesk("/prompt", "POST", promptObject);
@@ -32,13 +42,24 @@ export async function createNewPrompt() {
 }
 
 export async function updateExistingPrompt() {
+
   let { promptObject } = promptStore.getState();
-  console.log(promptObject)
+  console.log("updateExistingPrompt", promptObject.id)
+
+  if(!promptObject.project || promptObject.project === "") {
+    throw new Error(
+      "You must select a project name.",
+    );
+  }
+
+  let isDuplicate = await isDuplicatePromptName(promptObject.name, promptObject.id);
   if (
+    isDuplicate ||
     !isValidName(promptObject.name) ||
     (promptObject.project && !isValidName(promptObject.project))
-  )
+  ) {
     return;
+  }
 
   const { type } = modelStore.getState().modelObject;
   if (type === "chat" || type === "completion") {
@@ -51,17 +72,26 @@ export async function updateExistingPrompt() {
     .updateNameById(promptObject.id, promptObject.id, promptObject.name);
 }
 
-export async function duplicateExistingPrompt(name: any, description: any) {
+export async function isDuplicatePromptName(name: string, id: any): Promise<boolean> {
+  const dbPrompts = await fetchAndSetPrompts();
+
+  if (id) {
+    return dbPrompts.some((prompt: { name: string, id: string }) => prompt.name === name && prompt.id !== id);
+  }
+
+  return dbPrompts.some((prompt: { name: string }) => prompt.name === name);
+}
+
+export async function duplicateExistingPrompt(name: any, description: any, project: any) {
   if (!isValidName(name)) return undefined;
 
-  const dbPrompts = await fetchAndSetPrompts();
-  const nameExists = dbPrompts.some(
-    (prompt: { name: any }) => prompt.name === name,
-  );
+  const nameExists = await isDuplicatePromptName(name, undefined);
+  let randomAlpha = Math.random().toString(36).substring(7);
   let promptObject = {
     ...promptStore.getState().promptObject,
-    name: nameExists ? `${name}_copy` : name,
+    name: nameExists ? `${name}_copy_`+randomAlpha : name,
     description,
+    project,
     app: undefined
   };
 

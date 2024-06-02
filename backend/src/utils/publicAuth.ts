@@ -30,6 +30,8 @@ import {
   generateInitialOrganization,
   automaticTestEnvironmentSetup,
 } from "./inititialize";
+import qs from "qs";
+import axios from "axios";
 
 const authenticate = async function (app: any) {
   app.use(cookieParser());
@@ -47,7 +49,7 @@ const authenticate = async function (app: any) {
     return res.redirect("/auth/login");
   });
 
-  app.get(["/auth/login"], async (req: any, res: any) => {
+  app.get(["/auth/login", "/auth/login/bypass"], async (req: any, res: any) => {
     const shouldSetup = await checkIfFirstRun();
     if (shouldSetup) {
       return res.redirect("/auth/setup");
@@ -61,11 +63,93 @@ const authenticate = async function (app: any) {
       token_cookie,
     );
 
-    if (isAuthenticated) {
-      return res.redirect("/");
+    let isBypass = req.path.includes("bypass");
+    let organization = await organization_db.getOrganization();
+    if (
+      !isBypass &&
+      process.env.SSO_CLIENT_SECRET &&
+      organization &&
+      organization.sso &&
+      organization.sso.length > 0 &&
+      organization.sso[0].provider
+    ) {
+      return res.redirect(`/auth/sso/login`);
     }
 
     res.sendFile(path.join(__dirname, "../../public/login.html"));
+  });
+
+  app.get(`/auth/sso/login`, async (req: any, res: any) => {
+    let organization = await organization_db.getOrganization();
+    let sso = organization.sso[0];
+    const redirectUrl = `${sso.authorization_endpoint}?client_id=${sso.client_id}&redirect_uri=${sso.redirect_endpoint}&response_type=code&scope=openid&state=1234`;
+    console.log(redirectUrl);
+    return res.redirect(redirectUrl);
+  });
+
+  app.get(`/auth/sso`, async (req: any, res: any) => {
+    let organization = await organization_db.getOrganization();
+    let sso = organization.sso[0];
+
+    console.log(req.query, req.params, req.body);
+    const { code } = req.query;
+    const { state } = req.query; // Get the state parameter from the query string
+    const { provider } = req.params;
+
+    console.log(`Redirecting to ${provider} token page...`);
+
+    try {
+      const response = await axios.post(
+        sso.token_endpoint,
+        qs.stringify({
+          grant_type: "authorization_code",
+          client_id: sso.client_id,
+          client_secret: process.env.SSO_CLIENT_SECRET,
+          code: req.query.code,
+          redirect_uri: sso.redirect_endpoint,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
+
+      console.log({
+        grant_type: "authorization_code",
+        client_id: sso.client_id,
+        client_secret: process.env.SSO_CLIENT_SECRET,
+        code: req.query.code,
+        redirect_uri: sso.redirect_endpoint,
+      })
+
+      let status = response.status;
+
+      if(status == 200) {
+        let token = organization.keys[0].key;
+        let expiry = 60 * 1000 * 60 * 24 * 30;
+        res.cookie("token", token, { maxAge: expiry, httpOnly: false });
+        res.cookie("organization", organization.id, {
+          maxAge: expiry,
+          httpOnly: false,
+        });
+        return res.redirect("/");
+      } else {
+        return res.status(500).send(`Error exchanging code for access token with ${provider}`);
+      }
+    } catch (error: any) {
+      console.log(
+        `Error to ${provider} token endpoint:`,
+        error.response.request,
+      );
+      console.error(
+        `Error exchanging code for access token with ${provider}:`,
+        error.response.data,
+      );
+      res
+        .status(500)
+        .send(`Error exchanging code for access token with ${provider}`);
+    }
   });
 
   // req.isAuthenticated is provided from the auth router

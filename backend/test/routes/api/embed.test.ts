@@ -36,7 +36,5 @@ describe.skip("Embedding API", async () => {
       .set("Authorization", "Bearer " + token);
 
     expect(res.status).to.equal(200);
-
   });
-
 });

@@ -12,6 +12,22 @@ const organizationSchema = mongoose.model(
           description: String,
         },
       ],
+      sso: [
+        {
+          provider: String,
+          client_id: String,
+          authorization_endpoint: String,
+          token_endpoint: String,
+          scopes: String,
+          redirect_endpoint: String,
+        },
+      ],
+      namespaces: [
+        {
+          name: String,
+          description: String,
+        },
+      ]
     },
     {
       timestamps: true,
@@ -20,6 +36,13 @@ const organizationSchema = mongoose.model(
 );
 
 class Organization {
+  async saveSSO(ssoData: any, id: string): Promise<any> {
+    await organizationSchema.findByIdAndUpdate(id, {
+      sso: [ssoData],
+    });
+    return ssoData;
+  }
+
   async addOrganization(organization_api_key?: any): Promise<any> {
     // Generate a random name for the organization
     const randomName = `org-${crypto.randomBytes(6).toString("hex")}`;

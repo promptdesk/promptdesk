@@ -9,11 +9,12 @@ import {
   updateExistingPrompt,
   createNewPrompt,
   duplicateExistingPrompt,
-  deletePrompt,
+  deletePrompt
 } from "@/stores/prompts";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import GlobalModal from "./GlobalModal";
+import { set } from "lodash";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -22,15 +23,12 @@ function classNames(...classes: string[]) {
 const Modal = () => {
 
   const { show_modal, toggle_modal } = shouldShowSaveModal();
-
-
   const { push } = useRouter();
-
-  const { updateLocalPromptValues, promptObject, addToLocalPrompts, prompts } =
+  const { updateLocalPromptValues, promptObject, addToLocalPrompts, prompts, projects } =
     promptStore();
-
   const [appId, setAppId] = useState(promptObject.app)
   const [isAppEnabled, setIsAppEnabled] = useState(promptObject.app !== null && promptObject.app !== undefined)
+
 
   useEffect(() => {
     if (isAppEnabled && !appId) {
@@ -39,6 +37,7 @@ const Modal = () => {
     if(!isAppEnabled){
       setAppId(null)
     }
+    setProjectsList(projects());
   }, [isAppEnabled])
 
   
@@ -59,6 +58,9 @@ const Modal = () => {
     app: promptObject.app,
   });
 
+  const [projectsList, setProjectsList] = useState<string[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string>(formValues.project || "-- CUSTOM --");
+
   function changeName(name: string) {
     setFormValues({ ...formValues, name: name });
   }
@@ -70,6 +72,14 @@ const Modal = () => {
   function changeProject(project: string) {
     setFormValues({ ...formValues, project: project });
   }
+
+  useEffect(() => {
+    if(selectedProject !== "-- CUSTOM --"){
+      changeProject(selectedProject)
+    } else {
+      changeProject("")
+    }
+  }, [selectedProject])
 
   function setAllPromptInformation(validate = false) {
     if (validate && prompts.find((prompt) => prompt.name === formValues.name)) {
@@ -94,25 +104,32 @@ const Modal = () => {
       label: "Save as new",
       className: "btn-neutral",
       action: async () => {
-        var newPrompt = await duplicateExistingPrompt(
-          formValues.name,
-          formValues.description,
-        );
-        toggle_modal();
-        if (newPrompt) {
-          addToLocalPrompts(newPrompt);
-          addTab(newPrompt.name, newPrompt.id, true);
-          push("/workspace/" + newPrompt.id);
+        try {
+          var newPrompt = await duplicateExistingPrompt(
+            formValues.name,
+            formValues.description,
+            formValues.project
+          );
+          toggle_modal();
+          if (newPrompt) {
+            addToLocalPrompts(newPrompt);
+            addTab(newPrompt.name, newPrompt.id, true);
+            push("/workspace/" + newPrompt.id);
+          }
+        } catch (error) {
+          if (error instanceof Error) {
+            toast.error(error.message);
+          }
         }
       },
     },
     {
       label: "Update",
       className: "btn-primary",
-      action: () => {
+      action: async () => {
         try {
           setAllPromptInformation(false);
-          updateExistingPrompt();
+          await updateExistingPrompt();
           toggle_modal();
         } catch (error) {
           if (error instanceof Error) {
@@ -253,18 +270,30 @@ const Modal = () => {
         </div>
         <br />
         <div className="css-xeepoz">
-          <div
-            className="body-small mb-2 flex items-center"
-            id="save-modal-name"
-          >
+          <div className="body-small mb-2 flex items-center" id="save-modal-name">
             <div className="bold mr-2">Project</div>
           </div>
-          <input
+          <select
             className="text-input text-input-sm text-input-full"
-            type="text"
-            defaultValue={formValues.project}
-            onInput={(e) => changeProject(e.currentTarget.value)}
-          />
+            value={selectedProject as string}
+            onChange={(e) => setSelectedProject(e.target.value)}
+          >
+            {projectsList.map((project, index) => (
+              <option key={index} value={project}>
+                {project}
+              </option>
+            ))}
+            <option value="-- CUSTOM --">-- CUSTOM --</option>
+          </select>
+          {selectedProject === "-- CUSTOM --" && (
+            <input
+              className="text-input text-input-sm text-input-full mt-2"
+              type="text"
+              placeholder="Enter custom project name"
+              value={formValues.project}
+              onInput={(e) => changeProject(e.currentTarget.value)}
+            />
+          )}
         </div>
         <hr className="mt-4" />
         <div className="mt-4">

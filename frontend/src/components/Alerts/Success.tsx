@@ -1,6 +1,6 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
-export default function Warning({ display, text }: any) {
+export default function Warning({ display = true, text }: any) {
   return (
     <>
       {display === true && ( // Conditionally rendering based on the `display` prop

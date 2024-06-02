@@ -133,11 +133,7 @@ export async function prompt_model_validation(body: any, organization: any) {
       ];
     }
 
-    console.log("prompt", prompt)
-
     var model_id = prompt.model;
-
-    console.log(model_id, organization.id)
 
     const model = await model_db.findModel(model_id, organization.id);
 

@@ -1,5 +1,5 @@
 import handlebars from "handlebars";
-import { Model, Variable} from "../models/allModels";
+import { Model, Variable } from "../models/allModels";
 
 let model_db = new Model();
 let variable_db = new Variable();
@@ -34,11 +34,8 @@ export async function replace_api_variables(api_call: any, organization: any) {
   return api_call;
 }
 
-
 export async function embedding_model_validation(body: any, organization: any) {
-
   try {
-  
     let model = undefined;
 
     //check if body.text_list exists
@@ -47,21 +44,23 @@ export async function embedding_model_validation(body: any, organization: any) {
         undefined,
         undefined,
         { error: true, message: "Text list not provided.", status: 404 },
-        organization
+        organization,
       ];
     }
 
     //get prompt if using SDK (saved in DB)
     if (body.model_name) {
-
-      model = await model_db.findModelByName({name: body.model_name, organization: organization.id});
+      model = await model_db.findModelByName({
+        name: body.model_name,
+        organization: organization.id,
+      });
 
       if (!model) {
         return [
           undefined,
           undefined,
           { error: true, message: "Model not found.", status: 404 },
-          organization
+          organization,
         ];
       }
 
@@ -70,10 +69,10 @@ export async function embedding_model_validation(body: any, organization: any) {
           undefined,
           undefined,
           { error: true, message: "Model API object not found.", status: 404 },
-          organization
+          organization,
         ];
       }
-  
+
       if (!model.input_format && !model.request_mapping) {
         return [
           undefined,
@@ -83,10 +82,10 @@ export async function embedding_model_validation(body: any, organization: any) {
             message: "Request JSON mapping not found.",
             status: 404,
           },
-          organization
+          organization,
         ];
       }
-  
+
       if (!model.output_format && !model.response_mapping) {
         return [
           undefined,
@@ -96,27 +95,24 @@ export async function embedding_model_validation(body: any, organization: any) {
             message: "Response JSON mapping not found.",
             status: 404,
           },
-          organization
+          organization,
         ];
       }
 
       return [body.text_list, model, undefined, organization];
-
     } else {
-
       return [
         undefined,
         undefined,
         { error: true, message: "Model name not provided.", status: 404 },
-        organization
+        organization,
       ];
-
     }
-    
-  } catch (error:any) {
-
-    return [undefined, { error: true, message: error.message, status: 500 }, organization];
-
+  } catch (error: any) {
+    return [
+      undefined,
+      { error: true, message: error.message, status: 500 },
+      organization,
+    ];
   }
-
 }

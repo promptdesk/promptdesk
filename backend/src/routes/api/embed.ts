@@ -22,9 +22,6 @@ router.all(["/embed"], async (req, res) => {
     req.body,
     organization,
   );
-
-  console.log(text_list, model)
-
   return res.send({ text_list, model, error });
 
   /*
@@ -131,7 +128,6 @@ router.all(["/embed"], async (req, res) => {
       .status(500)
       .json({ error: true, message: error.message, status: 500 });
   }*/
-
 });
 
 export default router;

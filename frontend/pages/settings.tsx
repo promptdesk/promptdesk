@@ -16,6 +16,7 @@ import UsersTable from "@/components/Table/UsersTable";
 import { userStore } from "@/stores/UserStore";
 import InputField from "@/components/Form/InputField";
 import { Toaster } from "react-hot-toast";
+import SSOSettings from "@/components/SSOSettings";
 
 export default function VariablesPage() {
   const { show_env_variable_modal, toggle_env_variable_modal } =
@@ -117,6 +118,8 @@ export default function VariablesPage() {
             </div>
           </div>
         </div>
+
+        <SSOSettings />
 
         <div className="sm:flex sm:items-center mt-8">
           <div className="sm:flex-auto">

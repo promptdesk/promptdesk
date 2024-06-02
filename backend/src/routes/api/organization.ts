@@ -18,6 +18,10 @@ router.post("/organizations", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/organization/issso", async (req: any, res: any) => {
+  return res.json({ isSSO: process.env.SSO_CLIENT_SECRET ? true : false });
+});
+
 router.get("/organization", async (req: Request, res: Response) => {
   const organization = (req as any).organization;
   try {
@@ -37,6 +41,19 @@ router.delete("/organization/:id", async (req: Request, res: Response) => {
   try {
     const id = await organization_db.removeOrganization(organizationId);
     res.status(200).json({ message: "Organization deleted successfully", id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+router.put("/organization/sso", async (req: Request, res: Response) => {
+  const organization = (req as any).organization;
+  const ssoData = req.body;
+
+  try {
+    const data = await organization_db.saveSSO(ssoData, organization.id);
+    res.status(200).json({ message: "SSO data saved successfully", data });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });

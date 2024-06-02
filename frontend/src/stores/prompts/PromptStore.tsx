@@ -14,6 +14,7 @@ interface PromptStore {
   createLocalPrompt: (projectName?: string, prompt?: any) => string | undefined;
   updateLocalPrompt: (promptObject: Prompt) => void;
   addToLocalPrompts: (prompt: Prompt) => void;
+  projects: () => string[];
 }
 
 const defaultPrompt: Prompt = {
@@ -43,6 +44,19 @@ const promptStore = create<PromptStore>((set, get) => ({
   generatedText: undefined,
   selectedVariable: "",
   parsingError: null,
+
+  projects: () => {
+    //loop through all prompts and find unique project names
+    const promptStoreState = promptStore.getState();
+    const prompts = promptStoreState.prompts;
+    const projects: string[] = [];
+    prompts.forEach((prompt) => {
+      if (prompt && prompt.project && !projects.includes(prompt.project)) {
+        projects.push(prompt.project);
+      }
+    });
+    return projects;
+  },
 
   updateLocalPromptValues: (key: any, value: any) => {
     set((state) => {
