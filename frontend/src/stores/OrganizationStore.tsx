@@ -5,7 +5,7 @@ import { fetchFromPromptdesk } from "@/services/PromptdeskService";
 interface OrganizationStore {
   organization: Organization | undefined;
   isSSO: boolean;
-  fetchOrganization: () => Promise<void>;
+  fetchOrganization: () => Promise<Organization>;
   fetchIsSSO: () => Promise<void>;
   saveSSO: (data:any) => Promise<void>;
 }
@@ -16,6 +16,7 @@ const organizationStore = create<OrganizationStore>((set) => ({
   fetchOrganization: async () => {
     const organization: Organization = await fetchFromPromptdesk("/organization");
     set({ organization });
+    return organization;
   },
   fetchIsSSO: async () => {
     const { isSSO }: { isSSO: boolean } = await fetchFromPromptdesk("/organization/issso");
