@@ -29,7 +29,19 @@ export async function createNewPrompt() {
   }
 
   if(!promptObject.project) {
-    throw new Error("You must select a project name.");
+    throw new Error("You must select or create a project name.");
+  }
+
+  if(!isValidName(promptObject.name)) {
+    throw new Error(
+      "Invalid prompt name name, only `-` and alphabets are allowed",
+    );
+  }
+
+  if(!promptObject.project || promptObject.project === "" || !isValidName(promptObject.project)) {
+    throw new Error(
+      "Invalid project name, only `-` and alphabets are allowed",
+    );
   }
 
   delete promptObject.new; // Simplified object modification
@@ -52,13 +64,21 @@ export async function updateExistingPrompt() {
     );
   }
 
+  if(!isValidName(promptObject.name)) {
+    throw new Error(
+      "Invalid prompt name name, only `-` and alphabets are allowed",
+    );
+  }
+
+  if(!promptObject.project || promptObject.project === "" || !isValidName(promptObject.project)) {
+    throw new Error(
+      "Invalid project name, only `-` and alphabets are allowed",
+    );
+  }
+
   let isDuplicate = await isDuplicatePromptName(promptObject.name, promptObject.id);
-  if (
-    isDuplicate ||
-    !isValidName(promptObject.name) ||
-    (promptObject.project && !isValidName(promptObject.project))
-  ) {
-    return;
+  if(isDuplicate) {
+    throw new Error("Prompt with this name already exists, please choose other name");
   }
 
   const { type } = modelStore.getState().modelObject;

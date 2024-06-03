@@ -285,15 +285,13 @@ const Modal = () => {
             ))}
             <option value="-- CUSTOM --">-- CUSTOM --</option>
           </select>
-          {selectedProject === "-- CUSTOM --" && (
-            <input
+          <input
               className="text-input text-input-sm text-input-full mt-2"
               type="text"
-              placeholder="Enter custom project name"
+              placeholder="Enter a project name"
               value={formValues.project}
               onInput={(e) => changeProject(e.currentTarget.value)}
             />
-          )}
         </div>
         <hr className="mt-4" />
         <div className="mt-4">
