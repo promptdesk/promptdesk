@@ -54,7 +54,7 @@ const SSOSettings: React.FC = () => {
                 <InputField label="Client ID" value={clientID} onInputChange={(value) => setClientID(value)}/><br />
                 <InputField label="Authorization Endpoint" value={authorizationEndpoint} onInputChange={(value) => setAuthorizationEndpoint(value)}/><br />
                 <InputField label="Token Endpoint" value={tokenEndpoint} onInputChange={(value) => setTokenEndpoint(value)}/><br />
-                <InputField label="Scopes (comma or space seperated)" value={scopes} onInputChange={(value) => setScopes(value)}/><br />
+                <InputField label="Scopes (comma or space separated)" value={scopes} onInputChange={(value) => setScopes(value)}/><br />
                 <PlaygroundButton text="Update" onClick={updateSSO} />
             </>
             )}
