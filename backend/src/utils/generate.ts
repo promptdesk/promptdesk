@@ -86,6 +86,17 @@ export function process_prompt_variables(
         prompt_data["messages"][i]["content"],
         prompt_variables,
       );
+      //loop through all files in messages.i and replace the variables in the file
+      if (prompt_data["messages"][i]["files"]) {
+        for (var j = 0; j < prompt_data["messages"][i]["files"].length; j++) {
+          for (var key in prompt_data["messages"][i]["files"][j]) {
+            prompt_data["messages"][i]["files"][j][key] = replace_prompt_variables(
+              prompt_data["messages"][i]["files"][j][key],
+              prompt_variables,
+            );
+          }
+        }
+      }
     }
   }
 

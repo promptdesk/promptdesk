@@ -17,9 +17,8 @@ function PlaygroundButton({
   isFull = false,
   color,
   newTab,
-  href
+  href,
 }: PlaygroundButtonProps) {
-
   const handleClick = () => {
     if (typeof onClick === "function") {
       onClick();

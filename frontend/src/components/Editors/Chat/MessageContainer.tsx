@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import RemoveMessage from "./RemoveMessage";
+import UploadFiles from "./UploadFiles";
 import ChatMessageRole from "@/components/Editors/Chat/ChatMessageRole";
 import "./MessageContainer.scss";
+import { modelStore } from "@/stores/ModelStore";
 
 interface MessageContainerProps {
   index: number;
@@ -17,9 +19,15 @@ const MessageContainer: React.FC<MessageContainerProps> = ({
   message,
   roles,
   onEditMessage,
-  onToggleRole,
+  onToggleRole
 }) => {
   const textAreaRef = useRef<HTMLDivElement | null>(null);
+
+  const { modelObject } = modelStore();
+
+  const [multiModal, setMultiModal] = useState(
+    modelObject["model_parameters"]["multimodal"] || false,
+  );
 
   let defaultRole = message.role || roles[0];
 
@@ -47,23 +55,26 @@ const MessageContainer: React.FC<MessageContainerProps> = ({
   const placeholder = `Enter ${article} ${defaultRole} message here.`;
 
   return (
-    <div className="chat-pg-message">
-      <ChatMessageRole
-        defaultRole={defaultRole}
-        onRoleToggle={handleRoleToggle}
-      />
-      <div className="text-input-with-focus">
-        <div
-          className="text-input-md text-input chat-message-input"
-          contentEditable={true}
-          tabIndex={0}
-          ref={textAreaRef}
-          placeholder={placeholder}
-          suppressContentEditableWarning={true}
-          onInput={handleTextAreaChange}
+    <div className="chat-pg-message-container">
+      <div className="chat-pg-message">
+        <ChatMessageRole
+          defaultRole={defaultRole}
+          onRoleToggle={handleRoleToggle}
         />
+        <div className="text-input-with-focus">
+          <div
+            className="text-input-md text-input chat-message-input"
+            contentEditable={true}
+            tabIndex={0}
+            ref={textAreaRef}
+            placeholder={placeholder}
+            suppressContentEditableWarning={true}
+            onInput={handleTextAreaChange}
+          />
+        </div>
+        <RemoveMessage index={index} />
       </div>
-      <RemoveMessage index={index} />
+      <UploadFiles index={index} />
     </div>
   );
 };

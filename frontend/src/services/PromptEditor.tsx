@@ -29,6 +29,50 @@ export function editMessageAtIndex(index: number, newValue: string) {
   });
 }
 
+export function createFileAtIndex(
+  messageIndex: number,
+  fileIndex: number,
+  obj: { [key: string]: any },
+) {
+  promptStore.setState((state) => {
+    const promptObject = { ...state.promptObject };
+    const files = promptObject.prompt_data.messages[messageIndex].files || [];
+    files.push(obj);
+    promptObject.prompt_data.messages[messageIndex].files = files;
+    return { promptObject };
+  });
+}
+
+//update the value of the files[fileIndex][name] = value in
+export function updateFileAtIndex(
+  messageIndex: number,
+  fileIndex: number,
+  name: string,
+  value: string,
+) {
+  promptStore.setState((state) => {
+    const promptObject = { ...state.promptObject };
+    const files = promptObject.prompt_data.messages[messageIndex].files || [];
+    files[fileIndex][name] = value;
+    promptObject.prompt_data.messages[messageIndex].files = files;
+    return { promptObject };
+  });
+}
+
+export function deleteFileAtIndex(messageIndex: number, fileIndex: number) {
+  promptStore.setState((state) => {
+    const promptObject = { ...state.promptObject };
+    const files = promptObject.prompt_data.messages[messageIndex].files || [];
+    files.splice(fileIndex, 1);
+    promptObject.prompt_data.messages[messageIndex].files = files;
+    //if files is empty, remove the files key
+    if (files.length === 0) {
+      delete promptObject.prompt_data.messages[messageIndex].files;
+    }
+    return { promptObject };
+  });
+}
+
 export function addMessage(roles: string[]) {
   promptStore.setState((state) => {
     const promptObject = { ...state.promptObject };

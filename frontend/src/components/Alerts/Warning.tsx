@@ -1,6 +1,6 @@
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 
-export default function Warning({ display=true, text, className }: any) {
+export default function Warning({ display = true, text, className }: any) {
   return (
     <>
       {display === true && ( // Conditionally rendering based on the `display` prop

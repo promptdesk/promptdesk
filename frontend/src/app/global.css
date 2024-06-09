@@ -6914,8 +6914,10 @@ p code {
 .chat-pg-exchange-container.disabled {
   pointer-events: none;
 }
-.chat-pg-exchange-container .chat-pg-message {
+.chat-pg-exchange-container .chat-pg-message-container {
   border-bottom: 1px solid var(--gray-200);
+}
+.chat-pg-exchange-container .chat-pg-message {
   display: flex;
   flex-direction: row;
   padding: 12px 18px;
@@ -6996,7 +6998,7 @@ p code {
 .chat-pg-message .chat-message-role .subheading {
   display: inline-block;
   min-width: 93px;
-  padding: 16px 0;
+  padding-top: 8px;
   vertical-align: top;
 }
 .chat-pg-message .chat-message-role .subheading .chat-message-role-text {

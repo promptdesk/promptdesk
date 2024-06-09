@@ -44,7 +44,7 @@
     "helmet": "^7.1.0",
     "mongodb": "^6.3.0",
     "mongoose": "^7.6.8",
-    "promptdesk": "^1.0.4",
+    "promptdesk": "^1.1.0",
     "sqlite": "^5.1.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"

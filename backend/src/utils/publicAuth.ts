@@ -285,8 +285,6 @@ const checkAuth = async function (req: any, res: any, next: any) {
   if (req.path.startsWith("/auth")) {
     return res.redirect("/prompts");
   }
-
-  console.log("checkAuth DONE!");
   next();
 };
 

@@ -7,25 +7,27 @@ interface OrganizationStore {
   isSSO: boolean;
   fetchOrganization: () => Promise<Organization>;
   fetchIsSSO: () => Promise<void>;
-  saveSSO: (data:any) => Promise<void>;
+  saveSSO: (data: any) => Promise<void>;
 }
 
 const organizationStore = create<OrganizationStore>((set) => ({
   organization: undefined,
   isSSO: false,
   fetchOrganization: async () => {
-    const organization: Organization = await fetchFromPromptdesk("/organization");
+    const organization: Organization =
+      await fetchFromPromptdesk("/organization");
     set({ organization });
     return organization;
   },
   fetchIsSSO: async () => {
-    const { isSSO }: { isSSO: boolean } = await fetchFromPromptdesk("/organization/issso");
+    const { isSSO }: { isSSO: boolean } = await fetchFromPromptdesk(
+      "/organization/issso",
+    );
     set({ isSSO });
   },
-  saveSSO: async (data:any) => {
+  saveSSO: async (data: any) => {
     await fetchFromPromptdesk("/organization/sso", "PUT", data);
   },
-  
 }));
 
 export { organizationStore };

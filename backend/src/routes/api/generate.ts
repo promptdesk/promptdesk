@@ -44,6 +44,9 @@ router.all(["/generate"], async (req, res) => {
       proxy,
     );
 
+    console.log("PROMPT VARIABLES", prompt_variables);
+    console.log("PROMPT DATA", JSON.stringify(prompt_data));
+
     if (!prompt.model_parameters) prompt.model_parameters = {};
 
     for (const key in model.model_parameters) {

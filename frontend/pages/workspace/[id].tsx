@@ -124,7 +124,19 @@ export default function SinglePromptEditPage() {
                 <Warning
                   className="mb-2"
                   display={modelObject?.input_format != undefined}
-                  text={<>This model format is deprecated. Please download and upload sample models here: <a href="https://github.com/promptdesk/promptdesk/tree/main/models" target="_blank" className="text-yellow-700 underline decoration-solid text visited:text-yellow-700">https://github.com/promptdesk/promptdesk/tree/main/models</a></>}
+                  text={
+                    <>
+                      This model format is deprecated. Please download and
+                      upload sample models here:{" "}
+                      <a
+                        href="https://github.com/promptdesk/promptdesk/tree/main/models"
+                        target="_blank"
+                        className="text-yellow-700 underline decoration-solid text visited:text-yellow-700"
+                      >
+                        https://github.com/promptdesk/promptdesk/tree/main/models
+                      </a>
+                    </>
+                  }
                 />
                 <div className="pg-content-body">
                   {modelObject?.type === "chat" ? <ChatEditor /> : <Editor />}

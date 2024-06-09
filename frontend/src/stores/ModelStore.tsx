@@ -24,7 +24,9 @@ const modelStore = create<ModelStore>((set) => {
   const fetchAllModels = async () => {
     let models = await fetchFromPromptdesk("/models");
     //filter all type = embedding out
-    let dropdown_models = models.filter((model: any) => model.type !== "embedding");
+    let dropdown_models = models.filter(
+      (model: any) => model.type !== "embedding",
+    );
     const dropdownModelList = dropdown_models.map(
       ({ id, name, type, provider }: Model) => {
         return {

@@ -50,7 +50,19 @@ const ModelSettings = ({
       <div className="m-2 mt-4">
         <Warning
           display={inputFormat != undefined}
-          text={<>This model format is deprecated. Please download and upload sample models here: <a href="https://github.com/promptdesk/promptdesk/tree/main/models" target="_blank" className="text-yellow-700 underline decoration-solid text visited:text-yellow-700">https://github.com/promptdesk/promptdesk/tree/main/models</a></>}
+          text={
+            <>
+              This model format is deprecated. Please download and upload sample
+              models here:{" "}
+              <a
+                href="https://github.com/promptdesk/promptdesk/tree/main/models"
+                target="_blank"
+                className="text-yellow-700 underline decoration-solid text visited:text-yellow-700"
+              >
+                https://github.com/promptdesk/promptdesk/tree/main/models
+              </a>
+            </>
+          }
         />
         <div className="flex justify-between mb-2 mt-4">
           <h3 className="mb-0">API Call</h3>
@@ -114,7 +126,8 @@ const ModelSettings = ({
                 setFormattedParameters(value);
               }}
             />
-          </>)}
+          </>
+        )}
       </div>
     </div>
   );

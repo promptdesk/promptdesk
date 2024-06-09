@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { shouldShowSaveModal } from "@/stores/ModalStore";
 import { tabStore } from "@/stores/TabStore";
-import { Switch } from '@headlessui/react'
-import { v4 as uuidv4 } from 'uuid';
+import { Switch } from "@headlessui/react";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   promptStore,
   updateExistingPrompt,
   createNewPrompt,
   duplicateExistingPrompt,
-  deletePrompt
+  deletePrompt,
 } from "@/stores/prompts";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
@@ -17,30 +17,34 @@ import GlobalModal from "./GlobalModal";
 import { set } from "lodash";
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 const Modal = () => {
-
   const { show_modal, toggle_modal } = shouldShowSaveModal();
   const { push } = useRouter();
-  const { updateLocalPromptValues, promptObject, addToLocalPrompts, prompts, projects } =
-    promptStore();
-  const [appId, setAppId] = useState(promptObject.app)
-  const [isAppEnabled, setIsAppEnabled] = useState(promptObject.app !== null && promptObject.app !== undefined)
-
+  const {
+    updateLocalPromptValues,
+    promptObject,
+    addToLocalPrompts,
+    prompts,
+    projects,
+  } = promptStore();
+  const [appId, setAppId] = useState(promptObject.app);
+  const [isAppEnabled, setIsAppEnabled] = useState(
+    promptObject.app !== null && promptObject.app !== undefined,
+  );
 
   useEffect(() => {
     if (isAppEnabled && !appId) {
-      setAppId(uuidv4() as any)
+      setAppId(uuidv4() as any);
     }
-    if(!isAppEnabled){
-      setAppId(null)
+    if (!isAppEnabled) {
+      setAppId(null);
     }
     setProjectsList(projects());
-  }, [isAppEnabled])
+  }, [isAppEnabled]);
 
-  
   const {
     tabs,
     addTab,
@@ -59,7 +63,9 @@ const Modal = () => {
   });
 
   const [projectsList, setProjectsList] = useState<string[]>([]);
-  const [selectedProject, setSelectedProject] = useState<string>(formValues.project || "-- CUSTOM --");
+  const [selectedProject, setSelectedProject] = useState<string>(
+    formValues.project || "-- CUSTOM --",
+  );
 
   function changeName(name: string) {
     setFormValues({ ...formValues, name: name });
@@ -74,12 +80,12 @@ const Modal = () => {
   }
 
   useEffect(() => {
-    if(selectedProject !== "-- CUSTOM --"){
-      changeProject(selectedProject)
+    if (selectedProject !== "-- CUSTOM --") {
+      changeProject(selectedProject);
     } else {
-      changeProject("")
+      changeProject("");
     }
-  }, [selectedProject])
+  }, [selectedProject]);
 
   function setAllPromptInformation(validate = false) {
     if (validate && prompts.find((prompt) => prompt.name === formValues.name)) {
@@ -108,7 +114,7 @@ const Modal = () => {
           var newPrompt = await duplicateExistingPrompt(
             formValues.name,
             formValues.description,
-            formValues.project
+            formValues.project,
           );
           toggle_modal();
           if (newPrompt) {
@@ -270,7 +276,10 @@ const Modal = () => {
         </div>
         <br />
         <div className="css-xeepoz">
-          <div className="body-small mb-2 flex items-center" id="save-modal-name">
+          <div
+            className="body-small mb-2 flex items-center"
+            id="save-modal-name"
+          >
             <div className="bold mr-2">Project</div>
           </div>
           <select
@@ -286,40 +295,39 @@ const Modal = () => {
             <option value="-- CUSTOM --">-- CUSTOM --</option>
           </select>
           <input
-              className="text-input text-input-sm text-input-full mt-2"
-              type="text"
-              placeholder="Enter a project name"
-              value={formValues.project}
-              onInput={(e) => changeProject(e.currentTarget.value)}
-            />
+            className="text-input text-input-sm text-input-full mt-2"
+            type="text"
+            placeholder="Enter a project name"
+            value={formValues.project}
+            onInput={(e) => changeProject(e.currentTarget.value)}
+          />
         </div>
         <hr className="mt-4" />
         <div className="mt-4">
-
-        <Switch.Group as="div" className="flex items-center">
-          <Switch
-            checked={isAppEnabled}
-            onChange={setIsAppEnabled}
-            className={classNames(
-              isAppEnabled ? 'bg-indigo-600' : 'bg-gray-200',
-              'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2'
-            )}
-          >
-            <span
-              aria-hidden="true"
+          <Switch.Group as="div" className="flex items-center">
+            <Switch
+              checked={isAppEnabled}
+              onChange={setIsAppEnabled}
               className={classNames(
-                isAppEnabled ? 'translate-x-5' : 'translate-x-0',
-                'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out'
+                isAppEnabled ? "bg-indigo-600" : "bg-gray-200",
+                "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2",
               )}
-            />
-          </Switch>
-          <label className="ml-3 text-sm">
-            <span className="font-medium text-gray-900">Enable App</span>{' '}
-            <span className="text-gray-500">(Get a unique URL to share with others.)
-            </span>
-          </label>
-        </Switch.Group>
-
+            >
+              <span
+                aria-hidden="true"
+                className={classNames(
+                  isAppEnabled ? "translate-x-5" : "translate-x-0",
+                  "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out",
+                )}
+              />
+            </Switch>
+            <label className="ml-3 text-sm">
+              <span className="font-medium text-gray-900">Enable App</span>{" "}
+              <span className="text-gray-500">
+                (Get a unique URL to share with others.)
+              </span>
+            </label>
+          </Switch.Group>
         </div>
 
         <div className="modal-footer">{renderButtons()}</div>

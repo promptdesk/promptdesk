@@ -88,7 +88,7 @@ function Editor() {
   return (
     <div className="flex flex-col">
       <EnvironmentVariableWarning />
-      <Variables />
+       <Variables />
       <div className="chat-pg-body body-small flex-1 overflow-hidden">
         {renderDiv()}
         <div className="chat-pg-mobile-divider" />
