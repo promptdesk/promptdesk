@@ -39,7 +39,7 @@ const UploadFiles = ({ index }: { index: number }) => {
       <div>
         <div>
           {files.map((file, i) => (
-            <div className="flex items-center">
+            <div className="flex items-center" key={i}>
               <div className="grow">
                 <InputField
                   key={i}

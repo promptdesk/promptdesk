@@ -99,8 +99,6 @@ const promptStore = create<PromptStore>((set, get) => ({
       .getState()
       .models.find((model) => model.default);
 
-    console.log("defaultModel - 1");
-
     if (
       !defaultModel ||
       (promptModelType !== defaultModel.type && promptModelType)
@@ -152,8 +150,6 @@ const promptStore = create<PromptStore>((set, get) => ({
         }
       }
     }
-
-    console.log("defaultModel - 4", newPrompt, "asdf");
 
     set((state) => {
       const prompts = [...state.prompts, newPrompt];
