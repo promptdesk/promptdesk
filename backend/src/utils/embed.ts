@@ -1,8 +1,11 @@
+import { Model, Prompt, Log, Variable, Sample } from "../models/allModels";
 import handlebars from "handlebars";
-import { Model, Variable } from "../models/allModels";
+
 
 let model_db = new Model();
+let prompt_db = new Prompt();
 let variable_db = new Variable();
+let log_db = new Log();
 
 export function format_env_variables(prompt_variables: any): object {
   var variables: { [key: string]: string } = {};
@@ -11,15 +14,6 @@ export function format_env_variables(prompt_variables: any): object {
   }
   for (const variable of prompt_variables) {
     variables[variable.name] = variable.value;
-  }
-  return variables;
-}
-
-export function format_prompt_variables(prompt_variables: any): any {
-  var variables: { [key: string]: string } = {};
-  for (const key in prompt_variables) {
-    var variable = prompt_variables[key];
-    variables[key] = variable.value;
   }
   return variables;
 }
@@ -50,10 +44,10 @@ export async function embedding_model_validation(body: any, organization: any) {
 
     //get prompt if using SDK (saved in DB)
     if (body.model_name) {
-      model = await model_db.findModelByName({
-        name: body.model_name,
-        organization: organization.id,
-      });
+
+      let modelName = typeof body.model_name === 'object' ? body.model_name.name : body.model_name;
+
+      model = await model_db.findModelByName(body.model_name, organization.id)
 
       if (!model) {
         return [
@@ -109,6 +103,7 @@ export async function embedding_model_validation(body: any, organization: any) {
       ];
     }
   } catch (error: any) {
+    console.log("error", error);
     return [
       undefined,
       { error: true, message: error.message, status: 500 },

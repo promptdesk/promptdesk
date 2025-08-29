@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Help from "./Icons/Help";
 import Playground from "@/components/Icons/Playground";
 import Settings from "@/components/Icons/Settings";
@@ -9,8 +10,13 @@ import Folder from "@/components/Icons/Folder";
 import Documentation from "@/components/Icons/Documentation";
 import Logout from "@/components/Icons/Logout";
 import Logo from "@/components/Logo";
+import Chat from "@/components/Icons/Chat";
+import { chatStore } from "@/stores/ChatStore";
 
 function Navigation() {
+  const router = useRouter();
+  const { startNewChat } = chatStore();
+  
   const navItems = [
     {
       href: "/workspace",
@@ -20,6 +26,7 @@ function Navigation() {
     },
     { href: "/prompts", label: "Prompts", icon: Folder, expanded: true },
     { href: "/models", label: "Models", icon: Models, expanded: true },
+    { href: "/chat", label: "Chat", icon: Chat, expanded: true },
     { href: "/logs", label: "Logs", icon: Logs, expanded: true },
     { href: "/settings", label: "Settings", icon: Settings, expanded: true },
   ];
@@ -46,6 +53,13 @@ function Navigation() {
   // Event handler for mouse leave
   const handleMouseLeave = () => {
     setIsHovered(false);
+  };
+
+  // Handle chat navigation - create new chat every time
+  const handleChatClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    startNewChat(); // Create a new chat
+    router.push('/chat'); // Navigate to chat page
   };
 
   // Determine the className
@@ -75,18 +89,34 @@ function Navigation() {
       </div>
       <div className="app-navigation-menu">
         {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className="app-navigation-menu-item"
-          >
-            <div className="app-navigation-menu-item-icon">
-              <item.icon />
+          item.href === "/chat" ? (
+            <div
+              key={item.href}
+              className="app-navigation-menu-item"
+              onClick={handleChatClick}
+              style={{ cursor: 'pointer' }}
+            >
+              <div className="app-navigation-menu-item-icon">
+                <item.icon />
+              </div>
+              {(isHovered || item.expanded || currentNavItem?.expanded) && (
+                <div className="app-navigation-menu-item-label">{item.label}</div>
+              )}
             </div>
-            {(isHovered || item.expanded || currentNavItem?.expanded) && (
-              <div className="app-navigation-menu-item-label">{item.label}</div>
-            )}
-          </Link>
+          ) : (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="app-navigation-menu-item"
+            >
+              <div className="app-navigation-menu-item-icon">
+                <item.icon />
+              </div>
+              {(isHovered || item.expanded || currentNavItem?.expanded) && (
+                <div className="app-navigation-menu-item-label">{item.label}</div>
+              )}
+            </Link>
+          )
         ))}
       </div>
       <div className="app-navigation-footer">

@@ -112,7 +112,7 @@ class Log {
     };
   }
 
-  async getLogs(
+async getLogs(
     page: any,
     limit = 10,
     organization_id: string,
@@ -123,13 +123,14 @@ class Log {
     let query = {
       organization_id,
       status: { $exists: true },
+      deleted: false,
     } as any;
 
     if (model_id) {
       query.model_id = model_id;
     }
 
-    if (prompt_id) {
+    if (prompt_id && prompt_id !== "undefined") {
       query.prompt_id = prompt_id;
     }
 
@@ -141,43 +142,54 @@ class Log {
       query.status = status;
     }
 
-    query.deleted = false;
-
     const skip = (page - 1) * limit;
-    let logs = await logSchema
-      .find(query)
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 }); // Sort by descending order of creation time
 
-    logs = logs.map(this.transformLog);
-
-    const count = await logSchema.countDocuments(query);
-    const average = await logSchema.aggregate([
-      { $match: query },
-      { $group: { _id: null, average: { $avg: "$duration" } } },
+    // Use Promise.all to run queries in parallel
+    const [logs, aggregateResults] = await Promise.all([
+      // Get paginated logs
+      logSchema
+        .find(query)
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 })
+, // Removed .lean() to maintain compatibility with transformLog
+      
+      // Get all stats in a single aggregation pipeline
+      logSchema.aggregate([
+        { $match: query },
+        {
+          $facet: {
+            totalCount: [{ $count: "count" }],
+            averageDuration: [
+              { $group: { _id: null, average: { $avg: "$duration" } } }
+            ],
+            successCount: [
+              { $match: { status: 200 } },
+              { $count: "count" }
+            ]
+          }
+        }
+      ])
     ]);
 
-    let all200 = 0;
-    if (!query.status || query.status === 200) {
-      query.status = 200;
-      all200 = await logSchema.countDocuments(query);
-    }
+    // Transform logs (handle lean objects)
+    const transformedLogs = logs.map(log => this.transformLog(log));
 
-    let averageValue = 0;
-    if (average.length > 0 && average[0].average !== null) {
-      averageValue = average[0].average;
-    }
-    if (isNaN(averageValue)) {
-      averageValue = 0;
-    }
+    // Extract results from aggregation
+    const stats = aggregateResults[0];
+    const count = stats.totalCount[0]?.count || 0;
+    const averageValue = stats.averageDuration[0]?.average || 0;
+    const successCount = stats.successCount[0]?.count || 0;
+
+    // Calculate success rate
+    const successRate = count > 0 ? ((successCount / count) * 100).toFixed(0) : "0";
 
     return {
       page: page,
       per_page: limit,
       total: count,
       total_pages: Math.ceil(count / limit),
-      data: logs,
+      data: transformedLogs,
       stats: [
         { name: "Total Responses", stat: count },
         {
@@ -186,7 +198,7 @@ class Log {
         },
         {
           name: "Success Rate",
-          stat: (all200 ? ((all200 / count) * 100).toFixed(0) : 0) + "%",
+          stat: successRate + "%",
         },
       ],
     };

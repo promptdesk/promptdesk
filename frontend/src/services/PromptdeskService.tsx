@@ -9,7 +9,7 @@ const fetchFromPromptdesk = async (
   //read auth token from local storage if it exists
   let token = undefined;
   if (typeof window !== "undefined") {
-    token = Cookies.get("token");
+    token = Cookies.get("token") || localStorage.getItem("token") || undefined;
   }
 
   if (!token && process.env.ORGANIZATION_API_KEY) {
